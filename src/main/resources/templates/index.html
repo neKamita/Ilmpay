@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{app.title}">Ilmpay - Your Learning Journey Starts Here</title>
+    
+    <!-- Thymeleaf fragment for common head elements -->
+    <th:block th:fragment="common-head">
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </th:block>
+</head>
+<body>
+    <!-- Navigation fragment -->
+    <nav th:fragment="main-nav" class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/images/logo.svg}" alt="Ilmpay Logo" th:alt="#{nav.logo.alt}">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${currentPage == 'home' ? 'active' : ''}" 
+                           th:href="@{/}" th:text="#{nav.home}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${currentPage == 'features' ? 'active' : ''}" 
+                           th:href="@{#features}" th:text="#{nav.features}">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${currentPage == 'about' ? 'active' : ''}" 
+                           th:href="@{#about}" th:text="#{nav.about}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${currentPage == 'blog' ? 'active' : ''}" 
+                           th:href="@{#blog}" th:text="#{nav.blog}">Blog</a>
+                    </li>
+                </ul>
+                <!-- Right-aligned items -->
+                <ul class="navbar-nav ms-auto navbar-right">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-globe"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" th:href="@{''(lang=en)}">🇬🇧 English</a></li>
+                            <li><a class="dropdown-item" th:href="@{''(lang=ru)}">🇷🇺 Русский</a></li>
+                            <li><a class="dropdown-item" th:href="@{''(lang=uz)}">🇺🇿 O'zbek</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="download-btn" th:href="@{#download}" th:text="#{nav.download}">Download</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <div class="welcome-badge">
+                            <i class="fas fa-plus"></i>
+                            <span th:text="#{hero.welcome}">Welcome to a Modern Scholarship App</span>
+                        </div>
+                        <h1 th:text="#{hero.title}">Empowering Students to Achieve Their Dreams</h1>
+                        <p th:text="#{hero.description}">Are you a student dreaming of pursuing higher education but struggling to meet the financial demands? Look no further! IlmPay is here to support you on your educational journey.</p>
+                        <div class="app-store-buttons">
+                            <a th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
+                                <img th:src="@{/images/Google Play Black.svg}" th:alt="#{app.playstore.alt}">
+                            </a>
+                            <a th:href="@{${@environment.getProperty('app.appstore.url')}}" target="_blank">
+                                <img th:src="@{/images/App Store Black.svg}" th:alt="#{app.appstore.alt}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image-container">
+                        <img th:src="@{/images/iPhone-13-Pro-Front.png}" alt="Front Phone" class="hero-image front">
+                        <img th:src="@{/images/iPhone-13-Pro-Text.png}" alt="Text Phone" class="hero-image text">
+                        <img th:src="@{/images/iPhone-13-Pro-Reward.png}" alt="Reward Phone" class="hero-image reward">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold" th:text="#{features.title}">Why Choose Ilmpay?</h2>
+                <p class="text-muted" th:text="#{features.subtitle}">Discover the features that make us stand out</p>
+            </div>
+            <div class="row g-4">
+                <!-- Feature cards with th:each would go here when we have dynamic features -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap fa-2x text-primary"></i>
+                        </div>
+                        <h4 th:text="#{features.card1.title}">Expert-Led Courses</h4>
+                        <p th:text="#{features.card1.description}">Learn from industry professionals and experienced educators.</p>
+                    </div>
+                </div>
+                <!-- More feature cards... -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section - encouraging action -->
+    <section class="bg-primary text-white py-5">
+        <div class="container text-center">
+            <h2 class="fw-bold mb-4">Ready to Start Your Learning Journey?</h2>
+            <p class="mb-4">Join thousands of students already learning with Ilmpay</p>
+            <a href="/register" class="btn btn-light btn-lg">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer - keeping it organized -->
+    <footer class="bg-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2025 Ilmpay. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-decoration-none text-muted me-3">Privacy Policy</a>
+                    <a href="#" class="text-decoration-none text-muted">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Thymeleaf fragment for common scripts -->
+    <th:block th:fragment="common-scripts">
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Custom JS -->
+        <script th:src="@{/js/main.js}"></script>
+    </th:block>
+</body>
+</html>

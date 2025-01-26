@@ -1,0 +1,27 @@
+# 🐳 Docker Compose Configuration
+# Because running databases locally is so 2010! 
+
+services:
+  # 🐘 PostgreSQL Service
+  # The mighty elephant that never forgets your data!
+  postgres:
+    image: 'postgres:latest'  # Always living on the edge!
+    container_name: ilmpay-db  # Giving our database a fancy name
+    environment:
+      - 'POSTGRES_DB=ilmpay'  # Our app's cozy data home
+      - 'POSTGRES_PASSWORD=postgres'  # Super secure password (just kidding, change in production!)
+      - 'POSTGRES_USER=postgres'  # The database superhero
+    ports:
+      - '5432:5432'  # Mapping ports like a boss
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Where the magic persists
+    healthcheck:  # Making sure our elephant is feeling good
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# 📦 Volumes Configuration
+# Because losing data is not an option!
+volumes:
+  postgres_data:  # Our data's forever home
