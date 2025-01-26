@@ -4,6 +4,7 @@
     --secondary-color: #FF6B6B;
     --text-color: #2D3748;
     --light-bg: #F7FAFC;
+    --accent-light: #FFF0DC; /* Added our warm accent color */
 }
 
 body {
@@ -14,78 +15,136 @@ body {
 /* 🚀 Hero section styling - where the magic begins! */
 .hero-section {
     background: #F06527;
-    padding: 120px 0;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
     position: relative;
     overflow: hidden;
+    padding: 120px 0 200px 0;
+    display: flex;
+    align-items: center;
 }
 
-.hero-section::before {
-    content: '';
+/* 🌟 Floating ellipses - like cosmic donuts in our space! */
+.hero-ellipse {
     position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+    fill: var(--accent-light); /* Using our warm color for ellipses */
+}
+
+.hero-ellipse-top {
+    top: -20%;
     right: -10%;
-    top: -10%;
-    width: 70%;
-    height: 140%;
-    background: #FFE8DD;
-    border-radius: 0 0 0 70%;
-    z-index: 1;
+    width: 52%;
+    transform: rotate(180deg);
+    animation: floatTop 20s ease-in-out infinite;
+}
+
+.hero-ellipse-bottom {
+    bottom: -20%;
+    left: -10%;
+    width: 40%;
+    animation: floatBottom 15s ease-in-out infinite;
+}
+
+/* 🎡 Making our ellipses dance in the breeze */
+@keyframes floatTop {
+    0%, 100% { transform: rotate(180deg) translate(0, 0); }
+    50% { transform: rotate(180deg) translate(-20px, 20px); }
+}
+
+@keyframes floatBottom {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, -20px); }
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
     color: white;
+    padding-top: 40px;
+    transform: translateY(15%);
 }
 
 .hero-content h1 {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
+    text-align: left;
 }
 
 .hero-content p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     opacity: 0.9;
+    text-align: left;
 }
 
-/* 📱 Hero Images - Stacking them like a deck of cards! */
 .hero-image-container {
-    position: relative;
+    position: absolute;
+    bottom: -100px;
+    right: 0;
+    height: 700px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    z-index: 1;
 }
 
 .hero-image {
-    width: 249.96px;
-    height: 505.87px;
-    transition: transform 0.3s ease;
-    transform: rotate(0deg);
+    position: absolute;
+    bottom: 0;
+    transition: all 0.5s ease;
+    filter: drop-shadow(0 0 0 transparent);
+    box-shadow: none;
+    transform-origin: bottom center;
+    animation: riseUp 1s ease-out forwards;
+}
+
+@keyframes riseUp {
+    from {
+        transform: translateY(60%) translateX(0) rotateY(-10deg);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(40%) translateX(var(--x-offset)) rotateY(-10deg);
+        opacity: 1;
+    }
 }
 
 .hero-image.front {
     z-index: 3;
+    --x-offset: -80px;
+    animation-delay: 0s;
 }
 
 .hero-image.text {
     z-index: 2;
+    --x-offset: 0;
+    animation-delay: 0.2s;
 }
 
 .hero-image.reward {
     z-index: 1;
+    --x-offset: 80px;
+    animation-delay: 0.4s;
 }
 
-/* Hover effect to bring images forward */
+/* Hover effects */
 .hero-image-container:hover .hero-image.front {
-    transform: rotate(0deg) translate(10px, -5px);
+    transform: translateY(-10px) translateX(-80px) rotateY(-15deg);
 }
 
 .hero-image-container:hover .hero-image.text {
-    transform: rotate(0deg) translate(-10px, 5px);
+    transform: translateY(-5px) translateX(0) rotateY(-15deg);
+}
+
+.hero-image-container:hover .hero-image.reward {
+    transform: translateY(-2px) translateX(80px) rotateY(-15deg);
+}
+
+.hero-image img {
+    box-shadow: none;
+    filter: drop-shadow(0 0 0 transparent);
 }
 
 .welcome-badge {
@@ -177,23 +236,23 @@ body {
     margin-bottom: 20px;
 }
 
-/* 🎯 Download button - Making it pop! */
+/* 🎯 Download button - catch me if you can! */
 .download-btn {
-    display: inline-block;
-    padding: 12px 24px;
-    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-    color: white !important;
-    text-decoration: none;
-    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 24px;
+    background: var(--accent-light);
+    color: var(--primary-color);
+    border-radius: 8px;
     font-weight: 600;
+    text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(240, 101, 39, 0.2);
 }
 
 .download-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(240, 101, 39, 0.3);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    box-shadow: 0 4px 12px rgba(240, 101, 39, 0.15);
+    color: var(--primary-color);
 }
 
 .download-btn:active {
@@ -301,7 +360,7 @@ body {
 /* 📱 Mobile responsiveness - Because even astronauts use phones! */
 @media (max-width: 991px) {
     .navbar {
-        background: var(--primary-color); /* Add background on mobile for better contrast */
+        background: var(--primary-color);
         position: fixed;
         padding: 1rem 0;
     }
