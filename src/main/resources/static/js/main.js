@@ -86,31 +86,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Support Carousel - Our wise owl carrying the logos!
+// Support Carousel - Infinite loop without navigation arrows
 $(document).ready(function(){
     $('.support-carousel').owlCarousel({
+        items: 5,
         loop: true,
         margin: 30,
-        nav: true,
-        dots: true,
+        nav: false,
+        dots: false,
         autoplay: true,
-        autoplayTimeout: 3000,
+        autoplayTimeout: 1000,
         autoplayHoverPause: true,
-        smartSpeed: 500,
         responsive:{
-            0:{
-                items: 2,
-                margin: 20
-            },
-            576:{
-                items: 3
-            },
-            768:{
-                items: 4
-            },
-            992:{
-                items: 5
-            }
+            0:{ items: 2 },
+            576:{ items: 3 },
+            768:{ items: 4 },
+            992:{ items: 5 }
         }
     });
 });

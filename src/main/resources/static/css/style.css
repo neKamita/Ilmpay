@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Ruda:wght@400;500;700&display=swap');
+
     /* 🎨 Making things pretty with some custom styles! */
 :root {
     --primary-color: #F06527;
@@ -538,8 +540,10 @@ body {
 }
 
 .support-logo {
-    height: 30px;
-    width: auto;
+    width: 176.58px !important;
+    height: 52px !important;
+    object-fit: contain;
+    margin: 0 1.5rem;
     opacity: 0.8;
     transition: opacity 0.3s ease;
 }
@@ -590,10 +594,186 @@ body {
 
 @media (max-width: 768px) {
     .support-logo {
-        height: 25px;
+        width: 140px !important;
+        height: 40px !important;
+        margin: 0 1rem;
     }
     
     .support-carousel {
-        padding: 0 30px;
+        padding: 0 15px;
     }
+}
+
+/* Mobile First Styles */
+@media (max-width: 767px) {
+    .hero-title {
+        font-size: 2rem !important;
+        line-height: 1.2;
+    }
+    
+    .hero-description {
+        font-size: 1rem !important;
+        padding: 0 1rem;
+    }
+    
+    .feature-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .cta-section {
+        padding: 2rem 1rem !important;
+    }
+    
+    .mobile-logo {
+        width: 120px !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .desktop-only {
+        display: block !important;
+    }
+    .mobile-only {
+        display: none !important;
+    }
+}
+
+.benefits-section {
+    background-color: var(--primary-color);
+    padding: 80px 0;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.benefits-badge {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.benefits-badge span {
+    background: #FFF9F1;
+    border-radius: 1000px;
+    padding: 12px 20px 12px 20px;
+    color: #F06527;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.benefits-badge-star {
+    width: 24px;
+    height: 24px;
+    filter: invert(45%) sepia(82%) saturate(1023%) hue-rotate(339deg) brightness(99%) contrast(93%);
+}
+
+.benefits-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 60px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.benefit-card {
+    width: 290px;
+    height: 350px;
+    padding: 24px;
+    gap: 10px;
+    border-radius: 20px;
+    background: #FFF0DC;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    transition: transform 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-number {
+    width: 80px;
+    height: 80px;
+    padding: 20px;
+    gap: 4px;
+    border-radius: 50%;
+    background: rgba(240, 101, 39, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ruda', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.benefit-card h3 {
+    font-family: 'Ruda', sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 27.99px;
+    text-align: center;
+    color: #000000;
+    margin-bottom: 16px;
+}
+
+.benefit-card p {
+    font-family: 'Ruda', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 21px;
+    text-align: center;
+    color: #706183;
+    margin: 0;
+}
+
+.benefits-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .benefits-title {
+        font-size: 1.8rem;
+        padding: 0 20px;
+    }
+    
+    .benefit-card {
+        margin-bottom: 20px;
+    }
+    
+    .benefits-cards {
+        gap: 15px;
+    }
+}
+
+.benefits-ellipse {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+    fill: var(--accent-light);
+}
+
+.benefits-ellipse-top {
+    top: -20%;
+    right: -10%;
+    width: 40%;
+    transform: rotate(180deg);
+    animation: floatTop 20s ease-in-out infinite;
+}
+
+.benefits-ellipse-bottom {
+    bottom: -20%;
+    left: -10%;
+    width: 30%;
+    animation: floatBottom 15s ease-in-out infinite;
 }
