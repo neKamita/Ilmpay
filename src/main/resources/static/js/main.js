@@ -1,4 +1,4 @@
-// 🎯 Navbar Scroll Effect
+// Navbar Scroll Effect
 document.addEventListener('DOMContentLoaded', function() {
     const navbar = document.querySelector('.navbar');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -70,6 +70,47 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 behavior: 'smooth',
                 block: 'start'
             });
+        }
+    });
+});
+
+// Hero Section Animations - Making our phones dance! 
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate hero images with a staggered delay
+    const heroImages = document.querySelectorAll('.hero-image');
+    
+    heroImages.forEach((img, index) => {
+        setTimeout(() => {
+            img.classList.add('animate');
+        }, index * 200); // 200ms delay between each image
+    });
+});
+
+// Support Carousel - Our wise owl carrying the logos!
+$(document).ready(function(){
+    $('.support-carousel').owlCarousel({
+        loop: true,
+        margin: 30,
+        nav: true,
+        dots: true,
+        autoplay: true,
+        autoplayTimeout: 3000,
+        autoplayHoverPause: true,
+        smartSpeed: 500,
+        responsive:{
+            0:{
+                items: 2,
+                margin: 20
+            },
+            576:{
+                items: 3
+            },
+            768:{
+                items: 4
+            },
+            992:{
+                items: 5
+            }
         }
     });
 });

@@ -93,59 +93,46 @@
                 </div>
             </div>
             <div class="hero-image-container">
-                <img class="hero-image front" th:src="@{/images/iPhone-13-Pro-Front.png}" alt="IlmPay App Screenshot">
-                <img class="hero-image text" th:src="@{/images/iPhone-13-Pro-Text.png}" alt="IlmPay Features">
-                <img class="hero-image reward" th:src="@{/images/iPhone-13-Pro-Reward.png}" alt="IlmPay Rewards">
+                <img class="hero-image front" th:src="@{/images/iPhone-13-Pro-Front.svg}" alt="IlmPay App Screenshot">
+                <img class="hero-image text" th:src="@{/images/iPhone-13-Pro-Text.svg}" alt="IlmPay Features">
+                <img class="hero-image reward" th:src="@{/images/iPhone-13-Pro-Reward.svg}" alt="IlmPay Rewards">
             </div>
         </div>
     </section>
-
-    <!-- Features Section -->
-    <section id="features" class="py-5">
+    <section class="support-section">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold" th:text="#{features.title}">Why Choose Ilmpay?</h2>
-                <p class="text-muted" th:text="#{features.subtitle}">Discover the features that make us stand out</p>
-            </div>
-            <div class="row g-4">
-                <!-- Feature cards with th:each would go here when we have dynamic features -->
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-graduation-cap fa-2x text-primary"></i>
+            <h3 class="support-title text-center">Support By</h3>
+            <div id="supportCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <!-- First slide -->
+                    <div class="carousel-item active">
+                        <div class="support-logos">
+                            <img th:src="@{/images/Google.svg}" alt="Google" class="support-logo">
+                            <img th:src="@{/images/Afterpay.svg}" alt="Afterpay" class="support-logo">
+                            <img th:src="@{/images/A    sana.svg}" alt="Asana" class="support-logo">
                         </div>
-                        <h4 th:text="#{features.card1.title}">Expert-Led Courses</h4>
-                        <p th:text="#{features.card1.description}">Learn from industry professionals and experienced educators.</p>
+                    </div>
+                    <!-- Second slide -->
+                    <div class="carousel-item">
+                        <div class="support-logos">
+                            <img th:src="@{/images/Dropbox.svg}" alt="Dropbox" class="support-logo">
+                            <img th:src="@{/images/Scholarship.svg}" alt="Spotify" class="support-logo">
+                            <img th:src="@{/images/Grammarly.svg}" alt="Grammarly" class="support-logo">
+                        </div>
                     </div>
                 </div>
-                <!-- More feature cards... -->
+                <!-- Navigation arrows -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#supportCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#supportCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
         </div>
     </section>
-
-    <!-- CTA Section - encouraging action -->
-    <section class="bg-primary text-white py-5">
-        <div class="container text-center">
-            <h2 class="fw-bold mb-4">Ready to Start Your Learning Journey?</h2>
-            <p class="mb-4">Join thousands of students already learning with Ilmpay</p>
-            <a href="/register" class="btn btn-light btn-lg">Get Started Now</a>
-        </div>
-    </section>
-
-    <!-- Footer - keeping it organized -->
-    <footer class="bg-light py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2025 Ilmpay. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="#" class="text-decoration-none text-muted me-3">Privacy Policy</a>
-                    <a href="#" class="text-decoration-none text-muted">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <!-- Thymeleaf fragment for common scripts -->
     <th:block th:fragment="common-scripts">
