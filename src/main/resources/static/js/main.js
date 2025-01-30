@@ -104,4 +104,60 @@ $(document).ready(function(){
             992:{ items: 5 }
         }
     });
+
+    // Initialize testimonial carousel
+    var testimonialCarousel = $('.testimonial-carousel').owlCarousel({
+        items: 4,
+        loop: true,
+        margin: 20,
+        nav: true,
+        dots: false, // Disable default dots
+        mouseDrag: true,
+        touchDrag: true,
+        autoplay: true,
+        autoplayTimeout: 3000,
+        autoplayHoverPause: true,
+        responsive:{
+            0:{ items: 1 },
+            768:{ items: 2 },
+            992:{ items: 3 },
+            1200:{ items: 4 }
+        }
+    });
+
+    // Handle custom dot clicks
+    $('.custom-dot').click(function(){
+        var index = $(this).data('index');
+        testimonialCarousel.trigger('to.owl.carousel', [index, 300]);
+    });
+
+    // Update active dot on carousel change
+    testimonialCarousel.on('changed.owl.carousel', function(event){
+        // Get the current item index
+        var currentIndex = event.item.index;
+        
+        // Calculate the active dot index based on the number of dots
+        var dotCount = $('.custom-dot').length;
+        var activeDotIndex = currentIndex % dotCount;
+        
+        // Update active state
+        $('.custom-dot').removeClass('active');
+        $('.custom-dot').eq(activeDotIndex).addClass('active');
+    });
+
+    // Initialize active dot on page load
+    $('.custom-dot').first().addClass('active');
+});
+
+// FAQ Toggle functionality
+$(document).ready(function() {
+    $('.faq-question').click(function() {
+        const faqItem = $(this).closest('.faq-item');
+        
+        // Close other FAQ items
+        $('.faq-item').not(faqItem).removeClass('active');
+        
+        // Toggle current FAQ item
+        faqItem.toggleClass('active');
+    });
 });
