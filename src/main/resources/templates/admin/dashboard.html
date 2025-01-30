@@ -1,83 +1,204 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Ilmpay</title>
-    <!-- 🎨 Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- 📊 Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/admin.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
 </head>
-<body>
-    <!-- 🎯 Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">👑 Ilmpay Admin</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="fas fa-home"></i> Dashboard</a>
-                    </li>
-                    <!-- Add more nav items as needed -->
-                </ul>
-                <form th:action="@{/logout}" method="post" class="d-flex">
-                    <button class="btn btn-outline-light" type="submit">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </form>
-            </div>
-        </div>
-    </nav>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Include Sidebar -->
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div data-aos="zoom-in" data-aos-delay="100" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm">Total Visitors</p>
+                            <p class="text-3xl font-bold mt-2" th:text="${totalVisitors}">0</p>
+                        </div>
+                        <i data-lucide="users" class="w-12 h-12 opacity-75"></i>
+                    </div>
+                </div>
+                
+                <div data-aos="zoom-in" data-aos-delay="200" class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm">Today's Visitors</p>
+                            <p class="text-3xl font-bold mt-2" th:text="${todayVisitors}">0</p>
+                        </div>
+                        <i data-lucide="user-plus" class="w-12 h-12 opacity-75"></i>
+                    </div>
+                </div>
 
-    <!-- 📊 Main Content -->
-    <div class="container mt-4">
-        <div class="row">
-            <!-- 📈 Stats Cards -->
-            <div class="col-md-4 mb-4">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Users</h5>
-                        <p class="card-text display-4">0</p>
-                        <i class="fas fa-users position-absolute top-0 end-0 m-3 fa-2x opacity-50"></i>
+                <div data-aos="zoom-in" data-aos-delay="300" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm">App Downloads</p>
+                            <p class="text-3xl font-bold mt-2" th:text="${appDownloads}">0</p>
+                        </div>
+                        <i data-lucide="download" class="w-12 h-12 opacity-75"></i>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card bg-success text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Active Scholarships</h5>
-                        <p class="card-text display-4">0</p>
-                        <i class="fas fa-graduation-cap position-absolute top-0 end-0 m-3 fa-2x opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card bg-info text-white">
-                    <div class="card-body">
-                        <h5 class="card-title">Applications</h5>
-                        <p class="card-text display-4">0</p>
-                        <i class="fas fa-file-alt position-absolute top-0 end-0 m-3 fa-2x opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- 📋 Recent Activity -->
-        <div class="card mt-4">
-            <div class="card-header bg-light">
-                <h5 class="mb-0">Recent Activity</h5>
+                <div data-aos="zoom-in" data-aos-delay="400" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6 shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm">Active Users</p>
+                            <p class="text-3xl font-bold mt-2" th:text="${activeUsers}">0</p>
+                        </div>
+                        <i data-lucide="user-check" class="w-12 h-12 opacity-75"></i>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <p class="text-muted text-center">No recent activity to display</p>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-xl p-6 shadow-sm border">
+                    <h3 class="text-lg font-semibold mb-4">Visitor Trends</h3>
+                    <div class="h-64" id="visitorChart"></div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-sm border">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
+                        <i data-lucide="activity" class="w-5 h-5 text-indigo-600"></i>
+                        <span>User Activity Heatmap</span>
+                    </h3>
+                    <div class="h-64" id="heatmapChart"></div>
+                </div>
             </div>
-        </div>
+
+          
+
+    
+        </main>
     </div>
 
-    <!-- 🎯 Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Modals -->
+<div id="crudModal" class="modal-overlay hidden animate__animated animate__fadeIn">
+    <div class="modal-container animate__animated animate__slideInUp">
+        <div class="modal-header">
+            <h3 class="text-xl font-semibold text-gray-900" id="modalTitle"></h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="crudForm" class="space-y-6">
+                <input type="hidden" id="itemId">
+                <!-- Dynamic fields will be injected here -->
+                <div class="flex justify-end space-x-3 pt-6 border-t">
+                    <button type="button" onclick="closeModal()" 
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Expose modal functions with proper type handling
+            window.openSupportLogoModal = () => openModal('support-logo');
+            window.openBenefitModal = () => openModal('benefit');
+            window.openTestimonialModal = () => openModal('testimonial');
+            window.openFaqModal = () => openModal('faq');
+            
+            window.closeModal = function() {
+                document.getElementById('crudModal').classList.add('hidden');
+            }
+            
+            // Initialize icons
+            lucide.createIcons();
+        });
+    </script>
+
+    <!-- Add ApexCharts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        // Sample chart initialization
+        const visitorOptions = {
+            chart: { type: 'area', height: '100%' },
+            colors: ['#3B82F6'],
+            series: [{
+                name: 'Visitors',
+                data: [30, 40, 35, 50, 49, 60, 70]
+            }],
+            xaxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }
+        };
+        new ApexCharts(document.querySelector('#visitorChart'), visitorOptions).render();
+    </script>
+
+    <!-- Add SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Heatmap chart configuration -->
+    <script>
+        const heatmapData = {
+            chart: {
+                height: '100%',
+                type: 'heatmap',
+            },
+            dataLabels: {
+                enabled: false
+            },
+            colors: ["#4f46e5"],
+            series: [{
+                name: 'Monday',
+                data: generateTimeData()
+            }, {
+                name: 'Tuesday',
+                data: generateTimeData()
+            }, {
+                name: 'Wednesday',
+                data: generateTimeData()
+            }, {
+                name: 'Thursday',
+                data: generateTimeData()
+            }, {
+                name: 'Friday',
+                data: generateTimeData()
+            }],
+            title: {
+                text: 'User Activity by Hour'
+            },
+            xaxis: {
+                categories: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM']
+            }
+        };
+
+        function generateTimeData() {
+            return Array.from({ length: 9 }, () => ({
+                x: 'User Activity',
+                y: Math.floor(Math.random() * 90) + 10
+            }));
+        }
+
+        new ApexCharts(document.querySelector('#heatmapChart'), heatmapData).render();
+    </script>
 </body>
 </html>

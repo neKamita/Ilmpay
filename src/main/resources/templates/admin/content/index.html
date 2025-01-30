@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Management - Ilmpay Admin</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/main.js"></script>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <!-- Include Sidebar -->
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <h1 class="text-2xl font-bold mb-6">Content Management</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Support Logos Card -->
+                <a href="/admin/content/support-logos" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="image" class="w-8 h-8 text-indigo-600"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold">Support Logos</h3>
+                            <p class="text-sm text-gray-600">Manage partner and support logos</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Benefits Card -->
+                <a href="/admin/content/benefits" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="gift" class="w-8 h-8 text-indigo-600"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold">Benefits</h3>
+                            <p class="text-sm text-gray-600">Manage app benefits and features</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Testimonials Card -->
+                <a href="/admin/content/testimonials" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="message-square" class="w-8 h-8 text-indigo-600"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold">Testimonials</h3>
+                            <p class="text-sm text-gray-600">Manage user testimonials</p>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- FAQ Card -->
+                <a href="/admin/content/faqs" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="help-circle" class="w-8 h-8 text-indigo-600"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold">FAQs</h3>
+                            <p class="text-sm text-gray-600">Manage frequently asked questions</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html> 

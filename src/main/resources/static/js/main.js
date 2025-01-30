@@ -1,163 +1,341 @@
-// Navbar Scroll Effect
-document.addEventListener('DOMContentLoaded', function() {
-    const navbar = document.querySelector('.navbar');
-    const navLinks = document.querySelectorAll('.nav-link');
+// Global state
+let currentType = '';
+
+function openModal(type, data = null) {
+    currentType = type;
+    const modal = document.getElementById('crudModal');
+    const form = document.getElementById('crudForm');
+    const title = document.getElementById('modalTitle');
     
-    // Set initial active state
-    setActiveNavLink();
-    
-    // Update active state on scroll
-    window.addEventListener('scroll', function() {
-        setActiveNavLink();
-        
-        // Add/remove background on scroll
-        if (window.scrollY > 50) {
-            navbar.style.background = 'var(--primary-color)';
-            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        } else {
-            navbar.style.background = 'transparent';
-            navbar.style.boxShadow = 'none';
+    if (title) {
+        // Set title based on type
+        switch(type) {
+            case 'support-logo':
+                title.textContent = data ? 'Edit Logo' : 'New Support Logo';
+                break;
+            case 'benefit':
+                title.textContent = data ? 'Edit Benefit' : 'New Benefit';
+                break;
+            case 'testimonial':
+                title.textContent = data ? 'Edit Testimonial' : 'New Testimonial';
+                break;
+            case 'faq':
+                title.textContent = data ? 'Edit FAQ' : 'New FAQ';
+                break;
         }
-    });
-    
-    // Handle mobile menu
-    const navbarToggler = document.querySelector('.navbar-toggler');
-    const navbarCollapse = document.querySelector('.navbar-collapse');
-    
-    navbarToggler.addEventListener('click', function() {
-        navbar.style.background = 'var(--primary-color)';
-    });
-    
-    // Close mobile menu on link click
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (navbarCollapse.classList.contains('show')) {
-                navbarToggler.click();
+    } else {
+        console.error('Modal title element not found');
+    }
+
+    // Clear previous fields
+    form.innerHTML = `
+        <input type="hidden" id="itemId" value="${data?.id || ''}">
+        ${generateFields(type, data)}
+        <div class="flex justify-end space-x-3 pt-6 border-t">
+            <button type="button" onclick="closeModal()" 
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
+                Cancel
+            </button>
+            <button type="submit" 
+                    class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+                Save Changes
+            </button>
+        </div>
+    `;
+
+    modal.classList.remove('hidden');
+    setupFormSubmission(form, type);
+}
+
+function generateFields(type, data) {
+    switch(type) {
+        case 'support-logo':
+            return `
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" required class="input-field" 
+                               value="${data?.name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Image URL</label>
+                        <input type="url" name="imageUrl" required class="input-field"
+                               value="${data?.imageUrl || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Website URL</label>
+                        <input type="url" name="websiteUrl" class="input-field"
+                               value="${data?.websiteUrl || ''}">
+                    </div>
+                </div>
+            `;
+        case 'benefit':
+            return `
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" required class="input-field"
+                               value="${data?.title || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" required class="input-field">${data?.description || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Icon URL</label>
+                        <input type="url" name="iconUrl" required class="input-field"
+                               value="${data?.iconUrl || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Display Order (1-4)</label>
+                        <input type="number" name="displayOrder" min="1" max="4" required class="input-field"
+                               value="${data?.displayOrder || 1}">
+                    </div>
+                </div>
+            `;
+        case 'testimonial':
+            return `
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" required class="input-field"
+                               value="${data?.name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role</label>
+                        <input type="text" name="role" class="input-field"
+                               value="${data?.role || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Comment</label>
+                        <textarea name="comment" required class="input-field">${data?.comment || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Rating (1-5)</label>
+                        <input type="number" name="rating" min="1" max="5" required class="input-field"
+                               value="${data?.rating || 5}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Display Order (1-10)</label>
+                        <input type="number" name="displayOrder" min="1" max="10" required class="input-field"
+                               value="${data?.displayOrder || 1}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Avatar URL</label>
+                        <input type="url" name="avatarUrl" class="input-field"
+                               value="${data?.avatarUrl || ''}">
+                    </div>
+                </div>
+            `;
+        case 'faq':
+            return `
+                <div class="space-y-4">
+                    <div class="form-group">
+                        <label class="form-label">Question</label>
+                        <input type="text" name="question" required class="input-field"
+                               value="${data?.question || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Answer</label>
+                        <textarea name="answer" required class="input-field">${data?.answer || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Display Order (1-20)</label>
+                        <input type="number" name="displayOrder" min="1" max="20" required class="input-field"
+                               value="${data?.displayOrder || 1}">
+                    </div>
+                </div>
+            `;
+        default:
+            return '';
+    }
+}
+
+function closeModal() {
+    const modal = document.getElementById('crudModal');
+    modal.classList.add('animate__fadeOut');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('animate__fadeOut');
+    }, 300);
+}
+
+async function editItem(type, id) {
+    try {
+        // Show loading state
+        Swal.fire({
+            title: 'Loading...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
             }
         });
-    });
-});
 
-// Set active nav link based on scroll position
-function setActiveNavLink() {
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (window.scrollY >= sectionTop - 100) {
-            current = section.getAttribute('id');
+        const endpoints = {
+            'support-logo': 'support-logos',
+            'benefit': 'benefit-cards',
+            'testimonial': 'testimonials',
+            'faq': 'faqs'
+        };
+        
+        const endpoint = endpoints[type];
+        const response = await fetch(`/api/admin/${endpoint}/${id}`);
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.message || 'Failed to fetch item');
         }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
+
+        // Close loading indicator
+        Swal.close();
+
+        // Open modal with data
+        openModal(type, result.data);
+
+    } catch (error) {
+        console.error('Error:', error);
+        await Swal.fire({
+            title: 'Error!',
+            text: error.message || 'An unexpected error occurred',
+            icon: 'error',
+            confirmButtonColor: '#4f46e5'
+        });
+    }
+}
+
+function setupFormSubmission(form, type) {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        // Add active status if not present
+        if (!data.hasOwnProperty('active')) {
+            data.active = true;
+        }
+        
+        const itemId = document.getElementById('itemId').value;
+        
+        // Show loading state
+        Swal.fire({
+            title: 'Saving...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const endpoints = {
+            'support-logo': 'support-logos',
+            'benefit': 'benefit-cards',
+            'testimonial': 'testimonials',
+            'faq': 'faqs'
+        };
+        
+        try {
+            const endpoint = endpoints[type];
+            const url = itemId 
+                ? `/api/admin/${endpoint}/${itemId}`
+                : `/api/admin/${endpoint}`;
+
+            const response = await fetch(url, {
+                method: itemId ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            const responseData = await response.json();
+            if (!responseData.success) {
+                throw new Error(responseData.message || 'Failed to save');
+            }
+            
+            await Swal.fire({
+                title: 'Success!',
+                text: itemId ? 'Item updated successfully!' : 'Item created successfully!',
+                icon: 'success',
+                confirmButtonColor: '#4f46e5'
+            });
+
+            closeModal();
+            location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+            await Swal.fire({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+                confirmButtonColor: '#4f46e5'
+            });
         }
     });
 }
 
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
+// Add this function for delete confirmation
+async function deleteItem(type, id) {
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#4f46e5',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
     });
-});
 
-// Hero Section Animations - Making our phones dance! 
-document.addEventListener('DOMContentLoaded', function() {
-    // Animate hero images with a staggered delay
-    const heroImages = document.querySelectorAll('.hero-image');
+    if (!result.isConfirmed) return;
+
+    const endpoints = {
+        'support-logo': 'support-logos',
+        'benefit': 'benefit-cards',
+        'testimonial': 'testimonials',
+        'faq': 'faqs'
+    };
     
-    heroImages.forEach((img, index) => {
-        setTimeout(() => {
-            img.classList.add('animate');
-        }, index * 200); // 200ms delay between each image
-    });
-});
-
-// Support Carousel - Infinite loop without navigation arrows
-$(document).ready(function(){
-    $('.support-carousel').owlCarousel({
-        items: 5,
-        loop: true,
-        margin: 30,
-        nav: false,
-        dots: false,
-        autoplay: true,
-        autoplayTimeout: 1000,
-        autoplayHoverPause: true,
-        responsive:{
-            0:{ items: 2 },
-            576:{ items: 3 },
-            768:{ items: 4 },
-            992:{ items: 5 }
+    const endpoint = endpoints[type];
+    
+    try {
+        const response = await fetch(`/api/admin/${endpoint}/${id}`, {
+            method: 'DELETE'
+        });
+        
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.message);
         }
-    });
 
-    // Initialize testimonial carousel
-    var testimonialCarousel = $('.testimonial-carousel').owlCarousel({
-        items: 4,
-        loop: true,
-        margin: 20,
-        nav: true,
-        dots: false, // Disable default dots
-        mouseDrag: true,
-        touchDrag: true,
-        autoplay: true,
-        autoplayTimeout: 3000,
-        autoplayHoverPause: true,
-        responsive:{
-            0:{ items: 1 },
-            768:{ items: 2 },
-            992:{ items: 3 },
-            1200:{ items: 4 }
-        }
-    });
-
-    // Handle custom dot clicks
-    $('.custom-dot').click(function(){
-        var index = $(this).data('index');
-        testimonialCarousel.trigger('to.owl.carousel', [index, 300]);
-    });
-
-    // Update active dot on carousel change
-    testimonialCarousel.on('changed.owl.carousel', function(event){
-        // Get the current item index
-        var currentIndex = event.item.index;
+        await Swal.fire({
+            title: 'Deleted!',
+            text: 'Item has been deleted successfully.',
+            icon: 'success',
+            confirmButtonColor: '#4f46e5'
+        });
         
-        // Calculate the active dot index based on the number of dots
-        var dotCount = $('.custom-dot').length;
-        var activeDotIndex = currentIndex % dotCount;
-        
-        // Update active state
-        $('.custom-dot').removeClass('active');
-        $('.custom-dot').eq(activeDotIndex).addClass('active');
-    });
-
-    // Initialize active dot on page load
-    $('.custom-dot').first().addClass('active');
-});
-
-// FAQ Toggle functionality
-$(document).ready(function() {
-    $('.faq-question').click(function() {
-        const faqItem = $(this).closest('.faq-item');
-        
-        // Close other FAQ items
-        $('.faq-item').not(faqItem).removeClass('active');
-        
-        // Toggle current FAQ item
-        faqItem.toggleClass('active');
-    });
+        location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        await Swal.fire({
+            title: 'Error!',
+            text: 'Failed to delete item: ' + error.message,
+            icon: 'error',
+            confirmButtonColor: '#4f46e5'
+        });
+    }
+}
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Expose functions to window
+    window.openSupportLogoModal = (data) => openModal('support-logo', data);
+    window.openBenefitModal = (data) => openModal('benefit', data);
+    window.openTestimonialModal = (data) => openModal('testimonial', data);
+    window.openFaqModal = (data) => openModal('faq', data);
+    window.editItem = editItem;
+    window.deleteItem = deleteItem;
+    window.closeModal = closeModal;
 });

@@ -1,5 +1,8 @@
 package uz.pdp.ilmpay.Config;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.thymeleaf.dialect.IDialect;
+import org.thymeleaf.extras.springsecurity6.dialect.SpringSecurityDialect;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
  * 🔐 Security Configuration
@@ -76,4 +83,17 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(admin);  // 🧠 Keeping our users in memory
     }
+
+    @Bean
+public SpringTemplateEngine templateEngine(ITemplateResolver templateResolver) {
+    SpringTemplateEngine engine = new SpringTemplateEngine();
+    engine.setTemplateResolver(templateResolver);
+    engine.setEnableSpringELCompiler(true);
+    // Add the following line to expose request attributes
+    engine.setRenderHiddenMarkersBeforeCheckboxes(true);
+    Set<IDialect> dialects = new HashSet<>();
+    dialects.add(new SpringSecurityDialect());
+    engine.setAdditionalDialects(dialects);
+    return engine;
+}
 }

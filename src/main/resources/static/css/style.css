@@ -202,11 +202,11 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
-    border: none;
-    padding: 12px 30px;
-    border-radius: 8px;
-    font-weight: 600;
+    @apply px-4 py-2 bg-indigo-600 text-white rounded-lg 
+           transition-all duration-200 hover:bg-indigo-700 
+           active:transform active:scale-95 
+           disabled:opacity-50 disabled:cursor-not-allowed
+           shadow-md hover:shadow-lg;
 }
 
 .btn-outline-primary {
@@ -1392,17 +1392,21 @@ body {
 
 .footer-content {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr) 2fr;
     gap: 30px;
     margin-bottom: 40px;
 }
 
 .footer-column h3 {
     font-family: 'Ruda', sans-serif;
-    font-size: 14px;
+    font-size: 20px;
     font-weight: 700;
+    line-height: 24.34px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #FFFFFF;
     margin-bottom: 24px;
-    color: white;
 }
 
 .footer-column ul {
@@ -1417,11 +1421,14 @@ body {
 
 .footer-column ul li a {
     font-family: 'Ruda', sans-serif;
-    font-size: 14px;
-    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 21.91px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #FFFFFFCC;
     text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
 }
 
 .footer-column ul li a:hover {
@@ -1429,7 +1436,7 @@ body {
 }
 
 .footer-newsletter {
-    grid-column: span 1;
+    grid-column: 5 / 6;
 }
 
 .footer-newsletter p {
@@ -1511,9 +1518,8 @@ body {
     align-items: flex-start;
     gap: 40px;
     margin-bottom: 60px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid #FFFFFF80;
     padding-bottom: 40px;
-    justify-content: space-between;
 }
 
 .footer-logo {
@@ -1527,13 +1533,14 @@ body {
 
 .footer-description {
     flex: 0.5;
-    font-family: 'Ruda', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     font-size: 16px;
-    line-height: 1.6;
-    color: white;
-    opacity: 0.8;
-    margin: 0;
-    padding-top: 10px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    color: #FFFFFF;
 }
 
 @media (max-width: 768px) {
@@ -1549,3 +1556,25 @@ body {
         margin: 0 auto;
     }
 }
+
+.footer-circle {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.2;
+}
+
+.footer-circle-small {
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+}
+
+.footer-circle-large {
+    bottom: 0;
+    right: 0;
+    width: 600px;
+    height: 600px;
+}
+
