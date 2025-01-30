@@ -1,6 +1,8 @@
 # 🐳 Docker Compose Configuration
 # Because running databases locally is so 2010! 
 
+version: '3.8'
+
 services:
   # 🐘 PostgreSQL Service
   # The mighty elephant that never forgets your data!
@@ -20,8 +22,27 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - ilmpay-net
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ilmpay
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ilmpay-net
 
 # 📦 Volumes Configuration
 # Because losing data is not an option!
 volumes:
   postgres_data:  # Our data's forever home
+
+networks:
+  ilmpay-net:
