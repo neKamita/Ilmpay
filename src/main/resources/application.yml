@@ -20,9 +20,9 @@ spring:
 
   # 🗄️ Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/ilmpay
+    url: jdbc:postgresql://viaduct.proxy.rlwy.net:13686/railway
     username: postgres
-    password: root123
+    password: WJIYUGKGgpoxPstmeMTvCKxnGtMDRhvX
     driver-class-name: org.postgresql.Driver
   
   # 🏗️ JPA Configuration
