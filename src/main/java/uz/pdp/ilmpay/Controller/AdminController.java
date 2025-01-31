@@ -42,15 +42,26 @@ public class AdminController {
     /**
      * 🎮 Dashboard
      * The command center of our operation!
+     * Where we monitor our empire of knowledge 📚
      */
     @GetMapping("/dashboard")
     public String dashboard(Model model, HttpServletRequest request) {
+        // 🧭 Track the current path for navigation
         model.addAttribute("currentPath", request.getRequestURI());
+        
+        // 📊 Load all the stats that make us look good
+        model.addAttribute("totalVisitors", visitorService.getTotalVisitors());
+        model.addAttribute("todayVisitors", visitorService.getTodayVisitors());
+        model.addAttribute("appDownloads", visitorService.getAppDownloads());
+        model.addAttribute("activeUsers", visitorService.getActiveUsers());
+        
+        // 🎨 Load content for management
         model.addAttribute("supportLogos", supportLogoService.findAllActive());
         model.addAttribute("benefitCards", benefitCardService.findAllActive());
         model.addAttribute("testimonials", testimonialService.findAllActive());
         model.addAttribute("faqs", faqService.findAllActive());
-        return "admin/dashboard";
+        
+        return "admin/dashboard";  // 🚀 Launch the dashboard!
     }
 
     @GetMapping("/content")

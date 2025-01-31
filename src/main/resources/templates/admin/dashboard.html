@@ -4,69 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Ilmpay</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- 📊 ApexCharts - Add this before other scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <!-- 🎨 Replace CDN Tailwind with local version (TODO) -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    
+    <!-- Other resources -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-    <script src="/js/main.js"></script>
-    <script src="/js/admin.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="/css/admin.css">
+    
+    <!-- 🎭 GSAP Scripts - Move these before your main scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
+    
+    <!-- Local resources -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <script src="/js/main.js" defer></script>
+    <script src="/js/admin.js" defer></script>
+    
+    <!-- Additional styles -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
 <body class="bg-gray-50">
     <div class="min-h-screen flex">
         <!-- Include Sidebar -->
         <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
         <!-- Main Content -->
         <main class="flex-1 p-8">
             <!-- Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <div data-aos="zoom-in" data-aos-delay="100" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6 shadow-lg">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm">Total Visitors</p>
-                            <p class="text-3xl font-bold mt-2" th:text="${totalVisitors}">0</p>
-                        </div>
-                        <i data-lucide="users" class="w-12 h-12 opacity-75"></i>
-                    </div>
-                </div>
-                
-                <div data-aos="zoom-in" data-aos-delay="200" class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-6 shadow-lg">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm">Today's Visitors</p>
-                            <p class="text-3xl font-bold mt-2" th:text="${todayVisitors}">0</p>
-                        </div>
-                        <i data-lucide="user-plus" class="w-12 h-12 opacity-75"></i>
-                    </div>
-                </div>
-
-                <div data-aos="zoom-in" data-aos-delay="300" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm">App Downloads</p>
-                            <p class="text-3xl font-bold mt-2" th:text="${appDownloads}">0</p>
-                        </div>
-                        <i data-lucide="download" class="w-12 h-12 opacity-75"></i>
-                    </div>
-                </div>
-
-                <div data-aos="zoom-in" data-aos-delay="400" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6 shadow-lg">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm">Active Users</p>
-                            <p class="text-3xl font-bold mt-2" th:text="${activeUsers}">0</p>
-                        </div>
-                        <i data-lucide="user-check" class="w-12 h-12 opacity-75"></i>
-                    </div>
-                </div>
+ <!-- 📈 Stats Cards - Numbers that make the boss happy -->
+ <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <!-- 👥 Total Visitors - Counting every curious soul -->
+    <div data-aos="zoom-in" data-aos-delay="100" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6 shadow-lg">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm">Total Visitors</p>
+                <p class="text-3xl font-bold mt-2" th:text="${totalVisitors}">15,487</p>
+                <p class="text-xs mt-1 opacity-75">↑ 12.5% from last month</p>
             </div>
+            <i data-lucide="users" class="w-12 h-12 opacity-75"></i>
+        </div>
+    </div>
+    
+    <!-- 🎯 Today's Visitors - Fresh faces in the house -->
+    <div data-aos="zoom-in" data-aos-delay="200" class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-6 shadow-lg">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm">Today's Visitors</p>
+                <p class="text-3xl font-bold mt-2" th:text="${todayVisitors}">234</p>
+                <p class="text-xs mt-1 opacity-75">↑ 8.3% from yesterday</p>
+            </div>
+            <i data-lucide="user-plus" class="w-12 h-12 opacity-75"></i>
+        </div>
+    </div>
+
+    <!-- 📱 App Downloads - Because who doesn't love our app? -->
+    <div data-aos="zoom-in" data-aos-delay="300" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm">App Downloads</p>
+                <p class="text-3xl font-bold mt-2" th:text="${appDownloads}">9,845</p>
+                <p class="text-xs mt-1 opacity-75">↑ 15.2% from last month</p>
+            </div>
+            <i data-lucide="download" class="w-12 h-12 opacity-75"></i>
+        </div>
+    </div>
+
+    <!-- 🌟 Active Users - The real MVPs -->
+    <div data-aos="zoom-in" data-aos-delay="400" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6 shadow-lg">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm">Active Users</p>
+                <p class="text-3xl font-bold mt-2" th:text="${activeUsers}">7,256</p>
+                <p class="text-xs mt-1 opacity-75">↑ 5.7% from last week</p>
+            </div>
+            <i data-lucide="user-check" class="w-12 h-12 opacity-75"></i>
+        </div>
+    </div>
+</div>
 
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -84,121 +105,235 @@
                 </div>
             </div>
 
-          
-
-    
+            <!-- Content Management Section -->
+            <div th:replace="~{admin/content/index :: content-management}"></div>
         </main>
     </div>
 
-
-    <!-- Modals -->
-<div id="crudModal" class="modal-overlay hidden animate__animated animate__fadeIn">
-    <div class="modal-container animate__animated animate__slideInUp">
-        <div class="modal-header">
-            <h3 class="text-xl font-semibold text-gray-900" id="modalTitle"></h3>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-500">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-        </div>
-        <div class="modal-body">
-            <form id="crudForm" class="space-y-6">
-                <input type="hidden" id="itemId">
-                <!-- Dynamic fields will be injected here -->
-                <div class="flex justify-end space-x-3 pt-6 border-t">
-                    <button type="button" onclick="closeModal()" 
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">
-                        Cancel
-                    </button>
-                    <button type="submit" 
-                            class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
-                        Save Changes
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-    <!-- Initialize Lucide Icons -->
+    <!-- Initialize Charts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Expose modal functions with proper type handling
-            window.openSupportLogoModal = () => openModal('support-logo');
-            window.openBenefitModal = () => openModal('benefit');
-            window.openTestimonialModal = () => openModal('testimonial');
-            window.openFaqModal = () => openModal('faq');
-            
-            window.closeModal = function() {
-                document.getElementById('crudModal').classList.add('hidden');
-            }
-            
-            // Initialize icons
+            // Initialize Lucide icons
             lucide.createIcons();
+
+            // 📊 Visitor Trends Chart - Real-world-like data
+            const visitorData = {
+                chart: {
+                    type: 'area',
+                    height: 256,
+                    toolbar: { show: false },
+                    zoom: { enabled: false }
+                },
+                series: [{
+                    name: 'Daily Visitors',
+                    data: generateVisitorData() // We'll create this function
+                }],
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        format: 'dd MMM',
+                        style: { colors: '#718096' }
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: val => Math.floor(val),
+                        style: { colors: '#718096' }
+                    }
+                },
+                colors: ['#4F46E5'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [50, 100, 100]
+                    }
+                },
+                stroke: { width: 2 },
+                tooltip: {
+                    theme: 'dark',
+                    x: { format: 'dd MMM yyyy' }
+                }
+            };
+
+            new ApexCharts(document.querySelector('#visitorChart'), visitorData).render();
+
+            // 🌡️ Heatmap Chart - Activity patterns
+            const heatmapData = {
+                chart: {
+                    height: 350,
+                    type: 'heatmap',
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif',
+                    background: '#fff',
+                    animations: {
+                        speed: 500
+                    }
+                },
+                series: generateTimeBlocks(),
+                plotOptions: {
+                    heatmap: {
+                        enableShades: true,
+                        distributed: true,
+                        colorScale: {
+                            ranges: [
+                                { from: 0, to: 15, name: 'Very Low', color: '#F3F4F6' },    // Light gray
+                                { from: 16, to: 30, name: 'Low', color: '#93C5FD' },        // Light blue
+                                { from: 31, to: 50, name: 'Medium', color: '#3B82F6' },     // Medium blue
+                                { from: 51, to: 75, name: 'High', color: '#1D4ED8' },       // Dark blue
+                                { from: 76, to: 100, name: 'Peak', color: '#1E3A8A' }       // Navy blue
+                            ]
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                legend: {
+                    show: true,
+                    position: 'top',
+                    horizontalAlign: 'center',
+                    floating: false,
+                    fontSize: '12px',
+                    offsetY: 0,
+                    markers: {
+                        width: 10,
+                        height: 10,
+                        radius: 2
+                    }
+                },
+                xaxis: {
+                    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: {
+                        style: {
+                            colors: '#4B5563',
+                            fontSize: '12px',
+                            fontWeight: 500
+                        }
+                    },
+                    axisBorder: { show: false }
+                },
+                yaxis: {
+                    reversed: true,
+                    tickAmount: 8,
+                    labels: {
+                        style: {
+                            colors: '#4B5563',
+                            fontSize: '12px',
+                            fontWeight: 500
+                        },
+                        formatter: function(val) {
+                            const timeBlocks = [
+                                'Late Night (00-03)',
+                                'Early Morning (03-06)',
+                                'Morning (06-09)',
+                                'Late Morning (09-12)',
+                                'Afternoon (12-15)',
+                                'Late Afternoon (15-18)',
+                                'Evening (18-21)',
+                                'Night (21-24)'
+                            ];
+                            return timeBlocks[val - 1] || '';
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    theme: 'light',
+                    style: { fontSize: '12px' },
+                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                        const timeBlock = w.config.yaxis[0].labels.formatter(seriesIndex + 1);
+                        const day = w.config.xaxis.categories[dataPointIndex];
+                        const value = series[seriesIndex][dataPointIndex];
+                        return `
+                            <div class="p-2">
+                                <div class="font-semibold">${day} - ${timeBlock}</div>
+                                <div class="text-sm mt-1">${value} active users</div>
+                            </div>`;
+                    }
+                }
+            };
+
+            new ApexCharts(document.querySelector('#heatmapChart'), heatmapData).render();
         });
-    </script>
 
-    <!-- Add ApexCharts -->
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script>
-        // Sample chart initialization
-        const visitorOptions = {
-            chart: { type: 'area', height: '100%' },
-            colors: ['#3B82F6'],
-            series: [{
-                name: 'Visitors',
-                data: [30, 40, 35, 50, 49, 60, 70]
-            }],
-            xaxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }
-        };
-        new ApexCharts(document.querySelector('#visitorChart'), visitorOptions).render();
-    </script>
-
-    <!-- Add SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Heatmap chart configuration -->
-    <script>
-        const heatmapData = {
-            chart: {
-                height: '100%',
-                type: 'heatmap',
-            },
-            dataLabels: {
-                enabled: false
-            },
-            colors: ["#4f46e5"],
-            series: [{
-                name: 'Monday',
-                data: generateTimeData()
-            }, {
-                name: 'Tuesday',
-                data: generateTimeData()
-            }, {
-                name: 'Wednesday',
-                data: generateTimeData()
-            }, {
-                name: 'Thursday',
-                data: generateTimeData()
-            }, {
-                name: 'Friday',
-                data: generateTimeData()
-            }],
-            title: {
-                text: 'User Activity by Hour'
-            },
-            xaxis: {
-                categories: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM']
+        // 📈 Generate realistic visitor data
+        function generateVisitorData() {
+            const data = [];
+            const baseVisitors = 200;
+            const today = new Date();
+            
+            // Generate last 30 days of data
+            for (let i = 30; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                
+                // Add weekly patterns
+                let dayMultiplier = 1;
+                if (date.getDay() === 0 || date.getDay() === 6) {
+                    dayMultiplier = 0.7; // Weekend drop
+                }
+                
+                // Add random variation
+                const randomVariation = Math.random() * 50 - 25;
+                
+                // Calculate visitors with trend
+                const visitors = Math.max(
+                    Math.floor((baseVisitors + (i * 3)) * dayMultiplier + randomVariation),
+                    50
+                );
+                
+                data.push([date.getTime(), visitors]);
             }
-        };
-
-        function generateTimeData() {
-            return Array.from({ length: 9 }, () => ({
-                x: 'User Activity',
-                y: Math.floor(Math.random() * 90) + 10
-            }));
+            
+            return data;
         }
 
-        new ApexCharts(document.querySelector('#heatmapChart'), heatmapData).render();
+        // 🗺️ Generate realistic heatmap data
+        function generateTimeBlocks() {
+            const timeBlocks = [];
+            const periods = 8; // 8 time blocks of 3 hours each
+
+            for (let block = 0; block < periods; block++) {
+                const blockData = {
+                    name: `Block ${block + 1}`,
+                    data: []
+                };
+
+                // Generate data for each day
+                for (let day = 0; day < 7; day++) {
+                    let value;
+                    
+                    // Late night & early morning (blocks 0-1)
+                    if (block <= 1) {
+                        value = Math.floor(Math.random() * 15);
+                    }
+                    // Morning & late morning (blocks 2-3)
+                    else if (block <= 3) {
+                        value = Math.floor(Math.random() * 35) + 25;
+                    }
+                    // Afternoon & late afternoon (blocks 4-5)
+                    else if (block <= 5) {
+                        value = Math.floor(Math.random() * 25) + 50;
+                    }
+                    // Evening & night (blocks 6-7)
+                    else {
+                        value = Math.floor(Math.random() * 40) + 35;
+                    }
+
+                    // Reduce weekend activity
+                    if (day >= 5) {
+                        value = Math.floor(value * 0.6);
+                    }
+
+                    blockData.data.push(value);
+                }
+                timeBlocks.push(blockData);
+            }
+            return timeBlocks;
+        }
     </script>
 </body>
 </html>

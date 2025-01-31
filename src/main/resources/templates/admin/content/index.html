@@ -17,58 +17,64 @@
         
         <!-- Main Content -->
         <main class="flex-1 p-8">
-            <h1 class="text-2xl font-bold mb-6">Content Management</h1>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Support Logos Card -->
-                <a href="/admin/content/support-logos" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
-                    <div class="flex items-center space-x-3">
-                        <i data-lucide="image" class="w-8 h-8 text-indigo-600"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold">Support Logos</h3>
-                            <p class="text-sm text-gray-600">Manage partner and support logos</p>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Benefits Card -->
-                <a href="/admin/content/benefits" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
-                    <div class="flex items-center space-x-3">
-                        <i data-lucide="gift" class="w-8 h-8 text-indigo-600"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold">Benefits</h3>
-                            <p class="text-sm text-gray-600">Manage app benefits and features</p>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Testimonials Card -->
-                <a href="/admin/content/testimonials" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
-                    <div class="flex items-center space-x-3">
-                        <i data-lucide="message-square" class="w-8 h-8 text-indigo-600"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold">Testimonials</h3>
-                            <p class="text-sm text-gray-600">Manage user testimonials</p>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- FAQ Card -->
-                <a href="/admin/content/faqs" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
-                    <div class="flex items-center space-x-3">
-                        <i data-lucide="help-circle" class="w-8 h-8 text-indigo-600"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold">FAQs</h3>
-                            <p class="text-sm text-gray-600">Manage frequently asked questions</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <div th:replace="~{admin/content/index :: content-management}"></div>
         </main>
     </div>
 
+    <div th:fragment="content-management">
+        <h1 class="text-2xl font-bold mb-6">Content Management</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Support Logos Card -->
+            <a href="/admin/content/support-logos" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="image" class="w-8 h-8 text-indigo-600"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Support Logos</h3>
+                        <p class="text-sm text-gray-600">Manage partner and support logos</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Benefits Card -->
+            <a href="/admin/content/benefits" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="gift" class="w-8 h-8 text-indigo-600"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Benefits</h3>
+                        <p class="text-sm text-gray-600">Manage app benefits and features</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Testimonials Card -->
+            <a href="/admin/content/testimonials" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="message-square" class="w-8 h-8 text-indigo-600"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">Testimonials</h3>
+                        <p class="text-sm text-gray-600">Manage customer testimonials</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- FAQ Card -->
+            <a href="/admin/content/faq" class="block bg-white rounded-xl p-6 shadow-sm border hover:shadow-md transition-shadow">
+                <div class="flex items-center space-x-3">
+                    <i data-lucide="help-circle" class="w-8 h-8 text-indigo-600"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold">FAQ</h3>
+                        <p class="text-sm text-gray-600">Manage frequently asked questions</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
     </script>
 </body>
-</html> 
+</html>

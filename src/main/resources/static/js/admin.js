@@ -7,21 +7,65 @@ function toggleSubmenu(menuId) {
 
 // Initialize Lucide icons and GSAP animations
 document.addEventListener('DOMContentLoaded', function() {
-    // Check for elements before animating
-    const contentCards = document.querySelectorAll('.content-card');
+    // Only run GSAP animations if elements exist
+    const contentCards = document.querySelectorAll(".content-card");
     if (contentCards.length > 0) {
         gsap.from(contentCards, {
+            scrollTrigger: {
+                trigger: ".content-card",
+                start: "top bottom-=100",
+                toggleActions: "play none none reverse"
+            },
+            y: 30,
             opacity: 0,
-            y: 20,
-            stagger: 0.1,
-            duration: 0.5
+            duration: 0.6,
+            stagger: {
+                each: 0.15,
+                ease: "power2.out"
+            }
+        });
+    }
+
+    const gridItems = document.querySelectorAll(".grid > div");
+    if (gridItems.length > 0) {
+        gsap.from(gridItems, {
+            scrollTrigger: {
+                trigger: ".grid",
+                start: "top bottom-=50",
+                toggleActions: "play none none reverse"
+            },
+            scale: 0.8,
+            opacity: 0,
+            duration: 0.5,
+            stagger: {
+                amount: 0.8,
+                ease: "power2.out"
+            },
+            ease: "back.out(1.7)"
+        });
+
+        // Add hover animations
+        gridItems.forEach(item => {
+            item.addEventListener("mouseenter", () => {
+                gsap.to(item, {
+                    scale: 1.05,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
+
+            item.addEventListener("mouseleave", () => {
+                gsap.to(item, {
+                    scale: 1,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            });
         });
     }
 
     lucide.createIcons();
     
-    // Register ScrollTrigger plugin
-    gsap.registerPlugin(ScrollTrigger);
 
     // Timeline for sidebar entrance
     const sidebarTL = gsap.timeline();
@@ -58,44 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
             each: 0.15,
             ease: "power2.out"
         }
-    });
-
-    // Grid items animation with scale and hover effect
-    const gridItems = document.querySelectorAll(".grid > div");
-    
-    gsap.from(gridItems, {
-        scrollTrigger: {
-            trigger: ".grid",
-            start: "top bottom-=50",
-            toggleActions: "play none none reverse"
-        },
-        scale: 0.8,
-        opacity: 0,
-        duration: 0.5,
-        stagger: {
-            amount: 0.8,
-            ease: "power2.out"
-        },
-        ease: "back.out(1.7)"
-    });
-
-    // Add hover animations for grid items
-    gridItems.forEach(item => {
-        item.addEventListener("mouseenter", () => {
-            gsap.to(item, {
-                scale: 1.05,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        });
-
-        item.addEventListener("mouseleave", () => {
-            gsap.to(item, {
-                scale: 1,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-        });
     });
 
     // Sidebar collapse functionality

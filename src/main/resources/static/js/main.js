@@ -7,27 +7,16 @@ function openModal(type, data = null) {
     const form = document.getElementById('crudForm');
     const title = document.getElementById('modalTitle');
     
+    // Show modal
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Set title and form content
     if (title) {
-        // Set title based on type
-        switch(type) {
-            case 'support-logo':
-                title.textContent = data ? 'Edit Logo' : 'New Support Logo';
-                break;
-            case 'benefit':
-                title.textContent = data ? 'Edit Benefit' : 'New Benefit';
-                break;
-            case 'testimonial':
-                title.textContent = data ? 'Edit Testimonial' : 'New Testimonial';
-                break;
-            case 'faq':
-                title.textContent = data ? 'Edit FAQ' : 'New FAQ';
-                break;
-        }
-    } else {
-        console.error('Modal title element not found');
+        title.textContent = data ? 'Edit Logo' : 'New Support Logo';
     }
-
-    // Clear previous fields
+    
+    // Generate form fields
     form.innerHTML = `
         <input type="hidden" id="itemId" value="${data?.id || ''}">
         ${generateFields(type, data)}
@@ -42,25 +31,28 @@ function openModal(type, data = null) {
             </button>
         </div>
     `;
-
-    modal.classList.remove('hidden');
+    
     setupFormSubmission(form, type);
 }
 
-function generateFields(type, data) {
+function closeModal() {
+    hideModal();
+}
+
+function generateFields(type, data = null) {
     switch(type) {
         case 'support-logo':
             return `
                 <div class="space-y-4">
-                    <div class="form-group">
-                        <label class="form-label">Name</label>
-                        <input type="text" name="name" required class="input-field" 
-                               value="${data?.name || ''}">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Logo Name</label>
+                        <input type="text" name="name" value="${data?.name || ''}" 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Image URL</label>
-                        <input type="url" name="imageUrl" required class="input-field"
-                               value="${data?.imageUrl || ''}">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Image URL</label>
+                        <input type="text" name="imageUrl" value="${data?.imageUrl || ''}" 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Website URL</label>
@@ -151,15 +143,6 @@ function generateFields(type, data) {
     }
 }
 
-function closeModal() {
-    const modal = document.getElementById('crudModal');
-    modal.classList.add('animate__fadeOut');
-    setTimeout(() => {
-        modal.classList.add('hidden');
-        modal.classList.remove('animate__fadeOut');
-    }, 300);
-}
-
 async function editItem(type, id) {
     try {
         // Show loading state
@@ -240,7 +223,7 @@ function setupFormSubmission(form, type) {
                 : `/api/admin/${endpoint}`;
 
             const response = await fetch(url, {
-                method: itemId ? 'PUT' : 'POST',
+                method: itemId ? 'PUT' : 'POST',    
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -326,116 +309,155 @@ async function deleteItem(type, id) {
     }
 }
 
+// Add this function before the DOMContentLoaded event handler
+function updateCustomDots() {
+    const dotsContainer = document.querySelector('.custom-dots-container');
+    if (!dotsContainer) return;
+
+    // Clear existing dots
+    dotsContainer.innerHTML = '';
+
+    // Create new dots based on the number of testimonials
+    const totalItems = document.querySelectorAll('.testimonial-item').length;
+    for (let i = 0; i < totalItems; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'custom-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('data-index', i);
+        dot.addEventListener('click', () => {
+            const carousel = $('.testimonial-carousel');
+            carousel.trigger('to.owl.carousel', [i, 300]);
+            updateActiveDot(i);
+        });
+        dotsContainer.appendChild(dot);
+    }
+}
+
+function updateActiveDot(index) {
+    const dots = document.querySelectorAll('.custom-dot');
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[index]?.classList.add('active');
+}
+
+function showModal(type, data = null) {
+    const modal = document.getElementById('crudModal');
+    if (!modal) {
+        console.error('Modal element not found');
+        return;
+    }
+
+    // Reset and show modal
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    // Animate modal entrance
+    const content = modal.querySelector('.transform');
+    if (content) {
+        requestAnimationFrame(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        });
+    }
+
+    // Set up the modal content
+    openModal(type, data);
+}
+
+function hideModal() {
+    const modal = document.getElementById('crudModal');
+    if (!modal) {
+        console.error('Modal element not found');
+        return;
+    }
+
+    const content = modal.querySelector('.transform');
+    if (content) {
+        content.classList.add('scale-95', 'opacity-0');
+        content.classList.remove('scale-100', 'opacity-100');
+    }
+
+    // Hide modal after animation
+    setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }, 200);
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Lucide icons
     lucide.createIcons();
     
-    // Initialize Support Carousel - Smooth infinite logo animation! 
-    $('.support-carousel').owlCarousel({
-        loop: true,
-        margin: 40,
-        nav: false,
-        dots: false,
-        autoplay: true,
-        autoplayTimeout: 2000,
-        autoplaySpeed: 2000,
-        autoplayHoverPause: true,
-        slideTransition: 'linear',
-        responsive: {
-            0: {
-                items: 2
-            },
-            576: {
-                items: 3
-            },
-            768: {
-                items: 4
-            },
-            992: {
-                items: 6
+    // Only initialize carousels if they exist
+    if (document.querySelector('.support-carousel')) {
+        $('.support-carousel').owlCarousel({
+            loop: true,
+            margin: 40,
+            nav: false,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 2000,
+            autoplaySpeed: 2000,
+            autoplayHoverPause: true,
+            slideTransition: 'linear',
+            responsive: {
+                0: { items: 2 },
+                576: { items: 3 },
+                768: { items: 4 },
+                992: { items: 6 }
             }
-        }
-    });
-
-    // Initialize Testimonial Carousel - Let the happy students shine! 
-    const testimonialCarousel = $('.testimonial-carousel').owlCarousel({
-        loop: true,
-        margin: 24,
-        nav: false,
-        dots: false, // Disable default dots
-        autoplay: true,
-        autoplayTimeout: 2000,
-        autoplayHoverPause: true,
-        smartSpeed: 700,
-        slideTransition: 'ease',
-        responsive: {
-            0: {
-                items: 1,
-            },
-            576: {
-                items: 2,
-            },
-            768: {
-                items: 3,
-            },
-            992: {
-                items: 4,
-            }
-        }
-    });
-
-    // Create custom dots container if it doesn't exist
-    if (!document.querySelector('.custom-dots-container')) {
-        const dotsContainer = document.createElement('div');
-        dotsContainer.className = 'custom-dots-container';
-        $('.testimonial-carousel').after(dotsContainer);
-    }
-
-    // Update custom dots based on carousel items
-    function updateCustomDots() {
-        const dotsContainer = document.querySelector('.custom-dots-container');
-        
-        // Clear existing dots
-        dotsContainer.innerHTML = '';
-        
-        // Create 4 dots
-        for (let i = 0; i < 4; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'custom-dot' + (i === 0 ? ' active' : '');
-            dot.addEventListener('click', () => {
-                testimonialCarousel.trigger('to.owl.carousel', [i, 700]);
-                updateActiveDot(i);
-            });
-            dotsContainer.appendChild(dot);
-        }
-    }
-
-    // Update active dot based on current slide
-    function updateActiveDot(index) {
-        document.querySelectorAll('.custom-dot').forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
         });
     }
 
-    // Initialize custom dots
-    updateCustomDots();
+    if (document.querySelector('.testimonial-carousel')) {
+        const testimonialCarousel = $('.testimonial-carousel').owlCarousel({
+            loop: true,
+            margin: 24,
+            nav: false,
+            dots: false,
+            autoplay: true,
+            autoplayTimeout: 3000,
+            autoplayHoverPause: true,
+            smartSpeed: 700,
+            slideTransition: 'ease',
+            responsive: {
+                0: { items: 1 },
+                576: { items: 2 },
+                768: { items: 3 },
+                992: { items: 4 }
+            }
+        }).data('owl.carousel');
 
-    // Update dots on carousel change
-    testimonialCarousel.on('changed.owl.carousel', function(event) {
-        updateActiveDot(event.item.index % 4);
-    });
+        // Get the pre-existing dots container from HTML
+        const dotsContainer = document.querySelector('.custom-dots-container');
+        if (dotsContainer) {
+            const dots = dotsContainer.querySelectorAll('.custom-dot');
+            
+            // Add click handlers to existing dots
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    testimonialCarousel.to(index);
+                    updateActiveDot(index);
+                });
+            });
 
-    // Pause autoplay on dot hover
-    document.querySelector('.custom-dots-container').addEventListener('mouseenter', () => {
-        testimonialCarousel.trigger('stop.owl.autoplay');
-    });
+            // Update dots on carousel change
+            $('.testimonial-carousel').on('changed.owl.carousel', function(event) {
+                const index = event.item.index % dots.length;
+                updateActiveDot(index);
+            });
 
-    document.querySelector('.custom-dots-container').addEventListener('mouseleave', () => {
-        testimonialCarousel.trigger('play.owl.autoplay');
-    });
+            // Pause autoplay on dot hover
+            dotsContainer.addEventListener('mouseenter', () => {
+                testimonialCarousel.trigger('stop.owl.autoplay');
+            });
 
-    // Expose functions to window
+            dotsContainer.addEventListener('mouseleave', () => {
+                testimonialCarousel.trigger('play.owl.autoplay');
+            });
+        }
+    }
+
+    // Expose modal functions globally
     window.openSupportLogoModal = (data) => openModal('support-logo', data);
     window.openBenefitModal = (data) => openModal('benefit', data);
     window.openTestimonialModal = (data) => openModal('testimonial', data);

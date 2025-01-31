@@ -1,26 +1,71 @@
 package uz.pdp.ilmpay.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import uz.pdp.ilmpay.model.Visitor;
+import uz.pdp.ilmpay.repository.VisitorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import uz.pdp.ilmpay.model.Visitor;
-import uz.pdp.ilmpay.repository.VisitorRepository;
 
 import java.time.LocalDateTime;
 
-@Service
+/**
+ * 👥 Visitor Service
+ * Keeping track of our awesome visitors!
+ * 
+ * @author Your Friendly Neighborhood Developer
+ * @version 1.0 (The "People Counter" Edition)
+ */
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class VisitorService {
+
     private final VisitorRepository visitorRepository;
     private final HttpServletRequest request;
 
+    /**
+     * 📊 Get total number of visitors
+     * Every visitor counts! (literally)
+     */
+    public Long getTotalVisitors() {
+        return visitorRepository.countUniqueVisitors();
+    }
+
+    /**
+     * 🎯 Get today's visitor count
+     * Fresh faces of the day!
+     */
+    public Long getTodayVisitors() {
+        LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        return visitorRepository.countTodayUniqueVisitors(startOfDay);
+    }
+
+    /**
+     * 📱 Get total app downloads
+     * Because who doesn't love our app?
+     */
+    public Long getAppDownloads() {
+        return visitorRepository.countByIsDownloadedTrue();
+    }
+
+    /**
+     * 🌟 Get number of active users
+     * The real MVPs of our platform!
+     */
+    public Long getActiveUsers() {
+        return visitorRepository.countByIsActiveTrue();
+    }
+
+    /**
+     * 📝 Record a new visit
+     * Rolling out the virtual red carpet!
+     */
     public void recordVisit(String page) {
         try {
             Visitor visitor = new Visitor();
@@ -31,27 +76,10 @@ public class VisitorService {
             visitor.setActive(true);
             
             visitorRepository.save(visitor);
-            log.info("Recorded visit from IP: {}", visitor.getIpAddress());
+            log.info("Recorded visit from IP: {} to page: {}", visitor.getIpAddress(), page);
         } catch (Exception e) {
-            log.error("Failed to record visitor", e);
+            log.error("Failed to record visit", e);
         }
-    }
-
-    public long getTotalVisitors() {
-        return visitorRepository.countUniqueVisitors();
-    }
-
-    public long getTodayVisitors() {
-        LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
-        return visitorRepository.countTodayUniqueVisitors(startOfDay);
-    }
-
-    public long getTotalDownloads() {
-        return visitorRepository.countByIsDownloadedTrue();
-    }
-
-    public long getActiveUsers() {
-        return visitorRepository.countByIsActiveTrue();
     }
 
     private String getClientIp() {

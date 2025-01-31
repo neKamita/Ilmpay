@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="crud-modal">
+        <div id="crudModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <!-- Background backdrop -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+            <!-- Modal panel -->
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg scale-95 opacity-0">
+                    <!-- Close button -->
+                    <button type="button" onclick="closeModal()" class="absolute right-4 top-4 text-gray-400 hover:text-gray-500">
+                        <span class="sr-only">Close</span>
+                        <i data-lucide="x" class="h-6 w-6"></i>
+                    </button>
+
+                    <!-- Modal content -->
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <h3 id="modalTitle" class="text-lg font-semibold mb-4">Modal Title</h3>
+                        <form id="crudForm" class="space-y-4">
+                            <!-- Form fields will be dynamically inserted here -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
