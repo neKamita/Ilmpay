@@ -325,11 +325,116 @@ async function deleteItem(type, id) {
         });
     }
 }
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Lucide icons
     lucide.createIcons();
     
+    // Initialize Support Carousel - Smooth infinite logo animation! 
+    $('.support-carousel').owlCarousel({
+        loop: true,
+        margin: 40,
+        nav: false,
+        dots: false,
+        autoplay: true,
+        autoplayTimeout: 2000,
+        autoplaySpeed: 2000,
+        autoplayHoverPause: true,
+        slideTransition: 'linear',
+        responsive: {
+            0: {
+                items: 2
+            },
+            576: {
+                items: 3
+            },
+            768: {
+                items: 4
+            },
+            992: {
+                items: 6
+            }
+        }
+    });
+
+    // Initialize Testimonial Carousel - Let the happy students shine! 
+    const testimonialCarousel = $('.testimonial-carousel').owlCarousel({
+        loop: true,
+        margin: 24,
+        nav: false,
+        dots: false, // Disable default dots
+        autoplay: true,
+        autoplayTimeout: 2000,
+        autoplayHoverPause: true,
+        smartSpeed: 700,
+        slideTransition: 'ease',
+        responsive: {
+            0: {
+                items: 1,
+            },
+            576: {
+                items: 2,
+            },
+            768: {
+                items: 3,
+            },
+            992: {
+                items: 4,
+            }
+        }
+    });
+
+    // Create custom dots container if it doesn't exist
+    if (!document.querySelector('.custom-dots-container')) {
+        const dotsContainer = document.createElement('div');
+        dotsContainer.className = 'custom-dots-container';
+        $('.testimonial-carousel').after(dotsContainer);
+    }
+
+    // Update custom dots based on carousel items
+    function updateCustomDots() {
+        const dotsContainer = document.querySelector('.custom-dots-container');
+        
+        // Clear existing dots
+        dotsContainer.innerHTML = '';
+        
+        // Create 4 dots
+        for (let i = 0; i < 4; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'custom-dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', () => {
+                testimonialCarousel.trigger('to.owl.carousel', [i, 700]);
+                updateActiveDot(i);
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    // Update active dot based on current slide
+    function updateActiveDot(index) {
+        document.querySelectorAll('.custom-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+        });
+    }
+
+    // Initialize custom dots
+    updateCustomDots();
+
+    // Update dots on carousel change
+    testimonialCarousel.on('changed.owl.carousel', function(event) {
+        updateActiveDot(event.item.index % 4);
+    });
+
+    // Pause autoplay on dot hover
+    document.querySelector('.custom-dots-container').addEventListener('mouseenter', () => {
+        testimonialCarousel.trigger('stop.owl.autoplay');
+    });
+
+    document.querySelector('.custom-dots-container').addEventListener('mouseleave', () => {
+        testimonialCarousel.trigger('play.owl.autoplay');
+    });
+
     // Expose functions to window
     window.openSupportLogoModal = (data) => openModal('support-logo', data);
     window.openBenefitModal = (data) => openModal('benefit', data);
