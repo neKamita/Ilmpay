@@ -1074,14 +1074,15 @@ body {
 .custom-dots-container {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 40px;
+    align-items: center;
+    gap: 12px;
+    margin-top: 2rem;
 }
 
 .custom-dot {
     width: 8px;
     height: 8px;
-    background-color: #FFFFFF80;
+    background: rgba(255, 255, 255, 0.5);
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -1090,8 +1091,11 @@ body {
 .custom-dot.active {
     width: 16px;
     height: 16px;
-    background-color: #FFFFFF;
-    border-radius: 8px;
+    background: white;
+}
+
+.custom-dot:hover {
+    background: rgba(255, 255, 255, 0.8);
 }
 
 .faq-section {
@@ -1588,10 +1592,6 @@ body {
     background: var(--primary-color) !important;
 }
 
-.testimonial-carousel .owl-nav button:hover i {
-    border-color: white;
-}
-
 .testimonial-carousel .owl-nav button i {
     display: block;
     width: 12px;
@@ -1629,4 +1629,167 @@ body {
 .testimonial-carousel .owl-dot.active {
     background: var(--primary-color) !important;
     transform: scale(1.2);
+}
+
+/* 🎭 Modal Styles - Matching our warm, friendly theme! */
+@layer components {
+    /* 🌫️ Backdrop with our brand colors */
+    .modal-backdrop {
+        background: linear-gradient(45deg, 
+            rgba(240, 101, 39, 0.2),  /* Our primary orange */
+            rgba(255, 107, 107, 0.2)  /* Our secondary color */
+        );
+        backdrop-filter: blur(8px);
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+    }
+
+    .modal-backdrop.show {
+        opacity: 1;
+    }
+
+    /* 📦 Modal Content with our brand aesthetics */
+    .modal-content {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 
+            0 10px 15px -3px rgba(240, 101, 39, 0.1),
+            0 4px 6px -2px rgba(255, 107, 107, 0.05);
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        overflow: hidden;
+    }
+
+    .modal-content.show {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    /* 🎨 Decorative gradient bar */
+    .modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    }
+
+    /* 📝 Form Input Styles matching our theme */
+    .form-input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        background: var(--light-bg);
+        color: var(--text-color);
+        transition: all 0.2s ease;
+    }
+
+    .form-input:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-1px);
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(240, 101, 39, 0.1);
+        transform: translateY(-1px);
+    }
+
+    /* 🏷️ Form Labels with our brand font */
+    .form-label {
+        display: block;
+        font-family: 'Ruda', sans-serif;
+        font-weight: 500;
+        color: var(--text-color);
+        margin-bottom: 8px;
+    }
+
+    /* ❌ Close Button with brand colors */
+    .modal-close {
+        color: #718096;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+        color: var(--primary-color);
+        background: var(--accent-light);
+        transform: rotate(90deg);
+    }
+
+    /* 🎯 Action Buttons matching our brand */
+    .modal-btn {
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .modal-btn-primary {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+    .modal-btn-primary:hover {
+        background: #E55416; /* Slightly darker */
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(240, 101, 39, 0.2);
+    }
+
+    .modal-btn-secondary {
+        background: white;
+        color: var(--text-color);
+        border: 1px solid #E2E8F0;
+    }
+
+    .modal-btn-secondary:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: var(--accent-light);
+    }
+
+    /* 🌈 Custom Scrollbar matching our theme */
+    .modal-content {
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-color) var(--light-bg);
+    }
+
+    .modal-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .modal-content::-webkit-scrollbar-track {
+        background: var(--light-bg);
+    }
+
+    .modal-content::-webkit-scrollbar-thumb {
+        background-color: var(--primary-color);
+        border-radius: 3px;
+    }
+
+    /* 🎨 Form Field Animations */
+    @keyframes formFieldEnter {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-field-enter {
+        animation: formFieldEnter 0.3s ease-out forwards;
+    }
+
+    /* Staggered animation delays */
+    .form-field-enter-1 { animation-delay: 0.1s; }
+    .form-field-enter-2 { animation-delay: 0.2s; }
+    .form-field-enter-3 { animation-delay: 0.3s; }
 }

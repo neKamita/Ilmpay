@@ -1,3 +1,6 @@
+// 🎭 Admin Panel Functionality
+
+// 🔄 Sidebar Toggle
 function toggleSubmenu(menuId) {
     const menu = document.getElementById(menuId);
     const icon = document.getElementById(menuId + '-icon');
@@ -5,188 +8,158 @@ function toggleSubmenu(menuId) {
     icon.classList.toggle('rotate-90');
 }
 
-// Initialize Lucide icons and GSAP animations
-document.addEventListener('DOMContentLoaded', function() {
-    // Only run GSAP animations if elements exist
-    const contentCards = document.querySelectorAll(".content-card");
-    if (contentCards.length > 0) {
-        gsap.from(contentCards, {
-            scrollTrigger: {
-                trigger: ".content-card",
-                start: "top bottom-=100",
-                toggleActions: "play none none reverse"
-            },
-            y: 30,
-            opacity: 0,
-            duration: 0.6,
-            stagger: {
-                each: 0.15,
-                ease: "power2.out"
+// 🎯 Admin API Functions
+const AdminAPI = {
+    // 📝 CRUD Operations
+    async fetchItem(type, id) {
+        const response = await fetch(`/api/admin/${type}s/${id}`);
+        const data = await response.json();
+        if (!data.success) throw new Error(data.message);
+        return data.data;
+    },
+
+    async deleteItem(type, id) {
+        const response = await fetch(`/api/admin/${type}s/${id}`, {
+            method: 'DELETE'
+        });
+        const data = await response.json();
+        if (!data.success) throw new Error(data.message);
+        return data;
+    }
+};
+
+// 🎨 Admin UI Functions
+const AdminUI = {
+    // 🎯 Show loading state
+    showLoading(message = 'Loading...') {
+        return Swal.fire({
+            title: message,
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
             }
         });
-    }
+    },
 
-    const gridItems = document.querySelectorAll(".grid > div");
-    if (gridItems.length > 0) {
-        gsap.from(gridItems, {
-            scrollTrigger: {
-                trigger: ".grid",
-                start: "top bottom-=50",
-                toggleActions: "play none none reverse"
-            },
-            scale: 0.8,
-            opacity: 0,
-            duration: 0.5,
-            stagger: {
-                amount: 0.8,
-                ease: "power2.out"
-            },
-            ease: "back.out(1.7)"
+    // ✨ Show success message
+    async showSuccess(message) {
+        await Swal.fire({
+            title: 'Success!',
+            text: message,
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
         });
+    },
 
-        // Add hover animations
-        gridItems.forEach(item => {
-            item.addEventListener("mouseenter", () => {
-                gsap.to(item, {
-                    scale: 1.05,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            });
-
-            item.addEventListener("mouseleave", () => {
-                gsap.to(item, {
-                    scale: 1,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            });
+    // ❌ Show error message
+    async showError(error) {
+        await Swal.fire({
+            title: 'Error!',
+            text: error.message || 'An unexpected error occurred',
+            icon: 'error',
+            confirmButtonColor: '#4f46e5'
         });
+    },
+
+    // 🎯 Show delete confirmation
+    async confirmDelete() {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4f46e5',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        });
+        return result.isConfirmed;
     }
+};
 
-    lucide.createIcons();
-    
-
-    // Timeline for sidebar entrance
-    const sidebarTL = gsap.timeline();
-    
-    const sidebarLogo = document.querySelector('.sidebar-logo');
-    if (sidebarLogo) {
-        sidebarTL
-            .from(sidebarLogo, {
-                x: -50, 
-                opacity: 0,
-                duration: 0.8,
-                ease: "power3.out"
-            })
-            .from(".nav-item", {
-                x: -30,
-                opacity: 0,
-                duration: 0.5,
-                stagger: 0.1,
-                ease: "power2.out"
-            }, "-=0.3");
-    }
-
-    // Stats cards animation
-    gsap.from(".content-card", {
-        scrollTrigger: {
-            trigger: ".content-card",
-            start: "top bottom-=100",
-            toggleActions: "play none none reverse"
-        },
-        y: 30,
-        opacity: 0,
-        duration: 0.6,
-        stagger: {
-            each: 0.15,
-            ease: "power2.out"
+// 🎯 Admin Event Handlers
+const AdminHandlers = {
+    // 📝 Edit item
+    async handleEdit(type, id) {
+        try {
+            AdminUI.showLoading();
+            const data = await AdminAPI.fetchItem(type, id);
+            Swal.close();
+            Modal.show(type, data);
+        } catch (error) {
+            console.error('Error:', error);
+            await AdminUI.showError(error);
         }
-    });
+    },
 
-    // Sidebar collapse functionality
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    if (sidebarToggle) {
-        const sidebarIcon = sidebarToggle.querySelector('i');
-        const mainContent = document.querySelector('main');
-        let isCollapsed = false;
+    // ❌ Delete item
+    async handleDelete(type, id) {
+        try {
+            const confirmed = await AdminUI.confirmDelete();
+            if (!confirmed) return;
 
-        sidebarToggle.addEventListener('click', () => {
-            isCollapsed = !isCollapsed;
-            
-            // Timeline for collapse animation
-            const tl = gsap.timeline();
-            
-            if (isCollapsed) {
-                tl.to(mainContent, {
-                    paddingLeft: '64px',
-                    duration: 0.3,
-                    ease: 'power2.inOut'
-                }, 0)
-                .to(sidebarIcon, {
-                    rotation: 180,
-                    duration: 0.3,
-                    ease: 'power2.inOut'
-                }, 0);
-
-                // Hide text elements
-                gsap.to('.sidebar-text', {
-                    opacity: 0,
-                    duration: 0.2,
-                    display: 'none'
-                });
-            } else {
-                tl.to(mainContent, {
-                    paddingLeft: '256px',
-                    duration: 0.3,
-                    ease: 'power2.inOut'
-                }, 0)
-                .to(sidebarIcon, {
-                    rotation: 0,
-                    duration: 0.3,
-                    ease: 'power2.inOut'
-                }, 0);
-
-                // Show text elements
-                gsap.to('.sidebar-text', {
-                    opacity: 1,
-                    duration: 0.2,
-                    display: 'block',
-                    delay: 0.1
-                });
-            }
-        });
+            await AdminAPI.deleteItem(type, id);
+            await AdminUI.showSuccess('Item deleted successfully');
+            location.reload();
+        } catch (error) {
+            console.error('Error:', error);
+            await AdminUI.showError(error);
+        }
     }
+};
 
-    // Revenue Chart
-    const revenueChartEl = document.querySelector('#revenueChart');
-    if (revenueChartEl) {
-        const revenueOptions = {
-            chart: { type: 'line', height: '100%' },
-            colors: ['#10B981'],
-            series: [{
-                name: 'Revenue',
-                data: [1200, 1800, 1500, 2000, 2500, 3000, 3500]
-            }],
-            xaxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }
-        };
-        new ApexCharts(revenueChartEl, revenueOptions).render();
-    }
+// 🎨 Admin Dashboard Charts
+const AdminCharts = {
+    // 📊 Initialize charts
+    initCharts() {
+        this.initFeatureUsageChart();
+        // Add other chart initializations here
+    },
 
-    // Feature Usage Chart
-    const featureUsageChartEl = document.querySelector('#featureUsageChart');
-    if (featureUsageChartEl) {
-        const featureUsageOptions = {
-            chart: { type: 'bar', height: '100%' },
+    // 📈 Feature usage chart
+    initFeatureUsageChart() {
+        const el = document.querySelector('#featureUsageChart');
+        if (!el) return;
+
+        const options = {
+            chart: { 
+                type: 'bar',
+                height: '100%',
+                toolbar: {
+                    show: false
+                }
+            },
             colors: ['#8B5CF6'],
-            series: [{
-                name: 'Usage',
-                data: [400, 430, 448, 470, 540, 580, 690]
-            }],
-            xaxis: { 
-                categories: ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5', 'Feature 6', 'Feature 7']
+            plotOptions: {
+                bar: {
+                    borderRadius: 8,
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            xaxis: {
+                categories: ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5'],
             }
         };
-        new ApexCharts(featureUsageChartEl, featureUsageOptions).render();
+
+        const chart = new ApexCharts(el, options);
+        chart.render();
     }
-}); 
+};
+
+// 🎬 Initialize everything
+document.addEventListener('DOMContentLoaded', () => {
+    // 🎨 Initialize charts
+    AdminCharts.initCharts();
+
+    // 🎯 Initialize Lucide icons
+    lucide.createIcons();
+
+    // 🌟 Expose global functions
+    window.toggleSubmenu = toggleSubmenu;
+    window.editItem = AdminHandlers.handleEdit;
+    window.deleteItem = AdminHandlers.handleDelete;
+});
