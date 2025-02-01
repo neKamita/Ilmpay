@@ -107,12 +107,12 @@
         <div class="container">
             <h3 class="support-title text-center" th:text="#{support.title}">Support By</h3>
             <div class="support-carousel owl-carousel">
-                <img th:src="@{/images/Google.svg}" alt="Google" class="support-logo">
-                <img th:src="@{/images/Afterpay.svg}" alt="Afterpay" class="support-logo">
-                <img th:src="@{/images/Asana.svg}" alt="Asana" class="support-logo">
-                <img th:src="@{/images/Dropbox.svg}" alt="Dropbox" class="support-logo">
-                <img th:src="@{/images/Spotify.svg}" alt="Scholarship" class="support-logo">
-                <img th:src="@{/images/Grammarly.svg}" alt="Grammarly" class="support-logo">
+                <div th:each="logo : ${supportLogos}" class="support-logo-item">
+                    <a th:if="${logo.websiteUrl}" th:href="${logo.websiteUrl}" target="_blank" rel="noopener noreferrer">
+                        <img th:src="${logo.imageUrl}" th:alt="${logo.name}" class="support-logo">
+                    </a>
+                    <img th:unless="${logo.websiteUrl}" th:src="${logo.imageUrl}" th:alt="${logo.name}" class="support-logo">
+                </div>
             </div>
         </div>
     </section>
@@ -384,6 +384,7 @@
             </div>
         </div>
     </section>
+
     <footer class="footer-section">
         <img class="footer-circle footer-circle-small" th:src="@{/images/footer-1.svg}" alt="Decorative circle">
         <img class="footer-circle footer-circle-large" th:src="@{/images/footer-2.svg}" alt="Decorative circle">

@@ -3,6 +3,8 @@ package uz.pdp.ilmpay.Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import lombok.RequiredArgsConstructor;
+import uz.pdp.ilmpay.service.SupportLogoService;
 
 /**
  * 🏠 Home Sweet Home Controller
@@ -13,7 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
  * @version 1.0 (Now with extra awesomeness!)
  */
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
+    // 🎯 Our trusty services
+    private final SupportLogoService supportLogoService;
 
     /**
      * 🎯 The main landing page route
@@ -28,6 +33,9 @@ public class HomeController {
         
         // 🚀 Set the current page for navigation highlighting
         mav.addObject("currentPage", "home");
+        
+        // 🤝 Add support logos to show our awesome partners
+        mav.addObject("supportLogos", supportLogoService.findAllActive());
         
         return mav; // 🎉 Off you go, little view!
     }

@@ -7,30 +7,73 @@ All notable changes to this project will be documented in this file.
 - User registration module
 - Scholarship application workflow
 
-## [1.2.0] - 2024-03-15
-### Added
-- Multi-language support (RU, UZ)
-- Language switcher dropdown
-*(See messages_*.properties files for translations)*
+## [1.3.0] - 2025-01-28 to 2025-02-01
 
-### Changed
-- Updated security configuration with role-based access
-*(SecurityConfig.java lines 38-50)*
+### 2025-02-01
+#### Enhanced
+- Improved FilePond file upload detection
+- Centralized FilePond configuration in dedicated config file
+- Enhanced form validation for file uploads
+- Updated documentation (README.MD and CHANGELOG.md)
+- Added detailed logging for file operations
 
-## [1.1.0] - 2024-02-28
-### Added
-- Admin dashboard with statistics cards
-- Login/logout functionality
-*(See admin/dashboard.html lines 40-66)*
+#### Fixed
+- File upload detection in modal forms
+- Image validation logic in form submission
+- FilePond initialization in modals
 
-### Fixed
-- Mobile responsive issues in hero section
-*(style.css lines 490-499)*
+### 2025-01-31
+#### Added
+- AWS S3 integration for logo storage
+- S3Service implementation for file operations
+- AWS configuration in application properties
+- File type validation for image uploads
 
-## [1.0.0] - 2024-01-15
-### Added
-- Initial project setup with Spring Boot 3.4.2
-- Core landing page with responsive design
-- Basic security configuration
-- PostgreSQL integration
-*(Initial commit includes all base functionality)*
+#### Enhanced
+- Support logo preview functionality
+- Error handling with SweetAlert2 notifications
+- File upload progress indicators
+
+### 2025-01-30
+#### Added
+- Support Logo ordering system
+- Logo website URL management
+- Image URL alternative input option
+- Modal system for logo management
+
+#### Enhanced
+- Admin dashboard interface
+- Form validation messages
+- Error feedback system
+
+### 2025-01-29
+#### Added
+- Basic CRUD operations for Support Logos
+- FilePond integration for file uploads
+- Logo management interface in admin panel
+- Form templates for logo management
+
+#### Enhanced
+- Modal system architecture
+- Field validation system
+- Admin panel navigation
+
+### 2025-01-28
+#### Added
+- Initial Support Logo entity
+- Database schema for logos
+- Basic repository structure
+- REST endpoints for logo management
+
+#### Enhanced
+- Project structure for new features
+- Admin dashboard layout
+- Error handling system
+
+### Technical Improvements
+- Improved code organization and modularity
+- Enhanced logging system with emoji support
+- Better error handling with SweetAlert2
+- Centralized configuration management
+- AWS S3 integration for file storage
+- Standardized API response format

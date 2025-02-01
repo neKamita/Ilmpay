@@ -21,5 +21,10 @@ public class SupportLogo {
     private String imageUrl;
     private String websiteUrl;
     private boolean active;
+    
+    // Display order for sorting logos (lower numbers appear first)
+    @Column(name = "display_order")
+    private Integer order;
+    
     private LocalDateTime createdAt;
 } 

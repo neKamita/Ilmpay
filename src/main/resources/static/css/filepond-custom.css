@@ -1,0 +1,149 @@
+/* 🎨 Custom FilePond Styles */
+.filepond--panel-root {
+    background-color: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: 0.5em;
+}
+
+.filepond--drop-label {
+    color: #64748b;
+}
+
+.filepond--label-action {
+    text-decoration-color: #94a3b8;
+}
+
+/* 🖼️ Logo Grid Enhancements */
+.logo-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    background-color: white;
+    padding: 1rem;
+    transition: all 300ms ease-in-out;
+}
+
+.logo-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-0.25rem);
+}
+
+.logo-actions {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+    display: flex;
+    gap: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.logo-card:hover .logo-actions {
+    opacity: 1;
+}
+
+/* 🎨 FilePond Theme Overrides */
+.filepond--root {
+    font-family: inherit;
+}
+
+.filepond--drop-label.filepond--drop-label label {
+    font-size: 0.95rem;
+}
+
+.filepond--panel-root {
+    background-color: #f8fafc;
+}
+
+.filepond--item-panel {
+    background-color: #f1f5f9;
+}
+
+.filepond--image-preview-wrapper {
+    border-radius: 0.5rem;
+}
+
+.filepond--image-preview-overlay-success {
+    color: #10b981;
+}
+
+/* 🎯 Processing State */
+.filepond--item.is-processing .filepond--panel-root {
+    border-color: #60a5fa;  /* Blue border while processing */
+    background: rgba(96, 165, 250, 0.05);
+    animation: pulse 2s infinite;
+}
+
+/* ✨ Success State */
+.filepond--item.is-success .filepond--panel-root {
+    border-color: #22c55e;  /* Green border on success */
+    border-style: solid;
+    background: rgba(34, 197, 94, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* ❌ Error State */
+.filepond--item.is-error .filepond--panel-root {
+    border-color: #ef4444;  /* Red border on error */
+    background: rgba(239, 68, 68, 0.05);
+}
+
+/* 🌟 Processing Animation */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(96, 165, 250, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(96, 165, 250, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(96, 165, 250, 0);
+    }
+}
+
+/* 🎨 Hover Effects */
+.filepond--item:hover .filepond--panel-root {
+    background-color: #f1f5f9;
+}
+
+.filepond--item.is-success:hover .filepond--panel-root {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.filepond--item.is-error:hover .filepond--panel-root {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* 🎯 Progress Bar Enhancement */
+.filepond--progress-indicator {
+    background: #60a5fa;
+}
+
+/* 🎨 File Status Icons */
+.filepond--file-status-main {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.filepond--file-status-sub {
+    font-size: 0.75rem;
+    opacity: 0.75;
+}
+
+/* 💫 Smooth Transitions */
+.filepond--panel-root,
+.filepond--file-status-main,
+.filepond--file-status-sub,
+.filepond--progress-indicator {
+    transition: all 0.3s ease;
+}
+
+/* 🎯 Progress Bar */
+.filepond--progress-indicator {
+    background: #3b82f6;
+}

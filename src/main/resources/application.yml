@@ -1,31 +1,31 @@
-# 🚀 Spring Configuration
+# Spring Configuration
 spring:
-  # 🐳 Docker Configuration
+  # Docker Configuration
   docker:
     compose:
       enabled: false  # Temporarily disabled
 
-  # 🎨 Thymeleaf Configuration
+  # Thymeleaf Configuration
   thymeleaf:
     cache: false
     enabled: true
     prefix: classpath:/templates/
     suffix: .html
 
-  # 🌍 Internationalization
+  # Internationalization
   messages:
     basename: messages
     encoding: UTF-8
     fallback-to-system-locale: true
 
-  # 🗄️ Database Configuration
+  # Database Configuration
   datasource:
     url: jdbc:postgresql://viaduct.proxy.rlwy.net:13686/railway
     username: postgres
     password: WJIYUGKGgpoxPstmeMTvCKxnGtMDRhvX
     driver-class-name: org.postgresql.Driver
   
-  # 🏗️ JPA Configuration
+  # JPA Configuration
   jpa:
     hibernate:
       ddl-auto: update
@@ -35,15 +35,42 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
+    
+  # File Upload Configuration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
-# 🔌 Server Configuration
+# Server Configuration
 server:
   port: 8080
 
-# 🎯 Logging Configuration
+# AWS Configuration 
+aws:
+  region: ${AWS_REGION:eu-north-1}
+  credentials:
+    access-key: ${AWS_ACCESS_KEY:AKIA36E76CYUBBMMYYNG}
+    secret-key: ${AWS_SECRET_KEY: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}
+  s3:
+    bucket: ${AWS_S3_BUCKET:ilmpay}
+    region: ${AWS_REGION:eu-north-1}
+
+# Logging Configuration
 logging:
   level:
+    root: INFO
     org.springframework.web: INFO
     uz.pdp.ilmpay: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/ilmpay.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 30
+      total-size-cap: 3GB

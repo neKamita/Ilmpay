@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class IlmpayApplication {
 
     public static void main(String[] args) {
+        System.setProperty("aws.java.v1.disableDeprecationAnnouncement", "true");
         SpringApplication.run(IlmpayApplication.class, args);
     }
 

@@ -1,243 +1,552 @@
 // 🎭 Modal Management System - Where UI magic happens!
-const Modal = {
-    // 🎨 Current state (like a magician's hat, holding our secrets)
-    state: {
-        currentType: null,
-        currentData: null
-    },
 
-    // 🎯 Modal Elements (our magical props for the show)
-    elements: {
+class Modal {
+    // 🎪 Core properties
+    static elements = {
         modal: null,
-        backdrop: null,
-        panel: null,
         form: null,
         title: null,
         formFields: null,
-        closeButtons: null
-    },
+        closeButtons: null,
+        submitBtn: null,
+        filePonds: [] // Track FilePond instances
+    };
 
-    // 🎨 Configuration for different modal types (our spellbook)
-    config: {
-        'support-logo': {
-            createTitle: 'Add New Support Logo',
-            editTitle: 'Edit Support Logo',
-            fields: [
-                {
-                    name: 'name',
-                    label: 'Logo Name',
-                    type: 'text',
-                    required: true
-                },
-                {
-                    name: 'imageUrl',
-                    label: 'Image URL',
-                    type: 'text',
-                    required: true
-                },
-                {
-                    name: 'order',
-                    label: 'Display Order',
-                    type: 'number',
-                    required: true,
-                    min: 1
-                }
-            ]
-        }
-        // Add other modal configurations here as needed
-    },
+    // 🎨 Modal configurations
+    static config = {};
 
-    // 🎯 Initialize the modal system (setting up our stage)
-    init() {
-        // Cache DOM elements (finding all our props)
+    // 🎨 State management
+    static state = {
+        currentType: null,
+        currentData: null,
+        onShowCallbacks: {},
+        onCloseCallbacks: {}
+    };
+
+    // 🎯 Initialize the modal
+    static init() {
+        Logger.info('Modal', '🎬 Initializing modal system');
+        
+        // Get DOM elements (finding our stage props)
         this.elements.modal = document.getElementById('crudModal');
-        if (!this.elements.modal) {
-            console.error('🎭 Modal element not found! Make sure crud-modal fragment is included.');
-            return;
-        }
-
-        this.elements.backdrop = this.elements.modal.querySelector('.modal-backdrop');
-        this.elements.panel = this.elements.modal.querySelector('.modal-content');
         this.elements.form = this.elements.modal.querySelector('#crudForm');
         this.elements.title = this.elements.modal.querySelector('#modalTitle');
         this.elements.formFields = this.elements.modal.querySelector('.form-fields');
         this.elements.closeButtons = this.elements.modal.querySelectorAll('.modal-close');
+        this.elements.submitBtn = this.elements.form.querySelector('button[type="submit"]');
 
-        // Set up event listeners (preparing our interactive elements)
+        if (!this.elements.modal || !this.elements.form) {
+            Logger.error('Modal', '❌ Failed to initialize - Required elements not found');
+            return;
+        }
+
+        // Initialize configurations
+        this.initializeConfigs();
+        
+        // Set up event listeners
         this.setupEventListeners();
-    },
+        
+        Logger.info('Modal', '✅ Modal system initialized successfully');
+    }
 
-    // 🎭 Set up all event listeners (choreographing our show)
-    setupEventListeners() {
-        // Close on backdrop click (the classic disappearing act)
-        this.elements.modal?.addEventListener('click', (e) => {
-            if (e.target === this.elements.modal) {
-                this.close();
+    // Initialize configurations
+    static initializeConfigs() {
+        if (typeof fieldConfigs === 'undefined') {
+            Logger.warn('Modal', '⚠️ fieldConfigs not found, will retry in 100ms');
+            setTimeout(() => this.initializeConfigs(), 100);
+            return;
+        }
+
+        this.config = {
+            'support-logo': {
+                title: 'Support Logo',
+                endpoint: '/api/admin/support-logos',
+                method: 'POST',
+                fields: Object.entries(fieldConfigs['support-logo']).map(([name, field]) => ({
+                    name,
+                    ...field
+                }))
             }
+            // Add other modal configurations here as needed
+        };
+        
+        Logger.info('Modal', '✅ Modal configurations initialized');
+    }
+
+    // 🎯 Set up event listeners
+    static setupEventListeners() {
+        Logger.debug('Modal', '🎯 Setting up event listeners');
+
+        // Handle form submission
+        this.elements.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+        // Handle close buttons
+        this.elements.closeButtons.forEach(button => {
+            button.addEventListener('click', () => this.close());
         });
 
-        // Close on button click (the proper way to exit)
-        this.elements.closeButtons?.forEach(btn => {
-            btn.addEventListener('click', () => this.close());
-        });
-
-        // Close on Escape key (the emergency exit)
+        // Handle escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !this.elements.modal?.classList.contains('hidden')) {
+            if (e.key === 'Escape' && !this.elements.modal.classList.contains('hidden')) {
+                Logger.debug('Modal', '🔑 Escape key pressed - closing modal');
                 this.close();
             }
         });
 
-        // Form submission (the grand finale)
-        this.elements.form?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleSubmit(e);
+        Logger.debug('Modal', '✅ Event listeners setup complete');
+    }
+
+    // 🎯 Register callbacks
+    static onShow(type, callback) {
+        this.state.onShowCallbacks[type] = callback;
+    }
+
+    static onClose(type, callback) {
+        this.state.onCloseCallbacks[type] = callback;
+    }
+
+    // 🔄 Set button loading state
+    static setLoading(loading) {
+        const btn = this.elements.submitBtn;
+        if (!btn) return;
+        
+        if (loading) {
+            btn.disabled = true;
+            btn.innerHTML = `
+                <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Saving...</span>
+            `;
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = `
+                <i data-lucide="save"></i>
+                <span>Save Changes</span>
+            `;
+            // Reinitialize Lucide icons
+            if (window.lucide) {
+                lucide.createIcons(btn);
+            }
+        }
+    }
+
+    // 🎨 Generate field HTML
+    static generateFieldHtml(field) {
+        const currentValue = this.state.currentData?.[field.name];
+        Logger.debug('Modal', `🎨 Generating field HTML for ${field.name}`, { 
+            fieldType: field.type, 
+            currentValue,
+            currentData: this.state.currentData 
         });
-    },
-
-    // 🎬 Show the modal (raising the curtain)
-    show(type, data = null) {
-        if (!this.elements.modal) {
-            console.error('🎭 Cannot show modal: Modal elements not initialized!');
-            return;
-        }
-
-        this.state.currentType = type;
-        this.state.currentData = data;
-
-        // Show modal (lights up!)
-        this.elements.modal.classList.remove('hidden');
         
-        // Animate backdrop (setting the atmosphere)
-        requestAnimationFrame(() => {
-            this.elements.backdrop?.classList.add('show');
-            this.elements.panel?.classList.add('show');
-        });
-        
-        // Update content (preparing the stage)
-        this.updateContent();
-    },
-
-    // ❌ Close the modal (the final bow)
-    close() {
-        if (!this.elements.modal) return;
-
-        // Fade out elements (dimming the lights)
-        this.elements.backdrop?.classList.remove('show');
-        this.elements.panel?.classList.remove('show');
-
-        // Wait for animations to finish
-        setTimeout(() => {
-            this.elements.modal.classList.add('hidden');
-            this.resetState();
-        }, 300); // Match this with our CSS transition duration
-    },
-
-    // 🎨 Update modal content (setting the scene)
-    updateContent() {
-        const config = this.config[this.state.currentType];
-        if (!config) {
-            console.error(`🎭 No configuration found for type: ${this.state.currentType}`);
-            return;
-        }
-
-        // Update title (announcing the act)
-        if (this.elements.title) {
-            this.elements.title.textContent = this.state.currentData ? config.editTitle : config.createTitle;
+        // Get the field template
+        const template = fieldTemplates[field.type];
+        if (!template) {
+            console.warn(`Unsupported field type: ${field.type}`);
+            return '';
         }
         
-        // Clear previous fields (clean slate)
-        if (this.elements.formFields) {
-            this.elements.formFields.innerHTML = '';
+        // Generate HTML using template
+        return template(field, currentValue, this.state.currentData);
+    }
+
+    // 🎨 Initialize FilePond for file inputs
+    static initializeFilePond() {
+        Logger.debug('Modal', '🎣 Initializing FilePond instances');
+        
+        const inputs = this.elements.form.querySelectorAll('input[type="file"]');
+        inputs.forEach(input => {   
+            const inputId = input.getAttribute('name');
             
-            // Create form fields with animations (setting up props)
-            config.fields.forEach((field, index) => {
-                const fieldDiv = document.createElement('div');
-                fieldDiv.className = `form-field-enter form-field-enter-${index + 1}`;
-                fieldDiv.innerHTML = this.generateFieldHTML(field, this.state.currentData);
-                this.elements.formFields.appendChild(fieldDiv);
+            // Get current image URL if editing
+            const currentImageUrl = this.state.currentData?.imageUrl;
+            Logger.debug('Modal', '🖼️ Current image data:', { 
+                inputId, 
+                currentImageUrl,
+                currentData: this.state.currentData 
             });
-        }
+            
+            // Create FilePond instance (using global config from filepond-config.js)
+            const pond = FilePond.create(input);
+            
+            // If we have a current image, add it to FilePond
+            if (currentImageUrl) {
+                Logger.debug('Modal', '🖼️ Loading existing image into FilePond:', currentImageUrl);
+                
+                // Load the image into FilePond
+                pond.addFiles([{
+                    source: currentImageUrl,
+                    options: {
+                        type: 'local',
+                        metadata: {
+                            poster: currentImageUrl
+                        }
+                    }
+                }]).then(() => {
+                    Logger.debug('Modal', '✨ Existing image loaded into FilePond');
+                }).catch(error => {
+                    Logger.error('Modal', '❌ Failed to load existing image:', error);
+                });
+            }
+            
+            this.elements.filePonds.push(pond);
+        });
+    }
 
-        // Initialize icons (adding the finishing touches)
-        lucide.createIcons();
-    },
-
-    // 📝 Generate HTML for a form field (crafting each prop)
-    generateFieldHTML(field, data) {
-        const value = data ? data[field.name] || '' : '';
-        return `
-            <label for="${field.name}" class="form-label">${field.label}</label>
-            <input type="${field.type}" 
-                   id="${field.name}" 
-                   name="${field.name}" 
-                   value="${value}"
-                   class="form-input"
-                   ${field.required ? 'required' : ''}
-                   ${field.min ? `min="${field.min}"` : ''}>
-        `;
-    },
-
-    // 🔄 Reset modal state (cleaning up after the show)
-    resetState() {
-        this.state.currentType = null;
-        this.state.currentData = null;
-        if (this.elements.form) {
-            this.elements.form.reset();
-        }
-    },
-
-    // 📨 Handle form submission (the final act)
-    async handleSubmit(e) {
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
+    // 🎨 Update modal content
+    static updateContent() {
+        Logger.debug('Modal', '🎨 Updating modal content', {
+            currentType: this.state.currentType,
+            currentData: this.state.currentData
+        });
         
-        try {
-            // Show loading state (the anticipation builds!)
-            Swal.fire({
-                title: 'Saving...',
-                text: 'Just a moment while we save your changes!',
-                icon: 'info',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
+        // Clear existing fields
+        this.elements.formFields.innerHTML = '';
+        
+        // Clean up existing FilePond instances
+        this.elements.filePonds.forEach(pond => {
+            if (pond && typeof pond.destroy === 'function') {
+                pond.destroy();
+            }
+        });
+        this.elements.filePonds = [];
+
+        // Get configuration
+        const config = this.config[this.state.currentType];
+        if (!config || !config.fields) return;
+
+        // Generate fields HTML
+        config.fields.forEach(field => {
+            const fieldHtml = this.generateFieldHtml(field);
+            if (fieldHtml) {
+                this.elements.formFields.insertAdjacentHTML('beforeend', fieldHtml);
+            }
+        });
+
+        // If we have current data, populate the fields
+        if (this.state.currentData) {
+            Logger.debug('Modal', '📝 Populating fields with data', this.state.currentData);
+            Object.entries(this.state.currentData).forEach(([key, value]) => {
+                const input = this.elements.form.querySelector(`[name="${key}"]`);
+                if (input && value !== null && value !== undefined) {
+                    if (input.type !== 'file') {
+                        input.value = value;
+                    }
                 }
-            });
-
-            const response = await fetch(`/api/admin/${this.state.currentType}s`, {
-                method: this.state.currentData ? 'PUT' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-
-            if (!response.ok) throw new Error('Failed to save');
-
-            // Show success message (applause! 👏)
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: `${this.state.currentType} has been ${this.state.currentData ? 'updated' : 'created'} successfully.`,
-                timer: 2000,
-                showConfirmButton: false
-            });
-
-            this.close();
-            // Refresh the page to show updated data
-            setTimeout(() => window.location.reload(), 2000);
-
-        } catch (error) {
-            console.error('🎭 Modal submission error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: error.message || 'Something went wrong!'
             });
         }
     }
-};
 
-// 🎬 Initialize on page load (the pre-show setup)
+    // 🎭 Show the modal
+    static show(type, data = null) {
+        Logger.debug('Modal', '🎭 Show modal', { type, data });
+        
+        if (!this.config[type]) {
+            Logger.error('Modal', `❌ Invalid modal type: ${type}`);
+            return;
+        }
+        
+        // Set current state
+        this.state.currentType = type;
+        this.state.currentData = null;
+        
+        // Reset form and clear any existing FilePond instances
+        this.elements.form.reset();
+        this.elements.filePonds.forEach(pond => {
+            if (pond && typeof pond.destroy === 'function') {
+                pond.destroy();
+            }
+        });
+        this.elements.filePonds = [];
+        
+        // Update title
+        this.elements.title.textContent = `${data ? 'Edit' : 'Add'} ${this.config[type].title}`;
+        
+        // Show modal immediately to prevent flashing
+        this.elements.modal.classList.remove('hidden');
+        
+        // If editing, fetch data first
+        if (data) {
+            Logger.debug('Modal', '🔄 Fetching existing data for editing', { id: data });
+            
+            // Show loading state
+            this.setLoading(true);
+            
+            fetch(`${this.config[type].endpoint}/${data}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(response => {
+                    Logger.debug('Modal', '✨ Received item data', response);
+                    
+                    // Extract the actual logo data from the response
+                    const item = response.data;
+                    if (!item) {
+                        throw new Error('No data received from server');
+                    }
+                    
+                    // Set the current data
+                    this.state.currentData = item;
+                    
+                    Logger.debug('Modal', '📝 Extracted logo data', item);
+                    
+                    // Update content with the fetched data
+                    this.updateContent();
+                    
+                    // Initialize FilePond after content is updated
+                    this.initializeFilePond();
+                    
+                    // Reset loading state
+                    this.setLoading(false);
+                })
+                .catch(error => {
+                    Logger.error('Modal', '❌ Failed to fetch item data', error);
+                    this.setLoading(false);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to load item data. Please try again.',
+                        icon: 'error',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                });
+        } else {
+            // For new items, just update content
+            this.updateContent();
+            this.initializeFilePond();
+        }
+        
+        Logger.info('Modal', `✨ Modal shown successfully: ${type}`);
+    }
+
+    // 🚪 Close the modal
+    static close() {
+        Logger.group('Modal', '🚪 Closing modal');
+
+        // Clean up FilePond instances
+        this.elements.filePonds.forEach(pond => {
+            Logger.debug('Modal', '🧹 Cleaning up FilePond instance');
+            pond.destroy();
+        });
+        this.elements.filePonds = [];
+
+        // Hide modal
+        this.elements.modal.classList.add('hidden');
+        
+        // Execute onClose callbacks
+        const type = this.state.currentType;
+        if (type && this.state.onCloseCallbacks[type]) {
+            Logger.debug('Modal', '📞 Executing onClose callback');
+            this.state.onCloseCallbacks[type]();
+        }
+
+        // Reset state
+        this.resetState();
+
+        Logger.info('Modal', '✨ Modal closed successfully');
+        Logger.groupEnd();
+    }
+
+    // 🧹 Reset state
+    static resetState() {
+        this.state.currentType = null;
+        this.state.currentData = null;
+        this.elements.form.reset();
+    }
+
+    // 📝 Handle form submission
+    static async handleSubmit(e) {
+        e.preventDefault();
+        Logger.info('Modal', '📝 Form submission started');
+
+        try {
+            // Get form values
+            const nameInput = this.elements.form.querySelector('[name="name"]');
+            const websiteUrlInput = this.elements.form.querySelector('[name="websiteUrl"]');
+            const orderInput = this.elements.form.querySelector('[name="order"]');
+            const imageUrlInput = this.elements.form.querySelector('[name="imageUrl"]');
+            
+            // Find FilePond instance - try multiple selectors
+            let filePondInput = this.elements.form.querySelector('input[type="file"].filepond');
+            if (!filePondInput) {
+                filePondInput = this.elements.form.querySelector('.filepond--root');
+            }
+            if (!filePondInput) {
+                filePondInput = document.querySelector('input[name="imageFile"].filepond--browser');
+            }
+            
+            Logger.debug('Modal', '🔍 FilePond input search:', {
+                foundInput: !!filePondInput,
+                inputType: filePondInput ? filePondInput.tagName : null,
+                inputClass: filePondInput ? filePondInput.className : null
+            });
+            
+            // Get FilePond instance and check for files
+            const pond = filePondInput ? (FilePond.find(filePondInput) || window.supportLogoPond) : null;
+            Logger.debug('Modal', '🔍 Checking FilePond:', {
+                hasPond: !!pond,
+                files: pond ? pond.getFiles() : [],
+                filesLength: pond ? pond.getFiles().length : 0
+            });
+            
+            // Check for new file upload
+            const pondFiles = pond ? pond.getFiles() : [];
+            Logger.debug('Modal', '📊 FilePond files:', {
+                files: pondFiles.map(f => ({
+                    filename: f.filename,
+                    origin: f.origin,
+                    status: f.status,
+                    file: f.file ? {
+                        name: f.file.name,
+                        type: f.file.type,
+                        size: f.file.size
+                    } : null
+                }))
+            });
+
+            // A file is considered "new" if it exists and has a file object
+            const hasNewFile = pondFiles.length > 0 && pondFiles.some(file => file.file instanceof File);
+            const hasUrl = imageUrlInput && imageUrlInput.value.trim();
+            const isUpdate = this.state.currentData?.id;
+            
+            Logger.debug('Modal', '📊 Validation state:', {
+                hasNewFile,
+                hasUrl,
+                isUpdate,
+                pondFiles: pondFiles.map(f => ({
+                    filename: f.filename,
+                    origin: f.origin,
+                    status: f.status,
+                    hasFile: !!f.file,
+                    isFileInstance: f.file instanceof File
+                }))
+            });
+
+            // Only validate image requirement for new logos
+            if (!isUpdate && !hasNewFile && !hasUrl) {
+                Logger.warn('Modal', '⚠️ No image source provided for new logo');
+                Swal.fire({
+                    title: 'Validation Error',
+                    text: 'Please provide either an image file or URL',
+                    icon: 'warning',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                return;
+            }
+
+            this.setLoading(true);
+            const formData = new FormData();
+            
+            // Add form fields
+            formData.append('name', nameInput.value);
+            formData.append('websiteUrl', websiteUrlInput.value);
+            if (orderInput && orderInput.value) {
+                formData.append('order', orderInput.value);
+            }
+            
+            // Handle file upload - process any file in FilePond
+            if (pondFiles.length > 0) {
+                const pondFile = pondFiles[0]; // Get first file since we only allow one
+                if (pondFile.file instanceof File) {
+                    Logger.debug('Modal', '📁 Processing file:', {
+                        filename: pondFile.filename,
+                        type: pondFile.file.type,
+                        size: pondFile.file.size
+                    });
+                    formData.append('imageFile', pondFile.file);
+                } else {
+                    Logger.debug('Modal', '🔄 Using existing file:', {
+                        filename: pondFile.filename,
+                        origin: pondFile.origin,
+                        status: pondFile.status
+                    });
+                }
+            }
+            
+            // Add URL if provided and no new file
+            if (!hasNewFile && hasUrl) {
+                Logger.debug('Modal', '🔗 Using image URL:', imageUrlInput.value);
+                formData.append('imageUrl', imageUrlInput.value);
+            }
+
+            // Log form data for debugging
+            Logger.debug('Modal', '📦 Form data:', {
+                entries: Array.from(formData.entries()).map(([key, value]) => {
+                    return { key, type: value instanceof File ? 'File' : typeof value };
+                })
+            });
+
+            let response;
+            if (isUpdate) {
+                // Update existing item
+                Logger.debug('Modal', '🔄 Updating existing item', { id: this.state.currentData.id });
+                const url = `${this.config[this.state.currentType].endpoint}/${this.state.currentData.id}`;
+                response = await fetch(url, {
+                    method: 'PUT',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                }
+                response = await response.json();
+            } else {
+                // Create new item
+                Logger.debug('Modal', '🆕 Creating new item');
+                response = await fetch(this.config[this.state.currentType].endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                }
+                response = await response.json();
+            }
+
+            // Show success message
+            Swal.fire({
+                title: 'Success!',
+                text: 'Operation completed successfully! 🎉',
+                icon: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
+            });
+
+            // Close modal and refresh
+            this.close();
+            window.location.reload();
+
+        } catch (error) {
+            Logger.error('Modal', '❌ Form submission failed', error);
+            Swal.fire({
+                title: 'Error!',
+                text: error.message || 'Something went wrong. Please try again.',
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        } finally {
+            this.setLoading(false);
+        }
+    }
+}
+
+// 🎬 Initialize on page load
 document.addEventListener('DOMContentLoaded', () => Modal.init());

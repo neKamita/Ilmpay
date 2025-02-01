@@ -1,37 +1,53 @@
-// 🎭 Admin Panel Functionality
+// 🎭 Admin Panel Functionality - Where the magic happens! ✨
 
-// 🔄 Sidebar Toggle
+// 🔄 Sidebar Toggle - The hide and seek champion
 function toggleSubmenu(menuId) {
+    Logger.debug('Admin', '🎪 Playing peek-a-boo with submenu', { menuId });
     const menu = document.getElementById(menuId);
     const icon = document.getElementById(menuId + '-icon');
     menu.classList.toggle('hidden');
     icon.classList.toggle('rotate-90');
 }
 
-// 🎯 Admin API Functions
+// 🎯 Admin API Functions - The data whisperer
 const AdminAPI = {
-    // 📝 CRUD Operations
+    // 📝 CRUD Operations - Create, Read, Update, Delete (and sometimes Delete fails and hides 😅)
     async fetchItem(type, id) {
-        const response = await fetch(`/api/admin/${type}s/${id}`);
-        const data = await response.json();
-        if (!data.success) throw new Error(data.message);
-        return data.data;
+        Logger.debug('AdminAPI', '🎣 Fishing for data', { type, id });
+        try {
+            const response = await fetch(`/api/admin/${type}s/${id}`);
+            const data = await response.json();
+            if (!data.success) throw new Error(data.message);
+            Logger.info('AdminAPI', '🎯 Found the treasure!', data.data);
+            return data.data;
+        } catch (error) {
+            Logger.error('AdminAPI', '🎣 The big one got away', error);
+            throw error;
+        }
     },
 
     async deleteItem(type, id) {
-        const response = await fetch(`/api/admin/${type}s/${id}`, {
-            method: 'DELETE'
-        });
-        const data = await response.json();
-        if (!data.success) throw new Error(data.message);
-        return data;
+        Logger.debug('AdminAPI', '🗑️ Taking out the digital trash', { type, id });
+        try {
+            const response = await fetch(`/api/admin/${type}s/${id}`, {
+                method: 'DELETE'
+            });
+            const data = await response.json();
+            if (!data.success) throw new Error(data.message);
+            Logger.info('AdminAPI', '✨ Poof! It\'s gone', { type, id });
+            return data;
+        } catch (error) {
+            Logger.error('AdminAPI', '😅 This item is playing hard to get', error);
+            throw error;
+        }
     }
 };
 
-// 🎨 Admin UI Functions
+// 🎨 Admin UI Functions - Making things pretty since 2025
 const AdminUI = {
-    // 🎯 Show loading state
+    // 🎯 Show loading state - The "please wait while I do my thing" dance
     showLoading(message = 'Loading...') {
+        Logger.debug('AdminUI', '💃 Starting the loading dance', { message });
         return Swal.fire({
             title: message,
             allowOutsideClick: false,
@@ -41,8 +57,9 @@ const AdminUI = {
         });
     },
 
-    // ✨ Show success message
+    // ✨ Show success message - Time to celebrate!
     async showSuccess(message) {
+        Logger.info('AdminUI', '🎉 Time to celebrate!', { message });
         await Swal.fire({
             title: 'Success!',
             text: message,
@@ -52,73 +69,84 @@ const AdminUI = {
         });
     },
 
-    // ❌ Show error message
+    // ❌ Show error message - Oops, we goofed!
     async showError(error) {
+        Logger.error('AdminUI', '🙈 Oopsie! Something went wrong', error);
         await Swal.fire({
-            title: 'Error!',
-            text: error.message || 'An unexpected error occurred',
-            icon: 'error',
-            confirmButtonColor: '#4f46e5'
+            title: 'Oops! 😅',
+            text: error.message || 'Something went wrong',
+            icon: 'error'
         });
     },
 
-    // 🎯 Show delete confirmation
+    // 🎯 Show delete confirmation - The "are you really, really sure?" check
     async confirmDelete() {
+        Logger.debug('AdminUI', '🤔 User is contemplating deletion');
         const result = await Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#4f46e5',
-            cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
+            cancelButtonText: 'No, keep it!'
         });
+        Logger.debug('AdminUI', '🎲 Delete decision made', { confirmed: result.isConfirmed });
         return result.isConfirmed;
     }
 };
 
-// 🎯 Admin Event Handlers
+// 🎯 Admin Event Handlers - Where clicks become actions
 const AdminHandlers = {
-    // 📝 Edit item
+    // 📝 Edit item - Time to give it a makeover!
     async handleEdit(type, id) {
+        Logger.group('AdminHandlers', '✏️ Starting edit operation');
         try {
-            AdminUI.showLoading();
-            const data = await AdminAPI.fetchItem(type, id);
-            Swal.close();
-            Modal.show(type, data);
+            AdminUI.showLoading('Fetching data...');
+            const item = await AdminAPI.fetchItem(type, id);
+            Modal.show(type, item);
+            Logger.info('AdminHandlers', '💅 Item ready for its makeover', { type, id });
         } catch (error) {
-            console.error('Error:', error);
-            await AdminUI.showError(error);
+            Logger.error('AdminHandlers', '😅 Makeover failed', error);
+            AdminUI.showError(error);
+        } finally {
+            Logger.groupEnd();
         }
     },
 
-    // ❌ Delete item
+    // ❌ Delete item - The Marie Kondo method
     async handleDelete(type, id) {
+        Logger.group('AdminHandlers', '🗑️ Starting delete operation');
         try {
-            const confirmed = await AdminUI.confirmDelete();
-            if (!confirmed) return;
+            if (!await AdminUI.confirmDelete()) {
+                Logger.info('AdminHandlers', '💝 Item sparks joy, keeping it!', { type, id });
+                return;
+            }
 
+            AdminUI.showLoading('Deleting...');
             await AdminAPI.deleteItem(type, id);
             await AdminUI.showSuccess('Item deleted successfully');
-            location.reload();
+            window.location.reload();
+            Logger.info('AdminHandlers', '🧹 Cleanup complete!', { type, id });
         } catch (error) {
-            console.error('Error:', error);
-            await AdminUI.showError(error);
+            Logger.error('AdminHandlers', '🙈 Cleanup failed', error);
+            AdminUI.showError(error);
+        } finally {
+            Logger.groupEnd();
         }
     }
 };
 
-// 🎨 Admin Dashboard Charts
+// 🎨 Admin Dashboard Charts - Making data beautiful
 const AdminCharts = {
-    // 📊 Initialize charts
+    // 📊 Initialize charts - Let's make some art!
     initCharts() {
+        Logger.info('AdminCharts', '🎨 Time to paint with data!');
         this.initFeatureUsageChart();
-        // Add other chart initializations here
     },
 
-    // 📈 Feature usage chart
+    // 📈 Feature usage chart - Where numbers become eye candy
     initFeatureUsageChart() {
+        Logger.debug('AdminCharts', '📊 Creating a masterpiece with chart data');
         const el = document.querySelector('#featureUsageChart');
         if (!el) return;
 
@@ -150,16 +178,20 @@ const AdminCharts = {
     }
 };
 
-// 🎬 Initialize everything
+// 🎬 Initialize everything - The grand opening!
 document.addEventListener('DOMContentLoaded', () => {
-    // 🎨 Initialize charts
-    AdminCharts.initCharts();
-
-    // 🎯 Initialize Lucide icons
-    lucide.createIcons();
-
-    // 🌟 Expose global functions
-    window.toggleSubmenu = toggleSubmenu;
-    window.editItem = AdminHandlers.handleEdit;
-    window.deleteItem = AdminHandlers.handleDelete;
+    Logger.group('Admin', '🎬 Opening the admin panel');
+    try {
+        // 🎨 Initialize charts
+        AdminCharts.initCharts();
+        
+        // 🎭 Initialize Lucide icons
+        lucide.createIcons();
+        
+        Logger.info('Admin', '✨ Admin panel is ready for action!');
+    } catch (error) {
+        Logger.error('Admin', '😅 Houston, we have a problem', error);
+    } finally {
+        Logger.groupEnd();
+    }
 });

@@ -4,7 +4,7 @@
 const AnimationUtils = {
     // 🎨 Animate elements on scroll
     animateOnScroll(elements, config) {
-        if (!elements?.length) return;
+        if (!elements?.length || !window.gsap) return;
         
         gsap.from(elements, {
             scrollTrigger: {
@@ -18,7 +18,7 @@ const AnimationUtils = {
 
     // ✨ Add hover animation to elements
     addHoverAnimation(elements, scaleAmount = 1.05) {
-        if (!elements?.length) return;
+        if (!elements?.length || !window.gsap) return;
 
         elements.forEach(item => {
             item.addEventListener("mouseenter", () => {
@@ -57,103 +57,124 @@ const UIUtils = {
         document.querySelectorAll('.custom-dot').forEach((dot, i) => {
             dot.classList.toggle('active', i === index);
         });
+    },
+    
+    // 🎠 Initialize carousels
+    initCarousels() {
+        // Check if jQuery and Owl Carousel are available
+        if (!window.jQuery || !jQuery.fn.owlCarousel) return;
+        
+        // 🏢 Support Logos Carousel - Linear animation with 6 items
+        const supportCarousel = $('.support-carousel');
+        if (supportCarousel.length) {
+            supportCarousel.owlCarousel({
+                loop: true,
+                margin: 30,
+                nav: false,
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: 2000,
+                smartSpeed: 2000,
+                autoplayHoverPause: true,
+                slideTransition: 'linear',
+                responsive: {
+                    0: { items: 2 },
+                    576: { items: 3 },
+                    768: { items: 4 },
+                    992: { items: 6 }
+                }
+            });
+        }
+
+        // 💬 Testimonial Carousel - Ease animation with custom dots
+        const testimonialCarousel = $('.testimonial-carousel');
+        if (testimonialCarousel.length) {
+            const carousel = testimonialCarousel.owlCarousel({
+                loop: true,
+                margin: 30,
+                nav: false,
+                dots: false,
+                autoplay: true,
+                autoplayTimeout: 2000,
+                smartSpeed: 1000,
+                autoplayHoverPause: true,
+                slideTransition: 'ease',
+                responsive: {
+                    0: { items: 1 },
+                    576: { items: 2 },
+                    992: { items: 3 },
+                    1200: { items: 4 }
+                }
+            });
+
+            // 🎯 Handle custom dot clicks
+            $('.custom-dot').click(function() {
+                const index = $(this).data('index');
+                carousel.trigger('to.owl.carousel', [index, 300]);
+            });
+
+            // 🎨 Update active dot on slide change
+            carousel.on('changed.owl.carousel', function(event) {
+                $('.custom-dot').removeClass('active');
+                $(`.custom-dot[data-index="${event.item.index - event.item.count}"]`).addClass('active');
+            });
+        }
     }
 };
 
 // 🌟 Initialize everything on page load
 document.addEventListener('DOMContentLoaded', function() {
     // 🎨 Initialize Lucide icons
-    lucide.createIcons();
+    if (window.lucide) {
+        lucide.createIcons();
+    }
 
-    // ✨ Animate content cards
-    AnimationUtils.animateOnScroll(
-        document.querySelectorAll(".content-card"),
-        {
-            y: 30,
-            opacity: 0,
-            duration: 0.6,
-            stagger: {
-                each: 0.15,
-                ease: "power2.out"
+    // Only run animations if GSAP is loaded
+    if (window.gsap) {
+        // ✨ Animate content cards
+        AnimationUtils.animateOnScroll(
+            document.querySelectorAll(".content-card"),
+            {
+                y: 30,
+                opacity: 0,
+                duration: 0.6,
+                stagger: {
+                    each: 0.15,
+                    ease: "power2.out"
+                }
             }
-        }
-    );
+        );
 
-    // 🎯 Animate grid items
-    const gridItems = document.querySelectorAll(".grid > div");
-    AnimationUtils.animateOnScroll(
-        gridItems,
-        {
-            scale: 0.8,
-            opacity: 0,
-            duration: 0.5,
-            stagger: {
-                amount: 0.8,
-                ease: "power2.out"
-            },
-            ease: "back.out(1.7)"
-        }
-    );
+        // 🎯 Animate grid items
+        const gridItems = document.querySelectorAll(".grid > div");
+        AnimationUtils.animateOnScroll(
+            gridItems,
+            {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.5,
+                stagger: {
+                    amount: 0.8,
+                    ease: "power2.out"
+                },
+                ease: "back.out(1.7)"
+            }
+        );
 
-    // ✨ Add hover effect to grid items
-    AnimationUtils.addHoverAnimation(gridItems);
+        // ✨ Add hover effect to grid items
+        AnimationUtils.addHoverAnimation(gridItems);
+    }
 
-    // 🎠 Document Ready Handler
-    // 🏢 Support Logos Carousel - Linear animation with 6 items
-    $('.support-carousel').owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: false,
-        dots: false,
-        autoplay: true,
-        autoplayTimeout: 2000,
-        smartSpeed: 2000,
-        autoplayHoverPause: true,
-        slideTransition: 'linear',
-        responsive: {
-            0: { items: 2 },
-            576: { items: 3 },
-            768: { items: 4 },
-            992: { items: 6 }
-        }
-    });
+    // 🎠 Initialize carousels if available
+    UIUtils.initCarousels();
 
-    // 💬 Testimonial Carousel - Ease animation with custom dots
-    const testimonialCarousel = $('.testimonial-carousel').owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: false,
-        dots: false,
-        autoplay: true,
-        autoplayTimeout: 2000,
-        smartSpeed: 1000,
-        autoplayHoverPause: true,
-        slideTransition: 'ease',
-        responsive: {
-            0: { items: 1 },
-            576: { items: 2 },
-            992: { items: 3 },
-            1200: { items: 4 }
-        }
-    });
-
-    // 🎯 Handle custom dot clicks
-    $('.custom-dot').click(function() {
-        const index = $(this).data('index');
-        testimonialCarousel.trigger('to.owl.carousel', [index, 300]);
-    });
-
-    // 🎨 Update active dot on slide change
-    testimonialCarousel.on('changed.owl.carousel', function(event) {
-        $('.custom-dot').removeClass('active');
-        $(`.custom-dot[data-index="${event.item.index - event.item.count}"]`).addClass('active');
-    });
-
-    // 🎯 Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    // 🎯 Initialize tooltips if Bootstrap is available
+    if (window.bootstrap) {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
 
     // 🔗 Smooth scroll for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {

@@ -8,6 +8,7 @@ A modern scholarship management platform connecting students with educational fu
 - 🌍 **Multi-language Support** (EN, RU, UZ) with dynamic content switching
 - 📱 **Mobile-First Design** with responsive layouts and touch optimization
 - 👑 **Admin Dashboard** with real-time statistics and user management
+- 🎨 **Support Logo System** with AWS S3 integration and FilePond uploads
 - 🔐 **Secure Authentication** with role-based access control
 - 📊 **Dynamic Content** powered by Thymeleaf templates
 - 🐳 **Docker-Ready** deployment with PostgreSQL integration
@@ -16,9 +17,10 @@ A modern scholarship management platform connecting students with educational fu
 | Category       | Technologies                                                                 |
 |----------------|-----------------------------------------------------------------------------|
 | **Backend**    | Java 23, Spring Boot 3.4.2, Spring Security, Spring Data JPA, PostgreSQL    |
-| **Frontend**   | Bootstrap 5, HTMX, Font Awesome, Custom CSS animations                      |
-| **DevOps**     | Docker, Maven, Spring Boot Docker Compose support                          |
-| **I18n**       | Thymeleaf i18n with message properties for EN/RU/UZ                         |
+| **Frontend**   | Bootstrap 5, HTMX, FilePond, SweetAlert2, Font Awesome, Custom CSS          |
+| **Cloud**      | AWS S3 for file storage and CDN delivery                                    |
+| **DevOps**     | Docker, Maven, Spring Boot Docker Compose support                           |
+| **I18n**       | Thymeleaf i18n with message properties for EN/RU/UZ                        |
 
 ## Installation 🛠️
 
@@ -27,6 +29,7 @@ A modern scholarship management platform connecting students with educational fu
 - Maven 3.8+
 - Docker and Docker Compose (optional)
 - PostgreSQL 15+ (if running without Docker)
+- AWS Account with S3 bucket (for file storage)
 
 ### Local Development Setup
 1. Clone the repository:
@@ -75,6 +78,11 @@ ilmpay:
     jwt:
       secret: your_jwt_secret
       expiration: 86400000
+  aws:
+    access-key: your_aws_access_key
+    secret-key: your_aws_secret_key
+    bucket-name: your_bucket_name
+    region: your_aws_region
 ```
 
 2. Set active profile in `application.yml`:
@@ -89,19 +97,28 @@ spring:
 src/
 ├── main/
 │   ├── java/uz/pdp/ilmpay/
-│   │   ├── config/          # Security and Web configurations
+│   │   ├── config/          # Security, AWS and Web configurations
 │   │   ├── controller/      # MVC Controllers (Web/API endpoints)
 │   │   ├── model/          # Domain models and entities
 │   │   ├── repository/     # Data access layer (JPA repositories)
-│   │   ├── service/       # Business logic layer
+│   │   ├── service/       # Business logic and AWS S3 services
 │   │   ├── security/      # Security configurations and JWT utils
-│   │   └── util/          # Utility classes
+│   │   └── util/          # Utility classes and helpers
 │   └── resources/
 │       ├── messages/       # i18n properties files
 │       ├── static/        # CSS/JS/Images
-│       └── templates/     # Thymeleaf views
-└── test/                  # Test files
+│       │   ├── js/       # JavaScript modules and utilities
+│       │   ├── css/      # Stylesheets and animations
+│       │   └── images/   # Static images and icons
+│       └── templates/    # Thymeleaf template files
 ```
+
+## Latest Updates 🆕
+- Added Support Logo Management System with AWS S3 integration
+- Enhanced file upload experience with FilePond
+- Improved admin dashboard with new management features
+- Better error handling and user feedback
+- Centralized configuration for file uploads
 
 ## Contributing 🤝
 1. Fork the repository
@@ -113,11 +130,8 @@ src/
 ## License 📝
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support 💬
-For support, email support@ilmpay.uz or join our Telegram channel.
-
-
-
-
-
-
+## Acknowledgments 🙏
+- Spring Boot team for the amazing framework
+- FilePond for the beautiful file upload experience
+- AWS for reliable cloud storage solutions
+- All contributors who have helped shape this project

@@ -4,9 +4,12 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uz.pdp.ilmpay.dto.SupportLogoDTO;
+import uz.pdp.ilmpay.exception.ResourceNotFoundException;
 import uz.pdp.ilmpay.service.BenefitCardService;
 import uz.pdp.ilmpay.service.FaqService;
 import uz.pdp.ilmpay.service.SupportLogoService;
@@ -23,6 +26,7 @@ import org.springframework.validation.BindingResult;
 @RequestMapping("/api/admin")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
+@Slf4j
 public class AdminRestController {
     private final SupportLogoService supportLogoService;
     private final BenefitCardService benefitCardService;
@@ -46,36 +50,73 @@ public class AdminRestController {
     }
 
     @PostMapping("/support-logos")
-    public ResponseEntity<EntityResponse<SupportLogoDTO>> createSupportLogo(@Valid @RequestBody SupportLogoDTO dto, BindingResult bindingResult) {
-        // Validate input
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(EntityResponse.validationError(errors));
-        }
-
+    public ResponseEntity<EntityResponse<SupportLogoDTO>> createSupportLogo(
+            @RequestParam(required = false) MultipartFile imageFile,
+            @RequestParam(required = false) String imageUrl,
+            @RequestParam String name,
+            @RequestParam String websiteUrl,
+            @RequestParam(required = false) Integer order) {
+        
         try {
-            return ResponseEntity.ok(EntityResponse.success("Support logo created successfully", supportLogoService.create(dto)));
+            // Create DTO from form data
+            SupportLogoDTO dto = new SupportLogoDTO();
+            dto.setName(name);
+            dto.setWebsiteUrl(websiteUrl);
+            dto.setImageFile(imageFile);
+            dto.setImageUrl(imageUrl); // Add imageUrl to DTO
+            dto.setOrder(order);
+            dto.setActive(true);
+
+            // Create the support logo
+            SupportLogoDTO created = supportLogoService.create(dto);
+            log.info("✨ Successfully created support logo: {}", created.getName());
+            return ResponseEntity.ok(EntityResponse.success(created));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(EntityResponse.error(e.getMessage(), "LOGO_CREATE_ERROR"));
+            log.error("❌ Failed to create support logo", e);
+            return ResponseEntity.badRequest()
+                    .body(EntityResponse.error(e.getMessage()));
         }
     }
 
     @PutMapping("/support-logos/{id}")
-    public ResponseEntity<EntityResponse<SupportLogoDTO>> updateSupportLogo(@PathVariable Long id, @Valid @RequestBody SupportLogoDTO dto, BindingResult bindingResult) {
-        // Validate input
-        if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(EntityResponse.validationError(errors));
-        }
+    public ResponseEntity<EntityResponse<SupportLogoDTO>> updateSupportLogo(
+            @PathVariable Long id,
+            @RequestParam(required = false) MultipartFile imageFile,
+            @RequestParam String name,
+            @RequestParam String websiteUrl,
+            @RequestParam(required = false) Integer order) {
+        
+        log.info("🔄 Received update request for support logo id: {}", id);
+        log.debug("📦 Update payload - Name: {}, WebsiteUrl: {}, HasFile: {}", 
+            name, websiteUrl, imageFile != null);
 
         try {
-            return ResponseEntity.ok(EntityResponse.success("Support logo updated successfully", supportLogoService.update(id, dto)));
+            // Create DTO from form data
+            SupportLogoDTO dto = new SupportLogoDTO();
+            dto.setId(id);
+            dto.setName(name);
+            dto.setWebsiteUrl(websiteUrl);
+            dto.setImageFile(imageFile);
+            dto.setOrder(order);
+            dto.setActive(true);
+
+            // Update the support logo
+            SupportLogoDTO updated = supportLogoService.update(id, dto);
+            log.info("✨ Successfully updated support logo: {}", updated.getName());
+            return ResponseEntity.ok(
+                EntityResponse.success("Support logo updated successfully", updated)
+            );
+        } catch (ResourceNotFoundException e) {
+            log.error("❌ Support logo not found: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(EntityResponse.error(e.getMessage(), "LOGO_NOT_FOUND"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(EntityResponse.error(e.getMessage(), "LOGO_UPDATE_ERROR"));
+            log.error("❌ Failed to update support logo", e);
+            return ResponseEntity.badRequest()
+                    .body(EntityResponse.error(
+                        "Failed to update support logo: " + e.getMessage(),
+                        "UPDATE_ERROR"
+                    ));
         }
     }
 
