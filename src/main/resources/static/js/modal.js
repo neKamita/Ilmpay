@@ -66,8 +66,39 @@ class Modal {
                     name,
                     ...field
                 }))
+            },
+            'benefit': {
+                title: 'Benefit',
+                endpoint: '/api/admin/benefits',
+                method: 'POST',
+                fields: [
+                    {
+                        name: 'title',
+                        type: 'text',
+                        label: 'Title',
+                        placeholder: 'Enter benefit title',
+                        required: true
+                    },
+                    {
+                        name: 'description',
+                        type: 'textarea',
+                        label: 'Description',
+                        placeholder: 'Enter benefit description',
+                        required: true,
+                        rows: 4
+                    },
+                    {
+                        name: 'order',
+                        type: 'number',
+                        label: 'Display Order',
+                        placeholder: 'Enter display order (1-4)',
+                        required: true,
+                        min: 1,
+                        max: 4,
+                        step: 1
+                    }
+                ]
             }
-            // Add other modal configurations here as needed
         };
         
         Logger.info('Modal', '✅ Modal configurations initialized');
@@ -367,116 +398,93 @@ class Modal {
         Logger.info('Modal', '📝 Form submission started');
 
         try {
-            // Get form values
-            const nameInput = this.elements.form.querySelector('[name="name"]');
-            const websiteUrlInput = this.elements.form.querySelector('[name="websiteUrl"]');
-            const orderInput = this.elements.form.querySelector('[name="order"]');
-            const imageUrlInput = this.elements.form.querySelector('[name="imageUrl"]');
-            
-            // Find FilePond instance - try multiple selectors
-            let filePondInput = this.elements.form.querySelector('input[type="file"].filepond');
-            if (!filePondInput) {
-                filePondInput = this.elements.form.querySelector('.filepond--root');
-            }
-            if (!filePondInput) {
-                filePondInput = document.querySelector('input[name="imageFile"].filepond--browser');
-            }
-            
-            Logger.debug('Modal', '🔍 FilePond input search:', {
-                foundInput: !!filePondInput,
-                inputType: filePondInput ? filePondInput.tagName : null,
-                inputClass: filePondInput ? filePondInput.className : null
-            });
-            
-            // Get FilePond instance and check for files
-            const pond = filePondInput ? (FilePond.find(filePondInput) || window.supportLogoPond) : null;
-            Logger.debug('Modal', '🔍 Checking FilePond:', {
-                hasPond: !!pond,
-                files: pond ? pond.getFiles() : [],
-                filesLength: pond ? pond.getFiles().length : 0
-            });
-            
-            // Check for new file upload
-            const pondFiles = pond ? pond.getFiles() : [];
-            Logger.debug('Modal', '📊 FilePond files:', {
-                files: pondFiles.map(f => ({
-                    filename: f.filename,
-                    origin: f.origin,
-                    status: f.status,
-                    file: f.file ? {
-                        name: f.file.name,
-                        type: f.file.type,
-                        size: f.file.size
-                    } : null
-                }))
-            });
+            const formData = new FormData(this.elements.form);
+            const currentType = this.state.currentType;
 
-            // A file is considered "new" if it exists and has a file object
-            const hasNewFile = pondFiles.length > 0 && pondFiles.some(file => file.file instanceof File);
-            const hasUrl = imageUrlInput && imageUrlInput.value.trim();
-            const isUpdate = this.state.currentData?.id;
-            
-            Logger.debug('Modal', '📊 Validation state:', {
-                hasNewFile,
-                hasUrl,
-                isUpdate,
-                pondFiles: pondFiles.map(f => ({
-                    filename: f.filename,
-                    origin: f.origin,
-                    status: f.status,
-                    hasFile: !!f.file,
-                    isFileInstance: f.file instanceof File
-                }))
-            });
-
-            // Only validate image requirement for new logos
-            if (!isUpdate && !hasNewFile && !hasUrl) {
-                Logger.warn('Modal', '⚠️ No image source provided for new logo');
-                Swal.fire({
-                    title: 'Validation Error',
-                    text: 'Please provide either an image file or URL',
-                    icon: 'warning',
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-                return;
-            }
-
-            this.setLoading(true);
-            const formData = new FormData();
-            
-            // Add form fields
-            formData.append('name', nameInput.value);
-            formData.append('websiteUrl', websiteUrlInput.value);
-            if (orderInput && orderInput.value) {
-                formData.append('order', orderInput.value);
-            }
-            
-            // Handle file upload - process any file in FilePond
-            if (pondFiles.length > 0) {
-                const pondFile = pondFiles[0]; // Get first file since we only allow one
-                if (pondFile.file instanceof File) {
-                    Logger.debug('Modal', '📁 Processing file:', {
-                        filename: pondFile.filename,
-                        type: pondFile.file.type,
-                        size: pondFile.file.size
-                    });
-                    formData.append('imageFile', pondFile.file);
-                } else {
-                    Logger.debug('Modal', '🔄 Using existing file:', {
-                        filename: pondFile.filename,
-                        origin: pondFile.origin,
-                        status: pondFile.status
-                    });
+            // Only validate image for support-logo type
+            if (currentType === 'support-logo') {
+                // Find FilePond instance - try multiple selectors
+                let filePondInput = this.elements.form.querySelector('input[type="file"].filepond');
+                if (!filePondInput) {
+                    filePondInput = this.elements.form.querySelector('.filepond--root');
                 }
-            }
-            
-            // Add URL if provided and no new file
-            if (!hasNewFile && hasUrl) {
-                Logger.debug('Modal', '🔗 Using image URL:', imageUrlInput.value);
-                formData.append('imageUrl', imageUrlInput.value);
+                if (!filePondInput) {
+                    filePondInput = document.querySelector('input[name="imageFile"].filepond--browser');
+                }
+                
+                Logger.debug('Modal', '🔍 FilePond input search:', {
+                    foundInput: !!filePondInput,
+                    inputType: filePondInput ? filePondInput.tagName : null,
+                    inputClass: filePondInput ? filePondInput.className : null
+                });
+                
+                // Get FilePond instance and check for files
+                const pond = filePondInput ? (FilePond.find(filePondInput) || window.supportLogoPond) : null;
+                Logger.debug('Modal', '🔍 Checking FilePond:', {
+                    hasPond: !!pond,
+                    files: pond ? pond.getFiles() : [],
+                    filesLength: pond ? pond.getFiles().length : 0
+                });
+                
+                // Check for new file upload
+                const pondFiles = pond ? pond.getFiles() : [];
+                Logger.debug('Modal', '📊 FilePond files:', {
+                    files: pondFiles.map(f => ({
+                        filename: f.filename,
+                        origin: f.origin,
+                        status: f.status,
+                        file: f.file ? {
+                            name: f.file.name,
+                            type: f.file.type,
+                            size: f.file.size
+                        } : null
+                    }))
+                });
+
+                const hasNewFile = pondFiles.length > 0 && pondFiles.some(file => file.file instanceof File);
+                const hasUrl = this.elements.form.querySelector('[name="imageUrl"]')?.value.trim();
+                const isUpdate = this.state.currentData?.id;
+                
+                Logger.debug('Modal', '📊 Validation state:', {
+                    hasNewFile,
+                    hasUrl,
+                    isUpdate,
+                    pondFiles: pondFiles.map(f => ({
+                        filename: f.filename,
+                        origin: f.origin,
+                        status: f.status,
+                        hasFile: !!f.file,
+                        isFileInstance: f.file instanceof File
+                    }))
+                });
+
+                // Only validate image requirement for new logos
+                if (!isUpdate && !hasNewFile && !hasUrl) {
+                    Logger.warn('Modal', '⚠️ No image source provided for new logo');
+                    Swal.fire({
+                        title: 'Validation Error',
+                        text: 'Please provide either an image file or URL',
+                        icon: 'warning',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    return;
+                }
+
+                // Handle file upload - process any file in FilePond
+                if (pondFiles.length > 0) {
+                    const pondFile = pondFiles[0]; // Get first file since we only allow one
+                    if (pondFile.file instanceof File) {
+                        Logger.debug('Modal', '📁 Processing file:', {
+                            filename: pondFile.filename,
+                            type: pondFile.file.type,
+                            size: pondFile.file.size
+                        });
+                        formData.append('imageFile', pondFile.file);
+                    }
+                }
             }
 
             // Log form data for debugging
@@ -486,35 +494,71 @@ class Modal {
                 })
             });
 
+            this.setLoading(true);
             let response;
-            if (isUpdate) {
+
+            if (this.state.currentData?.id) {
                 // Update existing item
                 Logger.debug('Modal', '🔄 Updating existing item', { id: this.state.currentData.id });
-                const url = `${this.config[this.state.currentType].endpoint}/${this.state.currentData.id}`;
-                response = await fetch(url, {
-                    method: 'PUT',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                const url = `${this.config[currentType].endpoint}/${this.state.currentData.id}`;
+                
+                if (currentType === 'benefit') {
+                    // For benefits, send as JSON
+                    const jsonData = {
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        displayOrder: parseInt(formData.get('order')),
+                        active: true
+                    };
+                    response = await fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsonData)
+                    });
+                } else {
+                    // For other types (like support-logo), send as multipart/form-data
+                    response = await fetch(url, {
+                        method: 'PUT',
+                        body: formData
+                    });
                 }
-                response = await response.json();
             } else {
                 // Create new item
                 Logger.debug('Modal', '🆕 Creating new item');
-                response = await fetch(this.config[this.state.currentType].endpoint, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                
+                if (currentType === 'benefit') {
+                    // For benefits, send as JSON
+                    const jsonData = {
+                        title: formData.get('title'),
+                        description: formData.get('description'),
+                        displayOrder: parseInt(formData.get('order')),
+                        active: true
+                    };
+                    response = await fetch(this.config[currentType].endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsonData)
+                    });
+                } else {
+                    // For other types (like support-logo), send as multipart/form-data
+                    response = await fetch(this.config[currentType].endpoint, {
+                        method: 'POST',
+                        body: formData
+                    });
                 }
-                response = await response.json();
             }
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            Logger.info('Modal', '✅ Form submitted successfully:', { data });
 
             // Show success message
             Swal.fire({

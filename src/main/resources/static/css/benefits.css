@@ -1,0 +1,187 @@
+/* Benefits Management Styles */
+
+/* Card Styles */
+.benefits-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.benefit-card {
+    width: 100%;
+    min-height: 350px;
+    padding: 24px;
+    gap: 10px;
+    border-radius: 20px;
+    background: #FFF0DC;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(240, 101, 39, 0.1);
+}
+
+
+/* Display Order Badge */
+.benefit-number {
+    width: 80px;
+    height: 80px;
+    padding: 20px;
+    gap: 4px;
+    border-radius: 50%;
+    background: rgba(240, 101, 39, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ruda', sans-serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: #F06527;
+    margin-bottom: 20px;
+}
+
+/* Admin Actions */
+.benefit-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.benefit-card:hover .benefit-actions {
+    opacity: 1;
+}
+
+.benefit-actions button {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Title and Description Styles */
+.benefit-card .text-lg {
+    color: #1F2937;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+.benefit-card .text-sm {
+    color: #6B7280;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Form Field Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.5rem;
+    background-color: white;
+    color: #1F2937;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.form-input:hover,
+.form-textarea:hover {
+    border-color: #D1D5DB;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #6366F1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Help Text Styles */
+.form-group .text-sm {
+    color: #6B7280;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+}
+
+.form-group .text-blue-600 {
+    color: #2563EB;
+    font-size: 0.75rem;
+}
+
+/* Add New Button Styles */
+.btn-primary {
+    background: linear-gradient(135deg, #6366F1, #4F46E5);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px -1px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .benefits-cards {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+    
+    .benefit-card {
+        min-height: 300px;
+    }
+    
+    .benefit-number {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+    
+    .benefit-actions {
+        opacity: 1; /* Always show actions on mobile */
+    }
+}
+
+@media (min-width: 768px) {
+    .grid {
+        gap: 2rem;
+    }
+}

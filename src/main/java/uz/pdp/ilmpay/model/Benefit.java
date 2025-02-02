@@ -1,9 +1,13 @@
 package uz.pdp.ilmpay.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
+@Table(name = "benefits")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,16 +19,19 @@ public class Benefit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotBlank(message = "Title is required")
     private String title;
     
     @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Description is required")
     private String description;
     
-    private String iconUrl;  // Store the URL or path to the benefit icon
-    
+    @Min(value = 1, message = "Display order must be at least 1")
+    @Max(value = 4, message = "Display order cannot be more than 4")
     private Integer displayOrder;  // To control the display order of benefits
     
-    private boolean active = true;  // To enable/disable benefits without deleting them
+    @Column(nullable = false)
+    private boolean active = true;  // Default to active when created
     
-    // Funny comment: "Because who doesn't love a good benefit? 🎁"
+    // Funny comment: "Keeping it simple, just like my coffee - no fancy toppings! ☕"
 }

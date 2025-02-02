@@ -61,6 +61,37 @@ const fieldConfigs = {
             step: 1,
             help: 'ℹ️ Set the display order (lower numbers appear first)'
         }
+    },
+    // 🎁 Benefit Configuration
+    'benefit': {
+        title: {
+            type: 'text',
+            label: 'Title',
+            placeholder: 'What magical benefit shall we add today?',
+            required: true,
+            maxLength: 100,
+            help: '✨ Enter a clear and concise title for this benefit'
+        },
+        description: {
+            type: 'textarea',
+            label: 'Description',
+            placeholder: 'Tell us more about this amazing benefit...',
+            required: true,
+            maxLength: 500,
+            help: '📝 Provide a detailed description of the benefit',
+            rows: 4
+        },
+        displayOrder: {
+            type: 'number',
+            label: 'Display Order',
+            placeholder: 'Pick a number (1-4)',
+            required: true,
+            min: 1,
+            max: 4,
+            step: 1,
+            defaultValue: 1,
+            help: '🎯 Choose position from 1 to 4 (1 appears first)'
+        }
     }
     // Add more configurations for other entity types here
 };

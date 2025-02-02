@@ -15,6 +15,20 @@ const fieldTemplates = {
         </div>
     `,
     
+    // 📝 Textarea field template
+    textarea: (field, value, currentData) => `
+        <div class="form-group">
+            <label class="form-label">${field.label}</label>
+            <textarea name="${field.name}"
+                      class="form-textarea"
+                      placeholder="${field.placeholder || ''}"
+                      rows="${field.rows || 4}"
+                      ${field.required ? 'required' : ''}>${currentData?.[field.name] || ''}</textarea>
+            ${field.help ? `<p class="text-sm text-gray-500 mt-1">${field.help}</p>` : ''}
+            ${currentData ? `<p class="text-xs text-blue-600 mt-1">Current value: ${currentData[field.name] || 'Not set'}</p>` : ''}
+        </div>
+    `,
+    
     // 🔗 URL field template
     url: (field, value, currentData) => `
         <div class="form-group">
@@ -88,6 +102,7 @@ const fieldTemplates = {
                    name="${field.name}"
                    value="${currentData?.[field.name] || ''}"
                    class="form-input"
+                   placeholder="${field.placeholder || ''}"
                    ${field.min ? `min="${field.min}"` : ''}
                    ${field.max ? `max="${field.max}"` : ''}
                    ${field.step ? `step="${field.step}"` : ''}

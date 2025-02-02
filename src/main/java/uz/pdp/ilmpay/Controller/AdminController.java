@@ -79,7 +79,7 @@ public class AdminController {
     @GetMapping("/content/benefits")
     public String benefitsPage(Model model, HttpServletRequest request) {
         model.addAttribute("currentPath", request.getRequestURI());
-        model.addAttribute("benefitCards", benefitCardService.findAllActive());
+        model.addAttribute("benefits", benefitCardService.findAllActive());
         return "admin/content/benefits";
     }
 

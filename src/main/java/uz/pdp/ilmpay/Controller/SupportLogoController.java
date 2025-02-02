@@ -41,7 +41,7 @@ public class SupportLogoController {
     @ResponseBody
     public ResponseEntity<EntityResponse<SupportLogoDTO>> getSupportLogo(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(EntityResponse.success(supportLogoService.findById(id)));
+            return ResponseEntity.ok(EntityResponse.customResponse("Support logo retrieved successfully", "Logo magic at its best!", supportLogoService.findById(id)));
         } catch (Exception e) {
             log.error("Error fetching support logo: {}", e.getMessage());
             return ResponseEntity.badRequest().body(EntityResponse.error(e.getMessage()));

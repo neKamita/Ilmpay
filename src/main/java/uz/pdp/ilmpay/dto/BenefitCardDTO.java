@@ -6,7 +6,12 @@ import lombok.NoArgsConstructor;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
 
+/**
+ * 🎁 BenefitCardDTO: The data carrier for our benefits!
+ * Like a gift box, but with Java fields instead of surprises.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,11 +24,9 @@ public class BenefitCardDTO {
     @NotBlank(message = "Description is required")
     private String description;
     
-    @NotBlank(message = "Icon URL is required")
-    private String iconUrl;
-    
-    @Min(value = 0, message = "Display order must be non-negative")
+    @Min(value = 1, message = "Display order must be at least 1")
+    @Max(value = 4, message = "Display order cannot be more than 4")
     private int displayOrder;
     
     private boolean active;
-} 
+}

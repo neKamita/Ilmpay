@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benefits Management - Ilmpay Admin</title>
+    
+    <!-- jQuery first -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- FilePond -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css" rel="stylesheet">
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    
+    <!-- Other resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Custom resources -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/filepond-custom.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/sweetalert-custom.css">
+    <link rel="stylesheet" href="/css/benefits.css">
+    
+    <!-- Utilities first -->
+    <script src="/js/logger.js"></script>
+    
+    <!-- Core functionality -->
+    <script src="/js/main.js"></script>
+    <script src="/js/field-configs.js"></script>
+    <script src="/js/field-templates.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/admin.js"></script>
+    
+    <!-- Feature-specific scripts -->
+    <script src="/js/filepond-config.js"></script>
+    <script src="/js/crud.js"></script>
+    <script src="/js/benefits.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-900">Benefits Management</h1>
+                <button class="btn-primary flex items-center space-x-2" onclick="Modal.show('benefit')">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add New Benefit</span>
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border p-6 big-box">
+                <!-- Benefits Grid -->
+                <div class="benefits-cards">
+                    <!-- Enhanced Benefit Cards -->
+                    <div th:each="benefit : ${benefits}" class="benefit-card relative">
+                        <!-- Display Order Badge -->
+                        <div class="benefit-number" th:text="${benefit.displayOrder}">1</div>
+                        
+                        <!-- Title -->
+                        <h3 class="font-ruda text-2xl font-bold text-gray-900" th:text="${benefit.title}">Benefit Title</h3>
+                        
+                        <!-- Description -->
+                        <p class="font-ruda text-sm text-gray-600 text-center" th:text="${benefit.description}">Benefit description goes here...</p>
+                        
+                        <!-- Admin Actions -->
+                        <div class="benefit-actions">
+                            <button class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg"
+                                    th:onclick="|Modal.show('benefit', ${benefit.id})|"
+                                    title="Edit Benefit">
+                                <i data-lucide="edit" class="w-4 h-4"></i>
+                            </button>
+                            <button class="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg"
+                                    th:onclick="|deleteItem('benefit', ${benefit.id})|"
+                                    title="Delete Benefit">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Include the modal fragment -->
+    <div th:replace="~{admin/fragments/crud-modal :: crud-modal}"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
+            
+            // Initialize logger
+            Logger.info('Benefits', 'Benefits page initialized');
+        });
+    </script>
+</body>
+</html>

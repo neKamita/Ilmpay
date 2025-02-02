@@ -33,7 +33,6 @@ public class BenefitCardService {
         BenefitCard card = new BenefitCard();
         card.setTitle(dto.getTitle());
         card.setDescription(dto.getDescription());
-        card.setIconUrl(dto.getIconUrl());
         card.setDisplayOrder(dto.getDisplayOrder());
         card.setActive(true);
         card.setCreatedAt(LocalDateTime.now());
@@ -50,7 +49,6 @@ public class BenefitCardService {
 
         card.setTitle(dto.getTitle());
         card.setDescription(dto.getDescription());
-        card.setIconUrl(dto.getIconUrl());
         card.setDisplayOrder(dto.getDisplayOrder());
         card.setActive(dto.isActive());
 
@@ -67,15 +65,27 @@ public class BenefitCardService {
         benefitCardRepository.save(card);
     }
 
+    /**
+     * Retrieves a benefit by its id.
+     * 
+     * @param id the benefit id
+     * @return the BenefitCardDTO representing the benefit
+     * @throws ResourceNotFoundException if the benefit is not found
+     * 
+     * Note: If benefit not found, we raise a flag louder than a bug in production!
+     */
+    public BenefitCardDTO findById(Long id) {
+        return benefitCardRepository.findById(id)
+                .map(this::toDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Benefit not found"));
+    }
+
     private void validateBenefitCard(BenefitCardDTO dto) {
         if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
             throw new IllegalArgumentException("Title is required");
         }
         if (dto.getDescription() == null || dto.getDescription().trim().isEmpty()) {
             throw new IllegalArgumentException("Description is required");
-        }
-        if (dto.getIconUrl() == null || dto.getIconUrl().trim().isEmpty()) {
-            throw new IllegalArgumentException("Icon URL is required");
         }
     }
 
@@ -84,7 +94,6 @@ public class BenefitCardService {
             card.getId(),
             card.getTitle(),
             card.getDescription(),
-            card.getIconUrl(),
             card.getDisplayOrder(),
             card.isActive()
         );

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uz.pdp.ilmpay.dto.SupportLogoDTO;
+import uz.pdp.ilmpay.dto.BenefitCardDTO;
 import uz.pdp.ilmpay.exception.ResourceNotFoundException;
 import uz.pdp.ilmpay.service.BenefitCardService;
 import uz.pdp.ilmpay.service.FaqService;
@@ -36,14 +37,14 @@ public class AdminRestController {
     // CRUD endpoints for each entity with proper response handling
     @GetMapping("/support-logos")
     public ResponseEntity<EntityResponse<List<SupportLogoDTO>>> getAllSupportLogos() {
-        return ResponseEntity.ok(EntityResponse.success("Support logos retrieved successfully", supportLogoService.findAllActive()));
+        return ResponseEntity.ok(EntityResponse.customResponse("Support logos retrieved successfully", "They are looking fancy indeed!", supportLogoService.findAllActive()));
     }
 
     @GetMapping("/support-logos/{id}")
     public ResponseEntity<EntityResponse<SupportLogoDTO>> getSupportLogo(@PathVariable Long id) {
         try {
             SupportLogoDTO logo = supportLogoService.findById(id);
-            return ResponseEntity.ok(EntityResponse.success("Support logo retrieved successfully", logo));
+            return ResponseEntity.ok(EntityResponse.customResponse("Support logo retrieved successfully", "One logo to rule them all!", logo));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(EntityResponse.error(e.getMessage(), "LOGO_NOT_FOUND"));
         }
@@ -130,5 +131,37 @@ public class AdminRestController {
         }
     }
 
-    // Similar endpoints for other entities...
+    // Benefits CRUD endpoints
+    @GetMapping("/benefits")
+    public ResponseEntity<EntityResponse<List<BenefitCardDTO>>> getAllBenefits() {
+        return ResponseEntity.ok(EntityResponse.customResponse("Benefits retrieved successfully", "Your benefits are loaded with awesomeness!", benefitCardService.findAllActive()));
+    }
+
+    @GetMapping("/benefits/{id}")
+    public ResponseEntity<EntityResponse<BenefitCardDTO>> getBenefit(@PathVariable Long id) {
+        try {
+            BenefitCardDTO benefit = benefitCardService.findById(id);
+            return ResponseEntity.ok(EntityResponse.customResponse("Benefit retrieved successfully", "Benefit power activated!", benefit));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(EntityResponse.error(e.getMessage(), "BENEFIT_NOT_FOUND"));
+        }
+    }
+
+    @PostMapping("/benefits")
+    public ResponseEntity<EntityResponse<BenefitCardDTO>> createBenefit(@Valid @RequestBody BenefitCardDTO dto) {
+        BenefitCardDTO created = benefitCardService.create(dto);
+        return ResponseEntity.ok(EntityResponse.customResponse("Benefit created successfully", "A new benefit emerges!", created));
+    }
+
+    @PutMapping("/benefits/{id}")
+    public ResponseEntity<EntityResponse<BenefitCardDTO>> updateBenefit(@PathVariable Long id, @Valid @RequestBody BenefitCardDTO dto) {
+        BenefitCardDTO updated = benefitCardService.update(id, dto);
+        return ResponseEntity.ok(EntityResponse.customResponse("Benefit updated successfully", "Benefit updated with a twist!", updated));
+    }
+
+    @DeleteMapping("/benefits/{id}")
+    public ResponseEntity<EntityResponse<Void>> deleteBenefit(@PathVariable Long id) {
+        benefitCardService.delete(id);
+        return ResponseEntity.ok(EntityResponse.customResponse("Benefit deleted successfully", "The benefit has been banished!", null));
+    }
 }
