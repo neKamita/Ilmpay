@@ -4,7 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import uz.pdp.ilmpay.service.SupportLogoService;
+import uz.pdp.ilmpay.service.BenefitCardService;
 
 /**
  * 🏠 Home Sweet Home Controller
@@ -14,11 +16,13 @@ import uz.pdp.ilmpay.service.SupportLogoService;
  * @author Your Friendly Neighborhood Developer
  * @version 1.0 (Now with extra awesomeness!)
  */
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
     // 🎯 Our trusty services
     private final SupportLogoService supportLogoService;
+    private final BenefitCardService benefitCardService; // 🎁 For managing our awesome benefits
 
     /**
      * 🎯 The main landing page route
@@ -36,6 +40,12 @@ public class HomeController {
         
         // 🤝 Add support logos to show our awesome partners
         mav.addObject("supportLogos", supportLogoService.findAllActive());
+        
+        // 🎁 Add our amazing benefits, sorted by display order
+        var benefits = benefitCardService.findAllActive();
+        log.info("🎁 Found {} benefits for homepage", benefits.size());
+        benefits.forEach(benefit -> log.info("Benefit: {} (Order: {})", benefit.getTitle(), benefit.getDisplayOrder()));
+        mav.addObject("benefits", benefits);
         
         return mav; // 🎉 Off you go, little view!
     }

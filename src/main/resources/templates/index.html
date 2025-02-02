@@ -122,8 +122,9 @@
         <div class="container">
             <div class="benefits-badge">
                 <span>
-                <img th:src="@{/images/Star 1.svg}" class="benefits-badge-star" th:alt="#{hero.welcome.alt}">
-                    Awesome Benefit From Us</span>
+                    <img th:src="@{/images/Star 1.svg}" class="benefits-badge-star" th:alt="#{hero.welcome.alt}">
+                    Awesome Benefit From Us
+                </span>
             </div>
             
             <h2 class="benefits-title">
@@ -132,28 +133,13 @@
             </h2>
             
             <div class="benefits-cards">
-                <div class="benefit-card">
-                    <div class="benefit-number">1</div>
-                    <h3 th:text="#{benefits.step1.title}">Download the App</h3>
-                    <p th:text="#{benefits.step1.description}">Get started by downloading the IlmPay app on your mobile device. It's available for both iOS and Android platforms, making it accessible to everyone.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-number">2</div>
-                    <h3 th:text="#{benefits.step2.title}">Choose Your Challenge</h3>
-                    <p th:text="#{benefits.step2.description}">Browse through our wide range of test challenges covering various subjects and difficulty levels.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-number">3</div>
-                    <h3 th:text="#{benefits.step3.title}">Participate & Compete</h3>
-                    <p th:text="#{benefits.step3.description}">Once you've selected a challenge, it's time to put your knowledge to the test! Complete the challenge to the best of your ability and compete against other students.</p>
-                </div>
-                
-                <div class="benefit-card">
-                    <div class="benefit-number">4</div>
-                    <h3 th:text="#{benefits.step4.title}">Win & Get Rewarded</h3>
-                    <p th:text="#{benefits.step4.description}">If you emerge victorious, congratulations! Not only do you earn bragging rights, but we'll also cover your tuition fees for your next semester.</p>
+                <!-- Dynamic benefits from database -->
+                <div th:each="benefit : ${benefits}" class="benefit-card">
+                    <div class="benefit-number" th:text="${benefit.displayOrder}">1</div>
+                    <h3 class="font-ruda text-2xl font-bold text-gray-900" th:text="${benefit.title}">Benefit Title</h3>
+                    <p class="font-ruda text-sm text-gray-600 text-center" th:text="${benefit.description}">
+                        Benefit description goes here...
+                    </p>
                 </div>
             </div>
         </div>
