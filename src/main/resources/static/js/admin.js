@@ -1,3 +1,6 @@
+// 📦 Import our trusty Logger - The debugger's best friend
+import { Logger } from './logger.js';
+
 // 🎭 Admin Panel Functionality - Where the magic happens! ✨
 
 // 🔄 Sidebar Toggle - The hide and seek champion

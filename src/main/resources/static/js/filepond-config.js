@@ -1,4 +1,5 @@
 // 🎨 FilePond Configuration - Making file uploads as smooth as a duck on a pond! 🦆
+import Logger from './logger.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     Logger.info('FilePond', '🎣 Setting up the file fishing pond');

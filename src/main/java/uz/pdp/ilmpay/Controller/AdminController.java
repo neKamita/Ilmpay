@@ -161,13 +161,28 @@ public class AdminController {
     }
 
     // Testimonials CRUD
+    @GetMapping("/testimonials/{id}")
+    @ResponseBody
+    public ResponseEntity<EntityResponse<TestimonialDTO>> getTestimonial(@PathVariable Long id) {
+        log.info("🔍 Getting testimonial id: {}", id);
+        try {
+            TestimonialDTO testimonial = testimonialService.findById(id);
+            log.info("✅ Successfully retrieved testimonial id: {}", id);
+            return ResponseEntity.ok(EntityResponse.success(testimonial));
+        } catch (Exception e) {
+            log.error("❌ Failed to get testimonial. Error: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest()
+                    .body(EntityResponse.error("Failed to get testimonial: " + e.getMessage()));
+        }
+    }
+
     @PostMapping("/testimonials")
     @ResponseBody
     public ResponseEntity<EntityResponse<TestimonialDTO>> createTestimonial(
             @RequestParam("name") String name,
             @RequestParam("comment") String comment,
             @RequestParam("rating") int rating,
-            @RequestParam(value = "avatarUrl", required = false) MultipartFile avatarFile) {
+            @RequestParam(value = "imageFile", required = false) MultipartFile avatarFile) {
         log.info("✨ Creating new testimonial - Name: {}, Rating: {}, Has Avatar: {}",
                 name, rating, avatarFile != null);
         try {
@@ -195,7 +210,7 @@ public class AdminController {
             @RequestParam("name") String name,
             @RequestParam("comment") String comment,
             @RequestParam("rating") int rating,
-            @RequestParam(value = "avatarUrl", required = false) MultipartFile avatarFile) {
+            @RequestParam(value = "imageFile", required = false) MultipartFile avatarFile) {
         log.info("🔄 Updating testimonial id: {}", id);
         try {
             TestimonialDTO dto = new TestimonialDTO();

@@ -1,236 +1,162 @@
-// 🎯 CRUD Operations Helper
+// 🎯 CRUD Operations Helper - For all your data needs! 
+import { Logger } from './logger.js';
 
-/**
- * CrudOperations class for handling CRUD operations
- */
-class CrudOperations {
-    /**
-     * Initialize CRUD operations
-     * @param {string} type - The type of item (e.g., 'benefit', 'support-logo')
-     * @param {Object} config - Configuration object
-     */
+// 🎭 CRUD Configuration
+const crudConfig = {
+    'support-logo': {
+        endpoint: '/api/admin/support-logos',
+        messages: {
+            deleteConfirm: 'Are you sure you want to delete this logo?',
+            deleteSuccess: 'Logo deleted successfully! 🎉',
+            deleteError: 'Failed to delete logo 😢'
+        }
+    },
+    'benefit': {
+        endpoint: '/api/admin/benefits',
+        messages: {
+            deleteConfirm: 'Are you sure you want to delete this benefit? This action cannot be undone.',
+            deleteSuccess: 'Benefit deleted successfully! Your benefits list is now updated 🎉',
+            deleteError: 'Oops! Failed to delete the benefit. Please try again 😢'
+        }
+    },
+    'testimonial': {
+        endpoint: '/admin/testimonials',
+        messages: {
+            deleteConfirm: 'Are you sure you want to delete this testimonial? This action cannot be undone.',
+            deleteSuccess: 'Testimonial deleted successfully! Your testimonials list is now updated 🌟',
+            deleteError: 'Oops! Failed to delete the testimonial. Please try again 😢'
+        }
+    }
+};
+
+// Define the CrudOperations class
+export class CrudOperations {
     constructor(type, config) {
         this.type = type;
-        this.apiEndpoint = config.apiEndpoint;
-        this.fields = config.fields;
-        this.onSuccess = config.onSuccess || {};
-        this.onError = config.onError || {};
-        
-        // Initialize the modal handlers
-        this.initializeModalHandlers();
+        this.config = config;
+        Logger.info('CrudOperations', `🎮 Initializing CRUD operations for ${type}`);
     }
 
-    /**
-     * Initialize modal event handlers
-     */
-    initializeModalHandlers() {
-        // Handle form submission
-        document.addEventListener('modal:submit', (event) => {
-            if (event.detail.type === this.type) {
-                const formData = event.detail.formData;
-                const id = event.detail.id;
-                
-                if (id) {
-                    this.update(id, formData);
-                } else {
-                    this.create(formData);
-                }
-            }
-        });
-
-        // Handle modal open to set up fields
-        document.addEventListener('modal:open', (event) => {
-            if (event.detail.type === this.type) {
-                Modal.setFields(this.fields);
-            }
-        });
+    async create(data) {
+        try {
+            const response = await fetch(this.config.apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const result = await response.json();
+            this.config.onSuccess.create(result);
+            return result;
+        } catch (error) {
+            this.config.onError.create(error);
+            throw error;
+        }
     }
 
-    /**
-     * Create a new item
-     * @param {FormData} formData - Form data for the new item
-     */
-    create(formData) {
-        fetch(this.apiEndpoint, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.message || `HTTP error! status: ${response.status}`);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            Modal.hide();
-            if (this.onSuccess.create) {
-                this.onSuccess.create(data);
-            }
-        })
-        .catch(error => {
-            console.error('Create Error:', error);
-            if (this.onError.create) {
-                this.onError.create(error.message);
-            }
-        });
+    async update(id, data) {
+        try {
+            const response = await fetch(`${this.config.apiEndpoint}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const result = await response.json();
+            this.config.onSuccess.update(result);
+            return result;
+        } catch (error) {
+            this.config.onError.update(error);
+            throw error;
+        }
     }
 
-    /**
-     * Update an existing item
-     * @param {number} id - ID of the item to update
-     * @param {FormData} formData - Updated form data
-     */
-    update(id, formData) {
-        fetch(`${this.apiEndpoint}/${id}`, {
-            method: 'PUT',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => {
-                    throw new Error(data.message || `HTTP error! status: ${response.status}`);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            Modal.hide();
-            if (this.onSuccess.update) {
-                this.onSuccess.update(data);
-            }
-        })
-        .catch(error => {
-            console.error('Update Error:', error);
-            if (this.onError.update) {
-                this.onError.update(error.message);
-            }
-        });
+    async delete(id) {
+        try {
+            const response = await fetch(`${this.config.apiEndpoint}/${id}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            this.config.onSuccess.delete();
+            return true;
+        } catch (error) {
+            this.config.onError.delete(error);
+            throw error;
+        }
     }
 }
 
 /**
- * 🗑️ Delete an item with confirmation
- * @param {string} type - The type of item (e.g., 'support-logo')
+ * Delete an item with confirmation
+ * @param {string} type - The type of item (e.g., 'support-logo', 'testimonial')
  * @param {number} id - The ID of the item to delete
  */
-function deleteItem(type, id) {
-    // Configuration for different types
-    const config = {
-        'support-logo': {
-            title: 'Delete Support Logo',
-            text: 'Are you sure you want to delete this logo? This action cannot be undone.',
-            endpoint: '/api/admin/support-logos'
-        },
-        'benefit': {
-            title: 'Delete Benefit',
-            text: 'Are you sure you want to delete this benefit? This action cannot be undone.',
-            endpoint: '/api/admin/benefits'
-        }
-    };
-
-    const typeConfig = config[type];
-    if (!typeConfig) {
+export async function deleteItem(type, id) {
+    const config = crudConfig[type];
+    if (!config) {
         console.error(`❌ Unknown type: ${type}`);
         return;
     }
 
     // Show confirmation dialog
-    Swal.fire({
-        title: typeConfig.title,
-        text: typeConfig.text,
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: config.messages.deleteConfirm,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#ef4444', // Red color for danger
-        cancelButtonColor: '#6b7280', // Gray color
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Show loading state
+    });
+
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch(`${config.endpoint}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Show success message
             Swal.fire({
-                title: 'Deleting...',
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false
+                title: 'Deleted!',
+                text: config.messages.deleteSuccess,
+                icon: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
             });
 
-            // Send delete request
-            fetch(`${typeConfig.endpoint}/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                // Show success message
-                Swal.fire({
-                    title: 'Deleted!',
-                    text: 'The item has been deleted successfully.',
-                    icon: 'success',
-                    timer: 1500
-                }).then(() => {
-                    // Reload the page to reflect changes
-                    window.location.reload();
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to delete the item. Please try again.',
-                    icon: 'error'
-                });
+            // Reload the page
+            window.location.reload();
+        } catch (error) {
+            console.error('Delete failed:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: config.messages.deleteError,
+                icon: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
             });
         }
-    });
-}
-
-/**
- * 🔄 Update an item
- * @param {string} type - The type of item (e.g., 'support-logo')
- * @param {number} id - The ID of the item to update
- * @param {FormData} formData - The form data to send
- * @returns {Promise} - A promise that resolves when the update is complete
- */
-function updateItem(type, id, formData) {
-    const config = {
-        'support-logo': {
-            endpoint: '/api/admin/support-logos'
-        },
-        'benefit': {
-            endpoint: '/api/admin/benefits'
-        }
-    };
-
-    const typeConfig = config[type];
-    if (!typeConfig) {
-        return Promise.reject(new Error(`Unknown type: ${type}`));
     }
-
-    // Log the form data for debugging
-    console.debug('🔄 Update form data:', {
-        type,
-        id,
-        formData: Object.fromEntries(formData.entries())
-    });
-
-    return fetch(`${typeConfig.endpoint}/${id}`, {
-        method: 'PUT',
-        body: formData
-    }).then(response => {
-        if (!response.ok) {
-            return response.json().then(data => {
-                throw new Error(data.message || `HTTP error! status: ${response.status}`);
-            });
-        }
-        return response.json();
-    });
 }
+
+// Initialize when the script loads
+Logger.info('CrudOperations', '🎯 CRUD Operations initialized');

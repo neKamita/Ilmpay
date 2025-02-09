@@ -108,6 +108,17 @@ public class TestimonialService {
         return toDTO(saved);
     }
 
+    public TestimonialDTO findById(Long id) {
+        log.info("🔍 Finding testimonial by id: {}", id);
+        Testimonial testimonial = testimonialRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("❌ Testimonial not found with id: {}", id);
+                    return new ResourceNotFoundException("Testimonial not found with id: " + id);
+                });
+        log.info("✅ Found testimonial: {}", testimonial.getName());
+        return toDTO(testimonial);
+    }
+
     public void delete(Long id) {
         log.info("🗑️ Soft deleting testimonial id: {}", id);
         Testimonial testimonial = testimonialRepository.findById(id)
@@ -127,7 +138,8 @@ public class TestimonialService {
         dto.setName(testimonial.getName());
         dto.setComment(testimonial.getComment());
         dto.setRating(testimonial.getRating());
-        dto.setActive(testimonial.isActive()    );
+        dto.setAvatarUrl(testimonial.getAvatarUrl());
+        dto.setActive(testimonial.isActive());
         return dto;
     }
 

@@ -9,6 +9,10 @@
  * @version 1.0.0
  */
 
+import { Logger } from './logger.js';
+import { Modal } from './modal.js';
+import { CrudOperations } from './crud.js';
+
 // Initialize testimonial configuration
 function initTestimonialConfig() {
     Logger.info('Testimonials', '🎭 Initializing testimonial configuration');
@@ -66,17 +70,36 @@ function initTestimonialConfig() {
                 step: 1
             },
             {
-                name: 'avatarUrl',
+                name: 'imageFile',
                 type: 'file',
                 label: 'Student Photo',
                 required: false,
                 accept: 'image/*',
                 help: '📸 Upload a photo of the student (optional)',
+                uploadPath: 'testimonials/',
                 filepond: {
                     allowImagePreview: true,
                     imagePreviewMaxHeight: 200,
                     allowImageCrop: true,
-                    imageCropAspectRatio: '1:1'
+                    imageCropAspectRatio: '1:1',
+                    labelIdle: '🖼️ Drag & Drop student photo or <span class="filepond--label-action">Browse</span>',
+                    imageResizeTargetWidth: 400,
+                    imageResizeTargetHeight: 400,
+                    server: {
+                        process: {
+                            url: '/admin/testimonials/upload',
+                            method: 'POST',
+                            withCredentials: false,
+                            headers: {},
+                            timeout: 7000,
+                            onload: null,
+                            onerror: null
+                        },
+                        revert: null,
+                        restore: null,
+                        load: null,
+                        fetch: null
+                    }
                 }
             }
         ],
@@ -92,7 +115,7 @@ function initTestimonialConfig() {
         }
     };
 
-    Logger.info('Testimonials', '✅ Testimonial configuration initialized successfully');
+    Logger.info('Testimonials', '✅ Testimonial configuration initialized');
 }
 
 // Initialize when the DOM is ready

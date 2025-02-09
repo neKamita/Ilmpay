@@ -1,4 +1,7 @@
 // 🎭 Modal Management System - Where UI magic happens!
+import Logger from './logger.js';
+import { fieldConfigs } from './field-configs.js';
+import { fieldTemplates } from './field-templates.js';
 
 class Modal {
     // 🎪 Core properties
@@ -51,12 +54,6 @@ class Modal {
 
     // Initialize configurations
     static initializeConfigs() {
-        if (typeof fieldConfigs === 'undefined') {
-            Logger.warn('Modal', '⚠️ fieldConfigs not found, will retry in 100ms');
-            setTimeout(() => this.initializeConfigs(), 100);
-            return;
-        }
-
         this.config = {
             'support-logo': {
                 title: 'Support Logo',
@@ -65,7 +62,44 @@ class Modal {
                 fields: Object.entries(fieldConfigs['support-logo']).map(([name, field]) => ({
                     name,
                     ...field
-                }))
+                })),
+                successMessage: {
+                    create: 'Support logo created successfully!',
+                    update: 'Support logo updated successfully!'
+                }
+            },
+            'testimonial': {
+                title: 'Testimonial',
+                endpoint: '/api/admin/testimonials',
+                method: 'POST',
+                fields: [
+                    {
+                        name: 'title',
+                        type: 'text',
+                        label: 'Title',
+                        placeholder: 'Enter testimonial title',
+                        required: true
+                    },
+                    {
+                        name: 'description',
+                        type: 'textarea',
+                        label: 'Description',
+                        placeholder: 'Enter testimonial description',
+                        required: true,
+                        rows: 4
+                    },
+                    {
+                        name: 'image',
+                        type: 'file',
+                        label: 'Image',
+                        placeholder: 'Select an image',
+                        required: true
+                    }
+                ],
+                successMessage: {
+                    create: 'Testimonial created successfully!',
+                    update: 'Testimonial updated successfully!'
+                }
             },
             'benefit': {
                 title: 'Benefit',
@@ -97,7 +131,11 @@ class Modal {
                         max: 4,
                         step: 1
                     }
-                ]
+                ],
+                successMessage: {
+                    create: 'Benefit created successfully!',
+                    update: 'Benefit updated successfully!'
+                }
             }
         };
         
@@ -401,8 +439,8 @@ class Modal {
             const formData = new FormData(this.elements.form);
             const currentType = this.state.currentType;
 
-            // Only validate image for support-logo type
-            if (currentType === 'support-logo') {
+            // Handle file uploads for both support-logo and testimonial types
+            if (currentType === 'support-logo' || currentType === 'testimonial') {
                 // Find FilePond instance - try multiple selectors
                 let filePondInput = this.elements.form.querySelector('input[type="file"].filepond');
                 if (!filePondInput) {
@@ -419,7 +457,7 @@ class Modal {
                 });
                 
                 // Get FilePond instance and check for files
-                const pond = filePondInput ? (FilePond.find(filePondInput) || window.supportLogoPond) : null;
+                const pond = filePondInput ? FilePond.find(filePondInput) : null;
                 Logger.debug('Modal', '🔍 Checking FilePond:', {
                     hasPond: !!pond,
                     files: pond ? pond.getFiles() : [],
@@ -440,38 +478,6 @@ class Modal {
                         } : null
                     }))
                 });
-
-                const hasNewFile = pondFiles.length > 0 && pondFiles.some(file => file.file instanceof File);
-                const hasUrl = this.elements.form.querySelector('[name="imageUrl"]')?.value.trim();
-                const isUpdate = this.state.currentData?.id;
-                
-                Logger.debug('Modal', '📊 Validation state:', {
-                    hasNewFile,
-                    hasUrl,
-                    isUpdate,
-                    pondFiles: pondFiles.map(f => ({
-                        filename: f.filename,
-                        origin: f.origin,
-                        status: f.status,
-                        hasFile: !!f.file,
-                        isFileInstance: f.file instanceof File
-                    }))
-                });
-
-                // Only validate image requirement for new logos
-                if (!isUpdate && !hasNewFile && !hasUrl) {
-                    Logger.warn('Modal', '⚠️ No image source provided for new logo');
-                    Swal.fire({
-                        title: 'Validation Error',
-                        text: 'Please provide either an image file or URL',
-                        icon: 'warning',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000
-                    });
-                    return;
-                }
 
                 // Handle file upload - process any file in FilePond
                 if (pondFiles.length > 0) {
@@ -518,7 +524,7 @@ class Modal {
                         body: JSON.stringify(jsonData)
                     });
                 } else {
-                    // For other types (like support-logo), send as multipart/form-data
+                    // For other types (support-logo, testimonial), send as multipart/form-data
                     response = await fetch(url, {
                         method: 'PUT',
                         body: formData
@@ -544,7 +550,7 @@ class Modal {
                         body: JSON.stringify(jsonData)
                     });
                 } else {
-                    // For other types (like support-logo), send as multipart/form-data
+                    // For other types (support-logo, testimonial), send as multipart/form-data
                     response = await fetch(this.config[currentType].endpoint, {
                         method: 'POST',
                         body: formData
@@ -563,7 +569,7 @@ class Modal {
             // Show success message
             Swal.fire({
                 title: 'Success!',
-                text: 'Operation completed successfully! 🎉',
+                text: this.config[currentType].successMessage[this.state.currentData?.id ? 'update' : 'create'],
                 icon: 'success',
                 toast: true,
                 position: 'top-end',
@@ -592,5 +598,11 @@ class Modal {
     }
 }
 
-// 🎬 Initialize on page load
+// Export Modal for ES modules
+export { Modal };
+
+// Also make Modal available globally for inline event handlers
+window.Modal = Modal;
+
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => Modal.init());

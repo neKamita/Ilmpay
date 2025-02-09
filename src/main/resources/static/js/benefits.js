@@ -1,5 +1,7 @@
 // 🎁 Benefits Management JavaScript
 // Where we make managing benefits as fun as opening presents!
+import { Logger } from './logger.js';
+import { CrudOperations } from './crud.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     Logger.info('Benefits', '🎯 Time to manage some awesome benefits!');

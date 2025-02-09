@@ -31,7 +31,11 @@ public class TestimonialDTO {
     @Max(value = 5, message = "Rating cannot be more than 5")
     private int rating;
 
+    // For file upload
     private MultipartFile imageFile;
+
+    // For displaying stored S3 URL
+    private String avatarUrl;
 
     private boolean isActive = true;
 }

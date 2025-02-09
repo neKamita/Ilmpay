@@ -1,92 +1,56 @@
-// 🎯 Logger Utility - Making debugging a breeze!
+// Logger Module - Making debugging a breeze!
 
-const Logger = {
-    // Log levels
-    LEVELS: {
+// Logger class definition
+class Logger {
+    static LEVELS = {
         DEBUG: '🐛 DEBUG',
         INFO: 'ℹ️ INFO',
         WARN: '⚠️ WARN',
         ERROR: '❌ ERROR'
-    },
+    };
 
     // Enable/disable logging
-    enabled: true,
+    static enabled = true;
 
     // Enable/disable console groups
-    grouping: true,
+    static grouping = true;
 
     // Store logs for potential server upload
-    logHistory: [],
+    static logHistory = [];
 
     // Maximum number of logs to keep in history
-    maxHistorySize: 1000,
+    static maxHistorySize = 1000;
 
-    /**
-     * 📝 Log a debug message
-     * @param {string} component - Component name
-     * @param {string} message - Log message
-     * @param {any} data - Optional data to log
-     */
-    debug(component, message, data = null) {
+    static debug(component, message, data = null) {
         this._log(this.LEVELS.DEBUG, component, message, data);
-    },
+    }
 
-    /**
-     * ℹ️ Log an info message
-     * @param {string} component - Component name
-     * @param {string} message - Log message
-     * @param {any} data - Optional data to log
-     */
-    info(component, message, data = null) {
+    static info(component, message, data = null) {
         this._log(this.LEVELS.INFO, component, message, data);
-    },
+    }
 
-    /**
-     * ⚠️ Log a warning message
-     * @param {string} component - Component name
-     * @param {string} message - Log message
-     * @param {any} data - Optional data to log
-     */
-    warn(component, message, data = null) {
+    static warn(component, message, data = null) {
         this._log(this.LEVELS.WARN, component, message, data);
-    },
+    }
 
-    /**
-     * ❌ Log an error message
-     * @param {string} component - Component name
-     * @param {string} message - Log message
-     * @param {Error|any} error - Error object or data
-     */
-    error(component, message, error = null) {
+    static error(component, message, error = null) {
         this._log(this.LEVELS.ERROR, component, message, error);
-        if (error instanceof Error) {
+        if (error && error instanceof Error) {
             console.error(error);
         }
-    },
+    }
 
-    /**
-     * 📊 Start a grouped log section
-     * @param {string} component - Component name
-     * @param {string} label - Group label
-     */
-    group(component, label) {
+    static group(component, label) {
         if (!this.enabled || !this.grouping) return;
         console.group(`${component} - ${label}`);
-    },
+    }
 
-    /**
-     * 📊 End a grouped log section
-     */
-    groupEnd() {
+    static groupEnd() {
         if (!this.enabled || !this.grouping) return;
         console.groupEnd();
-    },
+    }
 
-    /**
-     * 🔄 Internal logging function
-     * @private
-     */
-    _log(level, component, message, data = null) {
+    static _log(level, component, message, data = null) {
         if (!this.enabled) return;
 
         const timestamp = new Date().toISOString();
@@ -99,36 +63,31 @@ const Logger = {
         };
 
         // Add to history
-        this.logHistory.unshift(logEntry);
+        this.logHistory.push(logEntry);
         if (this.logHistory.length > this.maxHistorySize) {
-            this.logHistory.pop();
+            this.logHistory.shift();
         }
 
         // Format console output
-        const prefix = `[${timestamp}] ${level} [${component}]`;
-        
+        const prefix = `[${timestamp}] ${level} ${component}:`;
+        console.log(prefix, message);
         if (data) {
-            console.log(prefix, message, data);
-        } else {
-            console.log(prefix, message);
+            console.log(data);
         }
-    },
+    }
 
-    /**
-     * 💾 Get log history
-     * @returns {Array} Array of log entries
-     */
-    getHistory() {
-        return this.logHistory;
-    },
+    static getHistory() {
+        return [...this.logHistory];
+    }
 
-    /**
-     * 🧹 Clear log history
-     */
-    clearHistory() {
+    static clearHistory() {
         this.logHistory = [];
     }
-};
+}
 
-// Export for use in other modules
-window.Logger = Logger;
+// Create a singleton instance
+const logger = new Logger();
+
+// Support both default and named exports
+export { Logger };
+export default Logger;

@@ -1,5 +1,9 @@
-// 🎨 Custom form field templates
-const fieldTemplates = {
+// 🎨 Field Templates Module - Beautiful form fields for every need!
+import Logger from './logger.js';
+
+Logger.info('FieldTemplates', '🎨 Loading field templates');
+
+export const fieldTemplates = {
     // 📝 Text field template
     text: (field, value, currentData) => `
         <div class="form-group">

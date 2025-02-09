@@ -1,5 +1,9 @@
-// 🎯 Custom field configurations
-const fieldConfigs = {
+// 🎯 Field Configurations Module
+import Logger from './logger.js';
+
+Logger.info('FieldConfigs', '📝 Loading field configurations');
+
+export const fieldConfigs = {
     // 🖼️ Support Logo Configuration
     'support-logo': {
         name: {
