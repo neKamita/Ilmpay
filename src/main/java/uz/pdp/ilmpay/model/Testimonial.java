@@ -7,21 +7,38 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "testimonials")
+/**
+ * Testimonial Entity
+ * Stores student testimonials with their feedback and ratings
+ * 
+ * @author neKamita
+ * @version 1.0
+ */
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "testimonials")
 public class Testimonial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Column(nullable = false)
     private String name;
-    private String role;
+
+    @Column(nullable = false, length = 1000)
     private String comment;
+
+    @Column(name = "avatar_url")
     private String avatarUrl;
+
+    @Column(nullable = false)
     private int rating;
-    private boolean active;
+
+    @Column(name = "is_active")
+    private boolean isActive = true;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-} 
+}

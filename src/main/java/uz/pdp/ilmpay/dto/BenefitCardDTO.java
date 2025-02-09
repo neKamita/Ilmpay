@@ -1,6 +1,7 @@
 package uz.pdp.ilmpay.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import jakarta.validation.constraints.Max;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BenefitCardDTO {
     private Long id;
     

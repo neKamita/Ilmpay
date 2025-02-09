@@ -10,6 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * 🎨 Support Logo DTO
+ * Carrying our partner logos in style!
+ * 
+ * @author Your Logo Handler
+ * @version 1.0 (The "Brand Carrier" Edition)
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

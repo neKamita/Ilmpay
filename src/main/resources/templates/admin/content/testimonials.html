@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonials Management - Ilmpay Admin</title>
+    
+    <!-- jQuery first -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- FilePond -->
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.css" rel="stylesheet">
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-edit/dist/filepond-plugin-image-edit.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    
+    <!-- Other resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Custom resources -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/filepond-custom.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/sweetalert-custom.css">
+    <link rel="stylesheet" href="/css/testimonials.css">
+    
+    <!-- Utilities first -->
+    <script src="/js/logger.js"></script>
+    
+    <!-- Core functionality -->
+    <script src="/js/main.js"></script>
+    <script src="/js/field-configs.js"></script>
+    <script src="/js/field-templates.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/admin.js"></script>
+    
+    <!-- Feature-specific scripts -->
+    <script src="/js/filepond-config.js"></script>
+    <script src="/js/crud.js"></script>
+    <script src="/js/testimonials.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-900">Testimonials Management</h1>
+                <button class="btn-primary flex items-center space-x-2" onclick="Modal.show('testimonial')">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add New Testimonial</span>
+                </button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border">
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Enhanced Testimonial Cards -->
+                        <div th:each="testimonial : ${testimonials}" class="testimonial-card relative">
+                            <!-- Rating Badge -->
+                            <div class="absolute -top-2 -right-2 bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium z-10"
+                                 th:text="${testimonial.rating + '★'}">
+                                5★
+                            </div>
+                            
+                            <!-- Author Image -->
+                            <div class="flex justify-center mb-4">
+                                <img th:if="${testimonial.avatarUrl}" 
+                                     th:src="${testimonial.avatarUrl}" 
+                                     class="w-20 h-20 rounded-full object-cover border-4 border-primary-100"
+                                     th:alt="${testimonial.name}">
+                                <div th:unless="${testimonial.avatarUrl}" 
+                                     class="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center">
+                                    <i data-lucide="user" class="w-10 h-10 text-primary-600"></i>
+                                </div>
+                            </div>
+                            
+                            <!-- Author Name -->
+                            <h3 class="text-lg font-semibold text-gray-900 text-center mb-2" 
+                                th:text="${testimonial.name}">Author Name</h3>
+                            
+                            <!-- Comment -->
+                            <p class="text-sm text-gray-600 text-center mb-4" 
+                               th:text="${testimonial.comment}">Testimonial comment goes here...</p>
+                            
+                            <!-- Admin Actions -->
+                            <div class="testimonial-actions">
+                                <button class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg"
+                                        th:onclick="|Modal.show('testimonial', ${testimonial.id})|"
+                                        title="Edit Testimonial">
+                                    <i data-lucide="edit" class="w-4 h-4"></i>
+                                </button>
+                                <button class="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg"
+                                        th:onclick="|deleteItem('testimonial', ${testimonial.id})|"
+                                        title="Delete Testimonial">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Include the modal fragment -->
+    <div th:replace="~{admin/fragments/crud-modal :: crud-modal}"></div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

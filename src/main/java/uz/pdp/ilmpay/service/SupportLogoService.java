@@ -22,15 +22,15 @@ import java.util.stream.Collectors;
 public class SupportLogoService {
     private final SupportLogoRepository supportLogoRepository;
     private final S3Service s3Service;
-    
+
     // S3 folder for support logos
     private static final String S3_FOLDER = "support-logos";
 
     public List<SupportLogoDTO> findAllActive() {
         return supportLogoRepository.findByActiveTrueOrderByOrder()
-            .stream()
-            .map(this::toDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     public SupportLogoDTO create(SupportLogoDTO dto) {
@@ -44,10 +44,10 @@ public class SupportLogoService {
         try {
             // 📸 If both file and URL are provided, file takes precedence
             if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
-                log.debug("📤 Uploading image file for logo: {}, size: {} bytes", 
-                    dto.getName(), dto.getImageFile().getSize());
+                log.debug("📤 Uploading image file for logo: {}, size: {} bytes",
+                        dto.getName(), dto.getImageFile().getSize());
                 log.info("🔄 File upload will take precedence over provided URL");
-                
+
                 String fileUrl = s3Service.uploadFile(dto.getImageFile(), S3_FOLDER);
                 logo.setImageUrl(fileUrl);
                 log.debug("✅ Image uploaded successfully to: {}", fileUrl);
@@ -80,10 +80,10 @@ public class SupportLogoService {
 
         try {
             SupportLogo logo = supportLogoRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("❌ Support logo not found with id: {}", id);
-                    return new ResourceNotFoundException("Logo not found with id: " + id);
-                });
+                    .orElseThrow(() -> {
+                        log.error("❌ Support logo not found with id: {}", id);
+                        return new ResourceNotFoundException("Logo not found with id: " + id);
+                    });
 
             // For update, we don't require a new image if one already exists
             if (dto.getImageFile() == null && (dto.getImageUrl() == null || dto.getImageUrl().trim().isEmpty())) {
@@ -91,20 +91,20 @@ public class SupportLogoService {
             } else {
                 // Handle file update with priority: File > URL
                 if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
-                    log.debug("📤 Uploading new image file for logo: {}, size: {} bytes", 
-                        dto.getName(), dto.getImageFile().getSize());
-                        
+                    log.debug("📤 Uploading new image file for logo: {}, size: {} bytes",
+                            dto.getName(), dto.getImageFile().getSize());
+
                     // If updating with file, log that it takes precedence
                     if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty()) {
                         log.info("🔄 New file upload will take precedence over provided URL");
                     }
-                    
+
                     // Delete old image if it's an S3 URL
                     if (logo.getImageUrl() != null && logo.getImageUrl().contains("s3.amazonaws.com")) {
                         log.debug("🗑️ Deleting old S3 image: {}", logo.getImageUrl());
                         s3Service.deleteFile(logo.getImageUrl());
                     }
-                    
+
                     // Upload new image
                     String fileUrl = s3Service.uploadFile(dto.getImageFile(), S3_FOLDER);
                     logo.setImageUrl(fileUrl);
@@ -112,13 +112,13 @@ public class SupportLogoService {
                 } else if (dto.getImageUrl() != null && !dto.getImageUrl().trim().isEmpty()) {
                     // Only update URL if no file is provided
                     log.debug("🔗 Updating to new image URL: {}", dto.getImageUrl());
-                    
+
                     // Delete old S3 image if exists
                     if (logo.getImageUrl() != null && logo.getImageUrl().contains("s3.amazonaws.com")) {
                         log.debug("🗑️ Deleting old S3 image: {}", logo.getImageUrl());
                         s3Service.deleteFile(logo.getImageUrl());
                     }
-                    
+
                     logo.setImageUrl(dto.getImageUrl());
                 }
             }
@@ -135,15 +135,15 @@ public class SupportLogoService {
             log.info("✨ Successfully updated support logo id: {}, name: {}", id, dto.getName());
             return toDTO(savedLogo);
         } catch (Exception e) {
-            log.error("❌ Failed to update support logo id: {}, name: {}, error: {}", 
-                id, dto.getName(), e.getMessage(), e);
+            log.error("❌ Failed to update support logo id: {}, name: {}, error: {}",
+                    id, dto.getName(), e.getMessage(), e);
             throw e;
         }
     }
 
     public void delete(Long id) {
         SupportLogo logo = supportLogoRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Logo not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Logo not found with id: " + id));
 
         // Delete image from S3 if it's an S3 URL
         if (logo.getImageUrl() != null && logo.getImageUrl().contains("s3.amazonaws.com")) {
@@ -157,13 +157,14 @@ public class SupportLogoService {
 
     public SupportLogoDTO findById(Long id) {
         SupportLogo logo = supportLogoRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Logo not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Logo not found with id: " + id));
         return toDTO(logo);
     }
 
     private void validateLogo(SupportLogoDTO dto) {
         // For create, require either image file or URL
-        if (!dto.getImageFile().isEmpty() && dto.getImageFile() == null && (dto.getImageUrl() == null || dto.getImageUrl().trim().isEmpty())) {
+        if (!dto.getImageFile().isEmpty() && dto.getImageFile() == null
+                && (dto.getImageUrl() == null || dto.getImageUrl().trim().isEmpty())) {
             throw new IllegalArgumentException("Either image file or URL must be provided");
         }
         if (dto.getName() == null || dto.getName().trim().isEmpty()) {
@@ -173,13 +174,12 @@ public class SupportLogoService {
 
     private SupportLogoDTO toDTO(SupportLogo logo) {
         return new SupportLogoDTO(
-            logo.getId(),
-            logo.getName(),
-            logo.getImageUrl(),
-            logo.getWebsiteUrl(),
-            logo.isActive(),
-            logo.getOrder()
-        );
+                logo.getId(),
+                logo.getName(),
+                logo.getImageUrl(),
+                logo.getWebsiteUrl(),
+                logo.isActive(),
+                logo.getOrder());
     }
 
     public List<SupportLogo> getAllActive() {

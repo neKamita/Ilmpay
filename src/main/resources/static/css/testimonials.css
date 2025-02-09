@@ -1,0 +1,102 @@
+/* 🎨 Testimonials Management Styles
+ * 
+ * These styles enhance the testimonials management interface with smooth
+ * animations, hover effects, and responsive design.
+ */
+
+.testimonial-card {
+    @apply bg-white rounded-lg shadow-sm border p-6 transition-all duration-300;
+    position: relative;
+}
+
+.testimonial-card:hover {
+    @apply shadow-md transform -translate-y-1;
+}
+
+.testimonial-actions {
+    @apply absolute top-4 right-4 flex gap-2 opacity-0 transition-opacity duration-300;
+}
+
+.testimonial-card:hover .testimonial-actions {
+    @apply opacity-100;
+}
+
+/* Rating Badge Animation */
+.testimonial-card .rating-badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Grid */
+@media (max-width: 768px) {
+    .testimonial-actions {
+        @apply opacity-100 static mt-4 justify-end;
+    }
+}
+
+/* Custom FilePond Styles for Testimonials */
+.testimonial-filepond.filepond--root {
+    @apply mb-4;
+}
+
+.testimonial-filepond .filepond--panel-root {
+    @apply bg-primary-50 border-2 border-primary-200;
+}
+
+.testimonial-filepond .filepond--drop-label {
+    @apply text-primary-600;
+}
+
+/* Rating Input Styles */
+.rating-input {
+    @apply flex items-center gap-2 mb-4;
+}
+
+.rating-input label {
+    @apply text-sm font-medium text-gray-700;
+}
+
+.rating-input input[type="number"] {
+    @apply w-20 px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500;
+}
+
+/* Comment Textarea Styles */
+.comment-textarea {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 min-h-[100px];
+}
+
+/* Helper Text */
+.helper-text {
+    @apply text-xs text-gray-500 mt-1;
+}
+
+.helper-text.error {
+    @apply text-red-500;
+}
+
+/* Success Animation */
+@keyframes successPop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.testimonial-success {
+    animation: successPop 0.3s ease-out forwards;
+}
