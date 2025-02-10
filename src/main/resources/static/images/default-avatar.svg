@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="30" cy="30" r="30" fill="#E5EFFF"/>
+    
+    <!-- Head -->
+    <circle cx="30" cy="23" r="11" fill="#007BFF"/>
+    
+    <!-- Body -->
+    <path d="M10 52C10 42.0589 18.0589 34 28 34H32C41.9411 34 50 42.0589 50 52V60H10V52Z" fill="#007BFF"/>
+    
+    <!-- Decorative Elements -->
+    <circle cx="45" cy="15" r="2" fill="#007BFF" opacity="0.3"/>
+    <circle cx="15" cy="45" r="3" fill="#007BFF" opacity="0.2"/>
+    <circle cx="48" cy="38" r="1.5" fill="#007BFF" opacity="0.4"/>
+    <circle cx="12" cy="20" r="1.5" fill="#007BFF" opacity="0.3"/>
+</svg>

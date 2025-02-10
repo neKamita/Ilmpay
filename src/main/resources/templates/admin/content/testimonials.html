@@ -19,10 +19,9 @@
     
     <!-- Other resources -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <!-- Custom resources -->
     <link rel="stylesheet" href="/css/admin.css">
@@ -56,64 +55,49 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold text-gray-900">Testimonials Management</h1>
                 <button class="btn-primary flex items-center space-x-2" onclick="Modal.show('testimonial')">
-                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <i class="fas fa-plus"></i>
                     <span>Add New Testimonial</span>
                 </button>
             </div>
 
-            <div class="bg-white rounded-xl shadow-sm border">
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Enhanced Testimonial Cards -->
-                        <div th:each="testimonial : ${testimonials}" class="testimonial-card relative">
-                            <!-- Rating Badge -->
-                            <div class="absolute -top-2 -right-2 bg-yellow-400 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-medium z-10"
-                                 th:text="${testimonial.rating + '★'}">
-                                5★
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <div th:each="testimonial : ${testimonials}" class="testimonial-card">
+                    <p class="testimonial-text" th:text="${testimonial.comment}">I really like this e-wallet app because it's incredibly convenient...</p>
+                    <div class="testimonial-author">
+                        <img th:if="${testimonial.avatarUrl != null and !testimonial.avatarUrl.isEmpty()}" 
+                             th:src="${testimonial.avatarUrl}" 
+                             th:alt="${testimonial.name}" 
+                             class="author-image">
+                        <img th:unless="${testimonial.avatarUrl != null and !testimonial.avatarUrl.isEmpty()}" 
+                             th:src="@{/images/default-avatar.svg}" 
+                             th:alt="${testimonial.name}" 
+                             class="author-image">
+                        <div class="author-info">
+                            <h4 th:text="${testimonial.name}">Student Name</h4>
+                            <div class="rating">
+                                <th:block th:each="i : ${#numbers.sequence(1, testimonial.rating)}">
+                                    <img th:src="@{/images/Star.svg}" alt="Star rating">
+                                </th:block>
                             </div>
-                            
-                            <!-- Author Image -->
-                            <div class="flex justify-center mb-4">
-                                <img th:if="${testimonial.avatarUrl}" 
-                                     th:src="${testimonial.avatarUrl}" 
-                                     class="w-20 h-20 rounded-full object-cover border-4 border-primary-100"
-                                     th:alt="${testimonial.name}">
-                                <div th:unless="${testimonial.avatarUrl}" 
-                                     class="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center">
-                                    <i data-lucide="user" class="w-10 h-10 text-primary-600"></i>
-                                </div>
-                            </div>
-                            
-                            <!-- Author Name -->
-                            <h3 class="text-lg font-semibold text-gray-900 text-center mb-2" 
-                                th:text="${testimonial.name}">Author Name</h3>
-                            
-                            <!-- Comment -->
-                            <p class="text-sm text-gray-600 text-center mb-4" 
-                               th:text="${testimonial.comment}">Testimonial comment goes here...</p>
-                            
-                            <!-- Admin Actions -->
-                            <div class="testimonial-actions">
-                                <button class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg"
-                                        th:onclick="|Modal.show('testimonial', ${testimonial.id})|"
-                                        title="Edit Testimonial">
-                                    <i data-lucide="edit" class="w-4 h-4"></i>
-                                </button>
-                                <button class="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg"
-                                        th:onclick="|deleteItem('testimonial', ${testimonial.id})|"
-                                        title="Delete Testimonial">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </div>
+                        </div>
+                        <div class="testimonial-actions">
+                            <button th:onclick="'Modal.show(\'testimonial\', ' + ${testimonial.id} + ')'" 
+                                    class="btn-icon edit-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button th:onclick="'deleteItem(\'testimonial\', ' + ${testimonial.id} + ')'" 
+                                    class="btn-icon delete-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Modal template -->
+            <div th:replace="~{admin/fragments/crud-modal :: crud-modal}"></div>
         </main>
     </div>
-
-    <!-- Include the modal fragment -->
-    <div th:replace="~{admin/fragments/crud-modal :: crud-modal}"></div>
 
     <script>
         // Initialize Lucide icons
