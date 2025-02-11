@@ -16,7 +16,124 @@ class Modal {
     };
 
     // 🎨 Modal configurations
-    static config = {};
+    static config = {
+        'support-logo': {
+            title: 'Support Logo',
+            endpoint: '/api/admin/support-logos',
+            method: 'POST',
+            fields: Object.entries(fieldConfigs['support-logo']).map(([name, field]) => ({
+                name,
+                ...field
+            })),
+            successMessage: {
+                create: 'Support logo created successfully!',
+                update: 'Support logo updated successfully!'
+            }
+        },
+        'testimonial': {
+            title: 'Testimonial',
+            endpoint: '/api/admin/testimonials',
+            method: 'POST',
+            fields: [
+                {
+                    name: 'title',
+                    type: 'text',
+                    label: 'Title',
+                    placeholder: 'Enter testimonial title',
+                    required: true
+                },
+                {
+                    name: 'description',
+                    type: 'textarea',
+                    label: 'Description',
+                    placeholder: 'Enter testimonial description',
+                    required: true,
+                    rows: 4
+                },
+                {
+                    name: 'image',
+                    type: 'file',
+                    label: 'Image',
+                    placeholder: 'Select an image',
+                    required: true
+                }
+            ],
+            successMessage: {
+                create: 'Testimonial created successfully!',
+                update: 'Testimonial updated successfully!'
+            }
+        },
+        'benefit': {
+            title: 'Benefit',
+            endpoint: '/api/admin/benefits',
+            method: 'POST',
+            fields: [
+                {
+                    name: 'title',
+                    type: 'text',
+                    label: 'Title',
+                    placeholder: 'Enter benefit title',
+                    required: true
+                },
+                {
+                    name: 'description',
+                    type: 'textarea',
+                    label: 'Description',
+                    placeholder: 'Enter benefit description',
+                    required: true,
+                    rows: 4
+                },
+                {
+                    name: 'order',
+                    type: 'number',
+                    label: 'Display Order',
+                    placeholder: 'Enter display order (1-4)',
+                    required: true,
+                    min: 1,
+                    max: 4,
+                    step: 1
+                }
+            ],
+            successMessage: {
+                create: 'Benefit created successfully!',
+                update: 'Benefit updated successfully!'
+            }
+        },
+        'faq': {
+            title: 'Frequently Asked Question',
+            endpoint: '/api/admin/faqs',
+            fields: [
+                {
+                    name: 'question',
+                    type: 'text',
+                    label: 'Question',
+                    placeholder: 'Enter the frequently asked question',
+                    required: true,
+                    maxLength: 200
+                },
+                {
+                    name: 'answer',
+                    type: 'textarea',
+                    label: 'Answer',
+                    placeholder: 'Enter the answer to the question',
+                    required: true,
+                    rows: 4
+                },
+                {
+                    name: 'displayOrder',
+                    type: 'number',
+                    label: 'Display Order',
+                    placeholder: 'Enter display order (0-based)',
+                    required: true,
+                    min: 0
+                }
+            ],
+            successMessage: {
+                create: 'FAQ created successfully!',
+                update: 'FAQ updated successfully!'
+            }
+        }
+    };
 
     // 🎨 State management
     static state = {
@@ -54,91 +171,6 @@ class Modal {
 
     // Initialize configurations
     static initializeConfigs() {
-        this.config = {
-            'support-logo': {
-                title: 'Support Logo',
-                endpoint: '/api/admin/support-logos',
-                method: 'POST',
-                fields: Object.entries(fieldConfigs['support-logo']).map(([name, field]) => ({
-                    name,
-                    ...field
-                })),
-                successMessage: {
-                    create: 'Support logo created successfully!',
-                    update: 'Support logo updated successfully!'
-                }
-            },
-            'testimonial': {
-                title: 'Testimonial',
-                endpoint: '/api/admin/testimonials',
-                method: 'POST',
-                fields: [
-                    {
-                        name: 'title',
-                        type: 'text',
-                        label: 'Title',
-                        placeholder: 'Enter testimonial title',
-                        required: true
-                    },
-                    {
-                        name: 'description',
-                        type: 'textarea',
-                        label: 'Description',
-                        placeholder: 'Enter testimonial description',
-                        required: true,
-                        rows: 4
-                    },
-                    {
-                        name: 'image',
-                        type: 'file',
-                        label: 'Image',
-                        placeholder: 'Select an image',
-                        required: true
-                    }
-                ],
-                successMessage: {
-                    create: 'Testimonial created successfully!',
-                    update: 'Testimonial updated successfully!'
-                }
-            },
-            'benefit': {
-                title: 'Benefit',
-                endpoint: '/api/admin/benefits',
-                method: 'POST',
-                fields: [
-                    {
-                        name: 'title',
-                        type: 'text',
-                        label: 'Title',
-                        placeholder: 'Enter benefit title',
-                        required: true
-                    },
-                    {
-                        name: 'description',
-                        type: 'textarea',
-                        label: 'Description',
-                        placeholder: 'Enter benefit description',
-                        required: true,
-                        rows: 4
-                    },
-                    {
-                        name: 'order',
-                        type: 'number',
-                        label: 'Display Order',
-                        placeholder: 'Enter display order (1-4)',
-                        required: true,
-                        min: 1,
-                        max: 4,
-                        step: 1
-                    }
-                ],
-                successMessage: {
-                    create: 'Benefit created successfully!',
-                    update: 'Benefit updated successfully!'
-                }
-            }
-        };
-        
         Logger.info('Modal', '✅ Modal configurations initialized');
     }
 
@@ -508,12 +540,17 @@ class Modal {
                 Logger.debug('Modal', '🔄 Updating existing item', { id: this.state.currentData.id });
                 const url = `${this.config[currentType].endpoint}/${this.state.currentData.id}`;
                 
-                if (currentType === 'benefit') {
-                    // For benefits, send as JSON
-                    const jsonData = {
+                if (currentType === 'benefit' || currentType === 'faq') {
+                    // For benefits and FAQs, send as JSON
+                    const jsonData = currentType === 'benefit' ? {
                         title: formData.get('title'),
                         description: formData.get('description'),
                         displayOrder: parseInt(formData.get('order')),
+                        active: true
+                    } : {
+                        question: formData.get('question'),
+                        answer: formData.get('answer'),
+                        displayOrder: parseInt(formData.get('displayOrder')),
                         active: true
                     };
                     response = await fetch(url, {
@@ -534,12 +571,17 @@ class Modal {
                 // Create new item
                 Logger.debug('Modal', '🆕 Creating new item');
                 
-                if (currentType === 'benefit') {
-                    // For benefits, send as JSON
-                    const jsonData = {
+                if (currentType === 'benefit' || currentType === 'faq') {
+                    // For benefits and FAQs, send as JSON
+                    const jsonData = currentType === 'benefit' ? {
                         title: formData.get('title'),
                         description: formData.get('description'),
                         displayOrder: parseInt(formData.get('order')),
+                        active: true
+                    } : {
+                        question: formData.get('question'),
+                        answer: formData.get('answer'),
+                        displayOrder: parseInt(formData.get('displayOrder')),
                         active: true
                     };
                     response = await fetch(this.config[currentType].endpoint, {

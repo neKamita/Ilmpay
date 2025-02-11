@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Management - Ilmpay Admin</title>
+    
+    <!-- jQuery first -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <!-- Sortable.js for drag-and-drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    
+    <!-- Other resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom resources -->
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/sweetalert-custom.css">
+    <link rel="stylesheet" href="/css/faqs.css">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex">
+        <div th:replace="~{admin/fragments/sidebar :: sidebar}"></div>
+        
+        <main class="flex-1 p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-900">FAQ Management</h1>
+                <button class="btn-primary flex items-center space-x-2" onclick="window.Modal.show('faq')">
+                    <i class="fas fa-plus"></i>
+                    <span>Add New FAQ</span>
+                </button>
+            </div>
+
+            <!-- FAQ list with drag-and-drop reordering -->
+            <div class="space-y-4" id="faqList">
+                <div th:each="faq : ${faqs}" class="faq-item bg-white rounded-lg shadow-sm p-4" th:data-id="${faq.id}">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900" th:text="${faq.question}">FAQ Question</h3>
+                            <p class="mt-1 text-gray-600" th:text="${faq.answer}">FAQ Answer</p>
+                            <div class="mt-2 text-sm text-gray-500">
+                                Order: <span th:text="${faq.displayOrder}">1</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="window.Modal.show('faq', this.dataset.id)" 
+                                    th:data-id="${faq.id}"
+                                    class="btn-icon edit-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="window.deleteItem('faq', this.dataset.id)"
+                                    th:data-id="${faq.id}"
+                                    class="btn-icon delete-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="btn-icon drag-handle cursor-move" title="Reorder">
+                                <i class="fas fa-grip-vertical"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- CRUD Modal -->
+    <div th:replace="~{admin/fragments/crud-modal :: crud-modal}"></div>
+
+    <!-- Initialize Lucide icons -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
+
+    <!-- Core functionality -->
+    <script type="module" src="/js/logger.js"></script>
+    <script type="module" src="/js/main.js"></script>
+    <script type="module" src="/js/field-configs.js"></script>
+    <script type="module" src="/js/field-templates.js"></script>
+    <script type="module" src="/js/modal.js"></script>
+    <script type="module" src="/js/admin.js"></script>
+    
+    <!-- Feature-specific scripts -->
+    <script type="module" src="/js/crud.js"></script>
+    <script type="module" src="/js/faqs-handlers.js"></script>
+</body>
+</html>

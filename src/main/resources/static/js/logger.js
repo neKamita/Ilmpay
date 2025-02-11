@@ -5,6 +5,7 @@ class Logger {
     static LEVELS = {
         DEBUG: '🐛 DEBUG',
         INFO: 'ℹ️ INFO',
+        SUCCESS: '✅ SUCCESS',
         WARN: '⚠️ WARN',
         ERROR: '❌ ERROR'
     };
@@ -27,6 +28,10 @@ class Logger {
 
     static info(component, message, data = null) {
         this._log(this.LEVELS.INFO, component, message, data);
+    }
+
+    static success(component, message, data = null) {
+        this._log(this.LEVELS.SUCCESS, component, message, data);
     }
 
     static warn(component, message, data = null) {

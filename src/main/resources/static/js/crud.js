@@ -26,6 +26,14 @@ const crudConfig = {
             deleteSuccess: 'Testimonial deleted successfully! Your testimonials list is now updated 🌟',
             deleteError: 'Oops! Failed to delete the testimonial. Please try again 😢'
         }
+    },
+    'faq': {
+        endpoint: '/api/admin/faqs',
+        messages: {
+            deleteConfirm: 'Are you sure you want to delete this FAQ? This action cannot be undone.',
+            deleteSuccess: 'FAQ deleted successfully! 🎉',
+            deleteError: 'Failed to delete FAQ 😢'
+        }
     }
 };
 

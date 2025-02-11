@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import uz.pdp.ilmpay.service.SupportLogoService;
 import uz.pdp.ilmpay.service.BenefitCardService;
+import uz.pdp.ilmpay.service.TestimonialService;
+import uz.pdp.ilmpay.service.FaqService;
 
 /**
  * 🏠 Home Sweet Home Controller
@@ -23,6 +25,8 @@ public class HomeController {
     // 🎯 Our trusty services
     private final SupportLogoService supportLogoService;
     private final BenefitCardService benefitCardService; // 🎁 For managing our awesome benefits
+    private final TestimonialService testimonialService; // 🌟 For our happy students' stories
+    private final FaqService faqService; // 🤔 For frequently asked questions
 
     /**
      * 🎯 The main landing page route
@@ -39,13 +43,26 @@ public class HomeController {
         mav.addObject("currentPage", "home");
         
         // 🤝 Add support logos to show our awesome partners
-        mav.addObject("supportLogos", supportLogoService.findAllActive());
+        var logos = supportLogoService.findAllActive();
+        log.info("🤝 Found {} support logos for homepage", logos.size());
+        mav.addObject("supportLogos", logos);
         
         // 🎁 Add our amazing benefits, sorted by display order
         var benefits = benefitCardService.findAllActive();
         log.info("🎁 Found {} benefits for homepage", benefits.size());
         benefits.forEach(benefit -> log.info("Benefit: {} (Order: {})", benefit.getTitle(), benefit.getDisplayOrder()));
         mav.addObject("benefits", benefits);
+
+        // 🌟 Add testimonials from our happy students
+        log.info("🔍 Fetching all active testimonials");
+        var testimonials = testimonialService.findAllActive();
+        log.info("🎭 Found {} testimonials for homepage", testimonials.size());
+        mav.addObject("testimonials", testimonials);
+
+        // 🤔 Add FAQs to help our users
+        var faqs = faqService.findAllActive();
+        log.info("🤔 Found {} FAQs for homepage", faqs.size());
+        mav.addObject("faqs", faqs);
         
         return mav; // 🎉 Off you go, little view!
     }

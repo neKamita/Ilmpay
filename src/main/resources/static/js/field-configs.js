@@ -140,6 +140,38 @@ export const fieldConfigs = {
                 return true;
             }
         }
+    },
+    // 🤔 FAQ Fields
+    faq: {
+        question: {
+            type: 'text',
+            label: 'Question',
+            placeholder: 'Enter the frequently asked question',
+            required: true,
+            maxLength: 200,
+            validation: {
+                required: 'Question is required',
+                maxLength: 'Question cannot be longer than 200 characters'
+            }
+        },
+        answer: {
+            type: 'textarea',
+            label: 'Answer',
+            placeholder: 'Enter the answer to the question',
+            required: true,
+            rows: 4,
+            validation: {
+                required: 'Answer is required'
+            }
+        },
+        displayOrder: {
+            type: 'number',
+            label: 'Display Order',
+            placeholder: 'Enter display order',
+            required: false,
+            min: 0,
+            defaultValue: 0
+        }
     }
     // Add more configurations for other entity types here
 };

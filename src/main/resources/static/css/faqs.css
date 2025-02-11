@@ -1,0 +1,54 @@
+/* 🤔 FAQ Styles
+ * Making those questions and answers look beautiful!
+ */
+
+.faq-item {
+    @apply bg-white rounded-lg shadow-sm mb-4 overflow-hidden transition-all duration-300;
+}
+
+.faq-item:hover {
+    @apply shadow-md;
+}
+
+.faq-item .accordion-button {
+    @apply w-full text-left px-6 py-4 text-gray-900 font-medium text-lg 
+           flex items-center justify-between cursor-pointer
+           transition-all duration-300 hover:bg-gray-50;
+}
+
+.faq-item .accordion-button:not(.collapsed) {
+    @apply bg-primary-50 text-primary-700;
+}
+
+.faq-item .accordion-body {
+    @apply px-6 py-4 text-gray-600 bg-white border-t border-gray-100;
+}
+
+/* Drag handle for admin panel */
+.drag-handle {
+    @apply cursor-move text-gray-400 hover:text-gray-600 transition-colors duration-200;
+}
+
+/* Admin panel specific styles */
+.faq-item .edit-btn {
+    @apply text-blue-600 hover:text-blue-800;
+}
+
+.faq-item .delete-btn {
+    @apply text-red-600 hover:text-red-800;
+}
+
+/* Chevron icon animation */
+.chevron-icon {
+    @apply w-5 h-5 transform transition-transform duration-300;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.accordion-button:not(.collapsed) .chevron-icon {
+    @apply rotate-180;
+}
+
+/* Order display */
+.order-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800;
+}
