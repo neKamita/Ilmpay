@@ -34,20 +34,24 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:classappend="${currentPage == 'home' ? 'active' : ''}" 
+                        <a class="nav-link" href="#home" th:classappend="${currentPage == 'home' ? 'active' : ''}" 
                            th:href="@{/}" th:text="#{nav.home}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:classappend="${currentPage == 'features' ? 'active' : ''}" 
-                           th:href="@{#features}" th:text="#{nav.features}">Features</a>
+                        <a class="nav-link" href="#support" th:classappend="${currentPage == 'features' ? 'active' : ''}" 
+                           th:href="@{#support}" th:text="#{nav.about}">Support</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:classappend="${currentPage == 'about' ? 'active' : ''}" 
-                           th:href="@{#about}" th:text="#{nav.about}">About Us</a>
+                        <a class="nav-link" href="#benefits" th:classappend="${currentPage == 'about' ? 'active' : ''}" 
+                           th:href="@{#benefits}" th:text="#{nav.features}">Benefits</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:classappend="${currentPage == 'blog' ? 'active' : ''}" 
-                           th:href="@{#blog}" th:text="#{nav.blog}">Blog</a>
+                        <a class="nav-link" href="#testimonials" th:classappend="${currentPage == 'blog' ? 'active' : ''}" 
+                           th:href="@{#testimonials}" th:text="#{nav.blog}">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq" th:classappend="${currentPage == 'faq' ? 'active' : ''}" 
+                           th:href="@{#faq}" th:text="#{nav.faq}">FAQ</a>
                     </li>
                 </ul>
                 <!-- Right-aligned items -->
@@ -103,7 +107,7 @@
             </div>
         </div>
     </section>
-    <section class="support-section">
+    <section id="support" class="support-section">
         <div class="container">
             <h3 class="support-title text-center" th:text="#{support.title}">Support By</h3>
             <div class="support-carousel owl-carousel">
@@ -116,7 +120,7 @@
             </div>
         </div>
     </section>
-    <section class="benefits-section">
+    <section id="benefits" class="benefits-section">
         <img class="benefits-ellipse benefits-ellipse-top" th:src="@{/images/elips.svg}" alt="Decorative shape">
         <img class="benefits-ellipse benefits-ellipse-bottom" th:src="@{/images/elips.svg}" alt="Decorative shape">
         <div class="container">
@@ -173,7 +177,7 @@
             </div>
         </div>
     </section>
-    <section class="testimonial-section">
+    <section id="testimonials" class="testimonial-section">
         <svg class="testimonial-ellipse testimonial-ellipse-top" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="200" cy="200" r="150" stroke="white" stroke-width="50"/>
         </svg>
@@ -221,7 +225,7 @@
             </div>
         </div>
     </section>
-    <section class="faq-section">
+    <section id="faq" class="faq-section">
         <svg class="faq-circle faq-circle-left" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="200" cy="200" r="150" stroke="#FEE5C5" stroke-width="50"/>
         </svg>
@@ -367,6 +371,8 @@
         <script src="https://unpkg.com/lucide@latest"></script>
         <!-- Finally our custom JS -->
         <script th:src="@{/js/main.js}"></script>
+
+        <script src="/js/smooth-scroll.js" type="module"></script>
     </th:block>
 </body>
 </html>
