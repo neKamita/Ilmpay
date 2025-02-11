@@ -37,5 +37,8 @@ public class TestimonialDTO {
     // For displaying stored S3 URL
     private String avatarUrl;
 
+    // For ordering testimonials
+    private Integer order;
+
     private boolean isActive = true;
 }

@@ -23,6 +23,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <!-- Custom resources -->
     <link rel="stylesheet" href="/css/admin.css">
@@ -31,6 +32,7 @@
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/sweetalert-custom.css">
     <link rel="stylesheet" href="/css/benefits.css">
+    <link rel="stylesheet" href="/css/drag-and-drop.css">
     
     <!-- Utilities first -->
     <script type="module" src="/js/logger.js"></script>
@@ -63,11 +65,19 @@
 
             <div class="bg-white rounded-xl shadow-sm border p-6 big-box">
                 <!-- Benefits Grid -->
-                <div class="benefits-cards">
+                <div id="benefitList" class="benefits-cards">
                     <!-- Enhanced Benefit Cards -->
-                    <div th:each="benefit : ${benefits}" class="benefit-card relative">
+                    <div th:each="benefit : ${benefits}" 
+                         class="benefit-card relative" 
+                         th:data-id="${benefit.id}"
+                         th:data-order="${benefit.displayOrder}">
+                        <!-- Drag Handle -->
+                        <div class="drag-handle absolute -top-2 -right-2 p-1 bg-gray-100 rounded-full cursor-move hover:bg-gray-200 transition-colors">
+                            <i data-lucide="grip" class="w-4 h-4 text-gray-500"></i>
+                        </div>
+                        
                         <!-- Display Order Badge -->
-                        <div class="benefit-number" th:text="${benefit.displayOrder}">1</div>
+                        <div class="benefit-number order-display" th:text="${benefit.displayOrder}">1</div>
                         
                         <!-- Title -->
                         <h3 class="font-ruda text-2xl font-bold text-gray-900" th:text="${benefit.title}">Benefit Title</h3>

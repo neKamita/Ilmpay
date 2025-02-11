@@ -65,7 +65,7 @@ public class AdminRestController {
             dto.setWebsiteUrl(websiteUrl);
             dto.setImageFile(imageFile);
             dto.setImageUrl(imageUrl); // Add imageUrl to DTO
-            dto.setOrder(order);
+            dto.setDisplayOrder(order);
             dto.setActive(true);
 
             // Create the support logo
@@ -98,7 +98,7 @@ public class AdminRestController {
             dto.setName(name);
             dto.setWebsiteUrl(websiteUrl);
             dto.setImageFile(imageFile);
-            dto.setOrder(order);
+            dto.setDisplayOrder(order);
             dto.setActive(true);
 
             // Update the support logo

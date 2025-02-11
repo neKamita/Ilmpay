@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
-@Table(name = "benefits")
+@Table(name = "benefit_cards") // Updated table name to match the actual database table
 @Getter
 @Setter
 @AllArgsConstructor

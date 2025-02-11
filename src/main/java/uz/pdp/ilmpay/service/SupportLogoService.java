@@ -6,13 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.ilmpay.dto.SupportLogoDTO;
+import uz.pdp.ilmpay.dto.ReorderItemDTO;
 import uz.pdp.ilmpay.exception.ResourceNotFoundException;
 import uz.pdp.ilmpay.model.SupportLogo;
 import uz.pdp.ilmpay.repository.SupportLogoRepository;
 import uz.pdp.ilmpay.service.S3Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,8 +32,10 @@ public class SupportLogoService {
     private static final String S3_FOLDER = "support-logos";
 
     public List<SupportLogoDTO> findAllActive() {
-        return supportLogoRepository.findByActiveTrueOrderByOrder()
-                .stream()
+        log.info("🔍 Fetching all active support logos");
+        List<SupportLogo> logos = supportLogoRepository.findByActiveTrueOrderByDisplayOrder();
+        log.info("✨ Found {} active support logos", logos.size());
+        return logos.stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
@@ -63,7 +70,7 @@ public class SupportLogoService {
 
             logo.setWebsiteUrl(dto.getWebsiteUrl());
             logo.setActive(true);
-            logo.setOrder(dto.getOrder());
+            logo.setDisplayOrder(dto.getDisplayOrder());
             logo.setCreatedAt(LocalDateTime.now());
 
             SupportLogo savedLogo = supportLogoRepository.save(logo);
@@ -126,8 +133,8 @@ public class SupportLogoService {
             // Update other fields
             logo.setName(dto.getName());
             logo.setWebsiteUrl(dto.getWebsiteUrl());
-            if (dto.getOrder() != null) {
-                logo.setOrder(dto.getOrder());
+            if (dto.getDisplayOrder() != null) {
+                logo.setDisplayOrder(dto.getDisplayOrder());
             }
             logo.setActive(true); // Keep it active on update
 
@@ -161,6 +168,95 @@ public class SupportLogoService {
         return toDTO(logo);
     }
 
+    /**
+     * 🔄 Reorders support logos based on the provided order list
+     * Makes our gallery look just the way we want! ✨
+     *
+     * @param reorderItems List of items with their new display order
+     * @return List of reordered support logos
+     */
+    @Transactional
+    public List<SupportLogoDTO> reorder(List<ReorderItemDTO> reorderItems) {
+        log.info("🔄 Starting reorder operation for {} items", reorderItems.size());
+        
+        try {
+            // Validate input
+            if (reorderItems == null || reorderItems.isEmpty()) {
+                log.warn("❌ No reorder items provided");
+                throw new IllegalArgumentException("No reorder items provided");
+            }
+
+            // Log incoming items
+            reorderItems.forEach(item -> 
+                log.debug("📦 Processing reorder item - ID: {}, New Order: {}", item.getId(), item.getDisplayOrder())
+            );
+
+            // Get all active logos that need to be updated
+            List<SupportLogo> logos = supportLogoRepository.findByActiveTrueOrderByDisplayOrder();
+            log.debug("📋 Found {} active logos in database", logos.size());
+            
+            if (logos.isEmpty()) {
+                String errorMsg = "No active logos found to reorder";
+                log.error("❌ {}", errorMsg);
+                throw new ResourceNotFoundException(errorMsg);
+            }
+
+            // Create a map of id to order for quick lookup
+            Map<Long, Integer> orderMap;
+            try {
+                orderMap = reorderItems.stream()
+                        .collect(Collectors.toMap(
+                                ReorderItemDTO::getId,
+                                ReorderItemDTO::getDisplayOrder
+                        ));
+            } catch (IllegalStateException e) {
+                String errorMsg = "Duplicate logo IDs found in request";
+                log.error("❌ {}", errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            }
+
+            // Validate all IDs exist
+            Set<Long> existingIds = logos.stream()
+                    .map(SupportLogo::getId)
+                    .collect(Collectors.toSet());
+            
+            Set<Long> requestedIds = orderMap.keySet();
+            
+            if (!existingIds.containsAll(requestedIds)) {
+                Set<Long> invalidIds = new HashSet<>(requestedIds);
+                invalidIds.removeAll(existingIds);
+                String errorMsg = String.format("Invalid logo IDs in request: %s", invalidIds);
+                log.error("❌ {}", errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            }
+
+            // Update orders
+            logos.forEach(logo -> {
+                Integer newOrder = orderMap.get(logo.getId());
+                if (newOrder != null) {
+                    log.debug("🔄 Updating logo {} order from {} to {}", 
+                        logo.getId(), logo.getDisplayOrder(), newOrder);
+                    logo.setDisplayOrder(newOrder);
+                }
+            });
+
+            try {
+                List<SupportLogo> updatedLogos = supportLogoRepository.saveAll(logos);
+                log.info("✨ Successfully updated orders for {} logos", updatedLogos.size());
+                return updatedLogos.stream()
+                        .map(this::toDTO)
+                        .collect(Collectors.toList());
+            } catch (Exception e) {
+                String errorMsg = "Failed to save updated logo orders";
+                log.error("❌ {} - Error: {}", errorMsg, e.getMessage());
+                throw new RuntimeException(errorMsg, e);
+            }
+        } catch (Exception e) {
+            log.error("💥 Error during reorder operation: {}", e.getMessage(), e);
+            throw e;
+        }
+    }
+
     private void validateLogo(SupportLogoDTO dto) {
         // For create, require either image file or URL
         if (!dto.getImageFile().isEmpty() && dto.getImageFile() == null
@@ -179,10 +275,7 @@ public class SupportLogoService {
                 logo.getImageUrl(),
                 logo.getWebsiteUrl(),
                 logo.isActive(),
-                logo.getOrder());
+                logo.getDisplayOrder());
     }
 
-    public List<SupportLogo> getAllActive() {
-        return supportLogoRepository.findByActiveTrue();
-    }
 }

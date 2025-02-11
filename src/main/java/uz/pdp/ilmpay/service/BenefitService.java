@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.ilmpay.dto.BenefitCardDTO;
+import uz.pdp.ilmpay.dto.ReorderItemDTO;
 import uz.pdp.ilmpay.model.Benefit;
 import uz.pdp.ilmpay.repository.BenefitRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -89,6 +91,65 @@ public class BenefitService {
         benefit.setActive(false);
         log.info("Soft deleting benefit with id: {}", id);
         benefitRepository.save(benefit);
+    }
+
+    /**
+     * 🔄 Reorders benefits based on the provided order list
+     * Like playing musical chairs, but with benefits! 🎵
+     *
+     * @param reorderItems List of items with their new display order
+     * @return List of reordered benefits
+     */
+    @Transactional
+    public List<BenefitCardDTO> reorder(List<ReorderItemDTO> reorderItems) {
+        log.info("🔄 Starting reorder of {} benefits", reorderItems.size());
+
+        try {
+            // Create a map of id to order for quick lookup
+            Map<Long, Integer> orderMap = reorderItems.stream()
+                    .collect(Collectors.toMap(
+                            ReorderItemDTO::getId,
+                            ReorderItemDTO::getDisplayOrder
+                    ));
+
+            // Get all active benefits that need to be updated
+            List<Benefit> benefits = benefitRepository.findActiveByIds(orderMap.keySet());
+            
+            if (benefits.isEmpty()) {
+                log.warn("❌ No active benefits found to reorder!");
+                throw new EntityNotFoundException("No active benefits found to reorder");
+            }
+
+            // Validate that we found all requested benefits
+            if (benefits.size() != orderMap.size()) {
+                log.warn("❌ Some benefits were not found or are inactive! Found {}, Expected {}", 
+                        benefits.size(), orderMap.size());
+                throw new EntityNotFoundException("Some benefits were not found or are inactive");
+            }
+
+            // Update orders
+            benefits.forEach(benefit -> {
+                Integer newOrder = orderMap.get(benefit.getId());
+                if (newOrder != null) {
+                    benefit.setDisplayOrder(newOrder);
+                    log.debug("📋 Updated order for benefit {}: {} -> {}", 
+                            benefit.getTitle(), benefit.getDisplayOrder(), newOrder);
+                }
+            });
+
+            // Save all updated benefits
+            List<Benefit> savedBenefits = benefitRepository.saveAll(benefits);
+            log.info("✨ Successfully reordered {} benefits", savedBenefits.size());
+
+            // Convert to DTOs and return
+            return savedBenefits.stream()
+                    .map(this::toDTO)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error("❌ Failed to reorder benefits: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to reorder benefits: " + e.getMessage(), e);
+        }
     }
 
     /**

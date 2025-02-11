@@ -1790,3 +1790,32 @@ body {
     .form-field-enter-2 { animation-delay: 0.2s; }
     .form-field-enter-3 { animation-delay: 0.3s; }
 }
+
+/* 🌟 Star Rating Styles - Making stars shine consistently! */
+.testimonial-stars {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    height: 24px; /* Fixed height for consistency */
+}
+
+.testimonial-stars i {
+    font-size: 16px; /* Fixed size for all stars */
+    color: #FFD700; /* Golden color for stars */
+    flex-shrink: 0; /* Prevent star shrinking */
+    width: 16px; /* Fixed width */
+    height: 16px; /* Fixed height */
+}
+
+/* Single star special case */
+.testimonial-stars.single-star {
+    justify-content: center;
+}
+
+.testimonial-stars.single-star i {
+    font-size: 16px; /* Keep the same size even when single */
+}
+
+.owl-carousel .owl-item img{
+    width: auto!important;
+}

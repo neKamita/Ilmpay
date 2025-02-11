@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.ilmpay.dto.BenefitCardDTO;
+import uz.pdp.ilmpay.dto.ReorderItemDTO;
 import uz.pdp.ilmpay.service.BenefitService;
 import uz.pdp.ilmpay.payload.EntityResponse;
 
@@ -213,6 +214,38 @@ public class BenefitController {
                     .message("Failed to delete benefit: " + e.getMessage())
                     .errorCode("BENEFIT_DELETE_ERROR")
                     .funnyMessage("🎪 This benefit is putting up a fight! Let's try again!")
+                    .build()
+            );
+        }
+    }
+
+    /**
+     * 🔄 Reorders benefits
+     * Like rearranging furniture, but more fun! 🎨
+     */
+    @PostMapping(value = "/reorder", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EntityResponse<List<BenefitCardDTO>>> reorderBenefits(@RequestBody List<ReorderItemDTO> reorderItems) {
+        try {
+            log.info("🔄 Reordering {} benefits", reorderItems.size());
+            List<BenefitCardDTO> benefits = benefitService.reorder(reorderItems);
+            log.info("✨ Successfully reordered benefits");
+            
+            return ResponseEntity.ok(
+                EntityResponse.<List<BenefitCardDTO>>builder()
+                    .success(true)
+                    .message("Benefits reordered successfully")
+                    .funnyMessage("🎯 Benefits are now lined up like ducks in a row!")
+                    .data(benefits)
+                    .build()
+            );
+        } catch (Exception e) {
+            log.error("❌ Failed to reorder benefits", e);
+            return ResponseEntity.badRequest().body(
+                EntityResponse.<List<BenefitCardDTO>>builder()
+                    .success(false)
+                    .message("Failed to reorder benefits: " + e.getMessage())
+                    .errorCode("BENEFITS_REORDER_ERROR")
+                    .funnyMessage("🔄 Our benefits are feeling a bit dizzy!")
                     .build()
             );
         }

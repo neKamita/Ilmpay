@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.ilmpay.dto.TestimonialDTO;
+import uz.pdp.ilmpay.dto.ReorderItemDTO;
 import uz.pdp.ilmpay.exception.ResourceNotFoundException;
 import uz.pdp.ilmpay.model.Testimonial;
 import uz.pdp.ilmpay.repository.TestimonialRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +35,7 @@ public class TestimonialService {
 
     public List<TestimonialDTO> findAllActive() {
         log.info("🔍 Fetching all active testimonials");
-        List<TestimonialDTO> testimonials = testimonialRepository.findByIsActiveTrueOrderByCreatedAtDesc()
+        List<TestimonialDTO> testimonials = testimonialRepository.findByIsActiveTrueOrderByOrderAsc()
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
@@ -51,6 +53,7 @@ public class TestimonialService {
         testimonial.setRating(dto.getRating());
         testimonial.setActive(true);
         testimonial.setCreatedAt(LocalDateTime.now());
+        testimonial.setOrder(dto.getOrder()); // Add order support
 
         // Handle avatar upload if present
         if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
@@ -83,6 +86,9 @@ public class TestimonialService {
         testimonial.setName(dto.getName());
         testimonial.setComment(dto.getComment());
         testimonial.setRating(dto.getRating());
+        if (dto.getOrder() != null) {
+            testimonial.setOrder(dto.getOrder()); // Add order support
+        }
 
         // Handle avatar update if new file is provided
         if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
@@ -132,6 +138,53 @@ public class TestimonialService {
         log.info("✅ Successfully soft deleted testimonial id: {}", id);
     }
 
+    /**
+     * 🔄 Reorders testimonials based on the provided order list
+     * Making our testimonials shine in perfect sequence! ⭐
+     *
+     * @param reorderItems List of items with their new display order
+     * @return List of reordered testimonials
+     */
+    @Transactional
+    public List<TestimonialDTO> reorder(List<ReorderItemDTO> reorderItems) {
+        log.info("🔄 Starting reorder of {} testimonials", reorderItems.size());
+
+        try {
+            // Create a map of id to order for quick lookup
+            Map<Long, Integer> orderMap = reorderItems.stream()
+                    .collect(Collectors.toMap(
+                            ReorderItemDTO::getId,
+                            ReorderItemDTO::getDisplayOrder
+                    ));
+
+            // Get all active testimonials
+            List<Testimonial> testimonials = testimonialRepository.findByIsActiveTrueOrderByOrderAsc();
+
+            // Update orders
+            testimonials.forEach(testimonial -> {
+                Integer newOrder = orderMap.get(testimonial.getId());
+                if (newOrder != null) {
+                    testimonial.setOrder(newOrder);
+                    log.debug("📋 Updated order for testimonial {}: {} -> {}", 
+                            testimonial.getName(), testimonial.getOrder(), newOrder);
+                }
+            });
+
+            // Save all updated testimonials
+            List<Testimonial> savedTestimonials = testimonialRepository.saveAll(testimonials);
+            log.info("✨ Successfully reordered {} testimonials", savedTestimonials.size());
+
+            // Convert to DTOs and return
+            return savedTestimonials.stream()
+                    .map(this::toDTO)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error("❌ Failed to reorder testimonials: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to reorder testimonials: " + e.getMessage(), e);
+        }
+    }
+
     private TestimonialDTO toDTO(Testimonial testimonial) {
         TestimonialDTO dto = new TestimonialDTO();
         dto.setId(testimonial.getId());
@@ -140,6 +193,7 @@ public class TestimonialService {
         dto.setRating(testimonial.getRating());
         dto.setAvatarUrl(testimonial.getAvatarUrl());
         dto.setActive(testimonial.isActive());
+        dto.setOrder(testimonial.getOrder()); // Add order support
         return dto;
     }
 

@@ -36,6 +36,9 @@ public class Testimonial {
     @Column(nullable = false)
     private int rating;
 
+    @Column(name = "display_order")
+    private Integer order;
+
     @Column(name = "is_active")
     private boolean isActive = true;
 

@@ -23,6 +23,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <!-- Custom resources -->
     <link rel="stylesheet" href="/css/admin.css">
@@ -30,6 +31,7 @@
     <link rel="stylesheet" href="/css/filepond-custom.css">
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/sweetalert-custom.css">
+    <link rel="stylesheet" href="/css/drag-and-drop.css">
     
     <!-- Utilities first -->
     <script src="/js/logger.js" type="module"></script>
@@ -55,20 +57,27 @@
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold text-gray-900">Support Logos Management</h1>
                 <button class="btn-primary flex items-center space-x-2" onclick="Modal.show('support-logo')">
-                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <i d    ata-lucide="plus" class="w-4 h-4"></i>
                     <span>Add New Logo</span>
                 </button>
             </div>
 
             <div class="bg-white rounded-xl shadow-sm border">
                 <div class="p-6">
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        <!-- Enhanced Logo Cards -->
-                        <div th:each="logo : ${supportLogos}" class="logo-card relative">
+                    <div id="logoList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div th:each="logo : ${supportLogos}" class="logo-card relative group" 
+                             th:data-id="${logo.id}" 
+                             th:data-display-order="${logo.displayOrder}">
+                            <!-- Drag Handle -->
+                            <div class="drag-handle absolute -top-2 -right-2 p-1 bg-gray-100 rounded-full cursor-move 
+                                        hover:bg-gray-200 transition-colors z-20 opacity-0 group-hover:opacity-100">
+                                <i data-lucide="grip" class="w-4 h-4 text-gray-500"></i>
+                            </div>
+                            
                             <!-- Order Badge -->
-                            <div th:if="${logo.order != null}" 
-                                 class="absolute -top-2 -left-2 bg-primary-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium z-10"
-                                 th:text="${logo.order}">
+                            <div class="order-badge absolute -top-2 -left-2 bg-primary-600 text-white rounded-full 
+                                        w-6 h-6 flex items-center justify-center text-xs font-medium z-10"
+                                 th:text="${logo.displayOrder}">
                             </div>
                             
                             <div class="aspect-w-16 aspect-h-9 mb-3">

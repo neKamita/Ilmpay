@@ -36,16 +36,16 @@ public class SupportLogoDTO {
     
     private boolean active;
     
-    private Integer order;
+    private Integer displayOrder;
     
     // Constructor for URL-based creation
-    public SupportLogoDTO(Long id, String name, String imageUrl, String websiteUrl, boolean active, Integer order) {
+    public SupportLogoDTO(Long id, String name, String imageUrl, String websiteUrl, boolean active, Integer displayOrder) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.websiteUrl = websiteUrl;
         this.active = active;
-        this.order = order;
+        this.displayOrder = displayOrder;
     }
 
     public SupportLogoDTO(Long id, String name, String imageUrl, String websiteUrl, boolean active) {

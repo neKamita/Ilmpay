@@ -1,0 +1,36 @@
+/* 🎨 Drag and Drop Styles */
+/* Making our drag and drop experience smooth and beautiful! */
+
+/* Drag Handle */
+.drag-handle {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    cursor: grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Show drag handle on hover */
+.benefit-card:hover .drag-handle,
+.testimonial-card:hover .drag-handle,
+.logo-card:hover .drag-handle {
+    opacity: 1;
+}
+
+/* Sortable Ghost (dragging) */
+.sortable-ghost {
+    opacity: 0.5;
+    background-color: #f3f4f6 !important;
+}
+
+/* Sortable Chosen (being dragged) */
+.sortable-chosen {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Sortable Drag (placeholder) */
+.sortable-drag {
+    opacity: 0.9;
+}

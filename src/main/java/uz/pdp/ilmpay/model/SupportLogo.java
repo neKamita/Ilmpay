@@ -24,7 +24,7 @@ public class SupportLogo {
 
     // Display order for sorting logos (lower numbers appear first)
     @Column(name = "display_order")
-    private Integer order;
+    private Integer displayOrder;
 
     private LocalDateTime createdAt;
 }
