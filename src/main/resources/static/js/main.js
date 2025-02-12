@@ -1,5 +1,54 @@
 // 🌟 Common Functionality for Ilmpay
 
+// 📊 Session Tracking Utilities
+const SessionTracker = {
+    startTime: Date.now(),
+    lastPageChange: Date.now(),
+    pageCount: 1,
+
+    // Track page changes
+    trackPageChange() {
+        this.pageCount++;
+        this.lastPageChange = Date.now();
+    },
+
+    // Update session data before page unload
+    async updateSession() {
+        const duration = Math.floor((Date.now() - this.startTime) / 1000); // Convert to seconds
+        const bounced = this.pageCount === 1; // Bounced if only one page was visited
+
+        try {
+            await fetch('/api/analytics/session-update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `duration=${duration}&bounced=${bounced}`,
+                keepalive: true // Ensure request completes even if page is unloading
+            });
+        } catch (error) {
+            console.error('Failed to update session:', error);
+        }
+    },
+
+    // Initialize session tracking
+    init() {
+        // Track page changes
+        window.addEventListener('popstate', () => this.trackPageChange());
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && link.href.startsWith(window.location.origin)) {
+                this.trackPageChange();
+            }
+        });
+
+        // Update session data before page unload
+        window.addEventListener('beforeunload', () => {
+            this.updateSession();
+        });
+    }
+};
+
 // 🎯 Global Animation Utilities
 const AnimationUtils = {
     // 🎨 Animate elements on scroll
@@ -124,6 +173,8 @@ const UIUtils = {
 
 // 🌟 Initialize everything on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize session tracking
+    SessionTracker.init();
     // 🎨 Initialize Lucide icons
     if (window.lucide) {
         lucide.createIcons();

@@ -371,6 +371,35 @@
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
+/* Select Element Styles */
+.select-container {
+    @apply relative inline-block;
+    line-height: normal;
+}
+
+.custom-select {
+    @apply w-full h-9 px-3 py-1.5 text-sm bg-white;
+    @apply border border-gray-300 rounded-lg;
+    @apply focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+    @apply cursor-pointer shadow-sm;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.custom-select:hover {
+    @apply border-gray-400;
+}
+
+.custom-select:focus {
+    @apply ring-indigo-500 border-indigo-500;
+}
+
 /* Enhanced Modal Styles */
 .modal-enter {
     animation: modal-enter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -400,4 +429,24 @@
         opacity: 0;
         transform: scale(0.95) translateY(10px);
     }
+}
+
+
+.custom-select {
+    @apply h-9 min-h-[36px] pl-3 pr-8 text-sm bg-white;
+    @apply border border-gray-300 rounded-lg;
+    @apply focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+    @apply cursor-pointer appearance-none;
+    background-image: url("data:image/svg+xml,..."); /* Custom arrow icon */
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.5em 1.5em;
+}
+
+.select-container {
+    @apply relative inline-block;
+}
+
+.select-container::after {
+    @apply absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none;
 }

@@ -4,13 +4,14 @@ import { Logger } from './logger.js';
 // 🎭 Admin Panel Functionality - Where the magic happens! ✨
 
 // 🔄 Sidebar Toggle - The hide and seek champion
-function toggleSubmenu(menuId) {
+// Make toggleSubmenu globally accessible since it's used in HTML onclick handlers
+window.toggleSubmenu = (menuId) => {
     Logger.debug('Admin', '🎪 Playing peek-a-boo with submenu', { menuId });
     const menu = document.getElementById(menuId);
     const icon = document.getElementById(menuId + '-icon');
     menu.classList.toggle('hidden');
     icon.classList.toggle('rotate-90');
-}
+};
 
 // 🎯 Admin API Functions - The data whisperer
 const AdminAPI = {

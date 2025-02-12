@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Ilmpay</title>
     
-    <!-- 📊 ApexCharts - Add this before other scripts -->
+    <!-- 📊 ApexCharts -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
-    <!-- 🎨 Replace CDN Tailwind with local version (TODO) -->
+    <!-- 🎨 Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
     
     <!-- Other resources -->
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- 🎭 GSAP Scripts - Move these before your main scripts -->
+    <!-- 🎭 GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     
@@ -38,69 +38,110 @@
         <!-- Main Content -->
         <main class="flex-1 p-8">
             <!-- Stats Cards -->
- <!-- 📈 Stats Cards - Numbers that make the boss happy -->
- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <!-- 👥 Total Visitors - Counting every curious soul -->
-    <div data-aos="zoom-in" data-aos-delay="100" class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6 shadow-lg">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm">Total Visitors</p>
-                <p class="text-3xl font-bold mt-2" th:text="${totalVisitors}">15,487</p>
-                <p class="text-xs mt-1 opacity-75">↑ 12.5% from last month</p>
-            </div>
-            <i data-lucide="users" class="w-12 h-12 opacity-75"></i>
-        </div>
-    </div>
-    
-    <!-- 🎯 Today's Visitors - Fresh faces in the house -->
-    <div data-aos="zoom-in" data-aos-delay="200" class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-6 shadow-lg">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm">Today's Visitors</p>
-                <p class="text-3xl font-bold mt-2" th:text="${todayVisitors}">234</p>
-                <p class="text-xs mt-1 opacity-75">↑ 8.3% from yesterday</p>
-            </div>
-            <i data-lucide="user-plus" class="w-12 h-12 opacity-75"></i>
-        </div>
-    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-6">
+                <!-- 👥 Total Visitors -->
+                <div class="col-span-1 md:col-span-2" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm">Total Visitors</p>
+                                <p class="text-3xl font-bold mt-2" th:text="${totalVisitors}">15,487</p>
+                                <p class="text-xs mt-1 opacity-75 rate-change" data-change="visitorChange"></p>
+                            </div>
+                            <i data-lucide="users" class="w-12 h-12 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 🎯 Today's Visitors -->
+                <div class="col-span-1" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm">Today's Visitors</p>
+                                <p class="text-3xl font-bold mt-2" th:text="${todayVisitors}">234</p>
+                                <p class="text-xs mt-1 opacity-75 rate-change" data-change="activeChange"></p>
+                            </div>
+                            <i data-lucide="user-plus" class="w-12 h-12 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- 📱 App Downloads - Because who doesn't love our app? -->
-    <div data-aos="zoom-in" data-aos-delay="300" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm">App Downloads</p>
-                <p class="text-3xl font-bold mt-2" th:text="${appDownloads}">9,845</p>
-                <p class="text-xs mt-1 opacity-75">↑ 15.2% from last month</p>
-            </div>
-            <i data-lucide="download" class="w-12 h-12 opacity-75"></i>
-        </div>
-    </div>
+                <!-- 📱 Active Users -->
+                <div class="col-span-1" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm">Active Users</p>
+                                <p class="text-3xl font-bold mt-2" th:text="${activeUsers}">7,256</p>
+                                <p class="text-xs mt-1 opacity-75 rate-change" data-change="durationChange"></p>
+                            </div>
+                            <i data-lucide="user-check" class="w-12 h-12 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- 🌟 Active Users - The real MVPs -->
-    <div data-aos="zoom-in" data-aos-delay="400" class="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6 shadow-lg">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm">Active Users</p>
-                <p class="text-3xl font-bold mt-2" th:text="${activeUsers}">7,256</p>
-                <p class="text-xs mt-1 opacity-75">↑ 5.7% from last week</p>
+                <!-- 🔄 Bounce Rate -->
+                <div class="col-span-1" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm">Bounce Rate</p>
+                                <p class="text-3xl font-bold mt-2" id="bounceRate">32.5%</p>
+                                <p class="text-xs mt-1 opacity-75 rate-change" data-change="bounceChange"></p>
+                            </div>
+                            <i data-lucide="shuffle" class="w-12 h-12 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ⏱️ Avg Session -->
+                <div class="col-span-1" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm">Avg Session</p>
+                                <p class="text-3xl font-bold mt-2" id="avgSessionDuration">8m 45s</p>
+                                <p class="text-xs mt-1 opacity-75 rate-change" data-change="durationChange"></p>
+                            </div>
+                            <i data-lucide="clock" class="w-12 h-12 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <i data-lucide="user-check" class="w-12 h-12 opacity-75"></i>
-        </div>
-    </div>
-</div>
 
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Visitor Trends Chart -->
                 <div class="bg-white rounded-xl p-6 shadow-sm border">
-                    <h3 class="text-lg font-semibold mb-4">Visitor Trends</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Visitor Trends</h3>
+                        <div class="select-container">
+                            <select id="visitorTrendsPeriod" class="custom-select" onchange="updateVisitorStats(this.value)">
+                            <option value="7">Last 7 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="90">Last 90 days</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="h-64" id="visitorChart"></div>
                 </div>
                 
+                <!-- Activity Heatmap -->
                 <div class="bg-white rounded-xl p-6 shadow-sm border">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
-                        <i data-lucide="activity" class="w-5 h-5 text-indigo-600"></i>
-                        <span>User Activity Heatmap</span>
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold flex items-center space-x-2">
+                            <i data-lucide="activity" class="w-5 h-5 text-indigo-600"></i>
+                            <span>User Activity Heatmap</span>
+                        </h3>
+                        <div class="select-container">
+                            <select id="heatmapPeriod" class="custom-select" onchange="updateHeatmap(this.value)">
+                            <option value="7" selected>Last 7 days</option>
+                            <option value="14">Last 14 days</option>
+                            <option value="30">Last 30 days</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="h-64" id="heatmapChart"></div>
                 </div>
             </div>
@@ -110,13 +151,12 @@
         </main>
     </div>
 
-    <!-- Initialize Charts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Lucide icons
             lucide.createIcons();
 
-            // 📊 Visitor Trends Chart - Real-world-like data
+            // Visitor Chart Configuration
             const visitorData = {
                 chart: {
                     type: 'area',
@@ -126,7 +166,7 @@
                 },
                 series: [{
                     name: 'Daily Visitors',
-                    data: generateVisitorData() // We'll create this function
+                    data: []
                 }],
                 xaxis: {
                     type: 'datetime',
@@ -158,9 +198,7 @@
                 }
             };
 
-            new ApexCharts(document.querySelector('#visitorChart'), visitorData).render();
-
-            // 🌡️ Heatmap Chart - Activity patterns
+            // Heatmap Configuration
             const heatmapData = {
                 chart: {
                     height: 350,
@@ -172,168 +210,201 @@
                         speed: 500
                     }
                 },
-                series: generateTimeBlocks(),
+                series: [],
                 plotOptions: {
                     heatmap: {
                         enableShades: true,
                         distributed: true,
                         colorScale: {
                             ranges: [
-                                { from: 0, to: 15, name: 'Very Low', color: '#F3F4F6' },    // Light gray
-                                { from: 16, to: 30, name: 'Low', color: '#93C5FD' },        // Light blue
-                                { from: 31, to: 50, name: 'Medium', color: '#3B82F6' },     // Medium blue
-                                { from: 51, to: 75, name: 'High', color: '#1D4ED8' },       // Dark blue
-                                { from: 76, to: 100, name: 'Peak', color: '#1E3A8A' }       // Navy blue
+                                { from: 0, to: 15, name: 'Very Low', color: '#F3F4F6' },
+                                { from: 16, to: 30, name: 'Low', color: '#93C5FD' },
+                                { from: 31, to: 50, name: 'Medium', color: '#3B82F6' },
+                                { from: 51, to: 75, name: 'High', color: '#1D4ED8' },
+                                { from: 76, to: 100, name: 'Peak', color: '#1E3A8A' }
                             ]
                         }
                     }
                 },
-                dataLabels: {
-                    enabled: false
-                },
-                legend: {
-                    show: true,
-                    position: 'top',
-                    horizontalAlign: 'center',
-                    floating: false,
-                    fontSize: '12px',
-                    offsetY: 0,
-                    markers: {
-                        width: 10,
-                        height: 10,
-                        radius: 2
-                    }
-                },
+                dataLabels: { enabled: false },
                 xaxis: {
-                    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    labels: {
-                        style: {
-                            colors: '#4B5563',
-                            fontSize: '12px',
-                            fontWeight: 500
-                        }
-                    },
-                    axisBorder: { show: false }
+                    categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 },
                 yaxis: {
-                    reversed: true,
-                    tickAmount: 8,
-                    labels: {
-                        style: {
-                            colors: '#4B5563',
-                            fontSize: '12px',
-                            fontWeight: 500
-                        },
-                        formatter: function(val) {
-                            const timeBlocks = [
-                                'Late Night (00-03)',
-                                'Early Morning (03-06)',
-                                'Morning (06-09)',
-                                'Late Morning (09-12)',
-                                'Afternoon (12-15)',
-                                'Late Afternoon (15-18)',
-                                'Evening (18-21)',
-                                'Night (21-24)'
-                            ];
-                            return timeBlocks[val - 1] || '';
-                        }
-                    }
-                },
-                tooltip: {
-                    enabled: true,
-                    theme: 'light',
-                    style: { fontSize: '12px' },
-                    custom: function({ series, seriesIndex, dataPointIndex, w }) {
-                        const timeBlock = w.config.yaxis[0].labels.formatter(seriesIndex + 1);
-                        const day = w.config.xaxis.categories[dataPointIndex];
-                        const value = series[seriesIndex][dataPointIndex];
-                        return `
-                            <div class="p-2">
-                                <div class="font-semibold">${day} - ${timeBlock}</div>
-                                <div class="text-sm mt-1">${value} active users</div>
-                            </div>`;
-                    }
+                    reversed: true
                 }
             };
 
-            new ApexCharts(document.querySelector('#heatmapChart'), heatmapData).render();
-        });
+            // Initialize charts with empty data first
+            const visitorChart = new ApexCharts(document.querySelector('#visitorChart'), visitorData);
+            visitorChart.render();
 
-        // 📈 Generate realistic visitor data
-        function generateVisitorData() {
-            const data = [];
-            const baseVisitors = 200;
-            const today = new Date();
-            
-            // Generate last 30 days of data
-            for (let i = 30; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
+            const heatmapChart = new ApexCharts(document.querySelector('#heatmapChart'), heatmapData);
+            heatmapChart.render();
+
+            // Helper function to format rate changes
+            function formatRateChange(change, type = 'increase') {
+                const isNegative = change < 0;
+                const arrow = isNegative ? '↓' : '↑';
+                const absChange = Math.abs(change).toFixed(1);
                 
-                // Add weekly patterns
-                let dayMultiplier = 1;
-                if (date.getDay() === 0 || date.getDay() === 6) {
-                    dayMultiplier = 0.7; // Weekend drop
+                let description;
+                switch(type) {
+                    case 'bounce':
+                        description = isNegative ? 'improvement' : 'increase';
+                        break;
+                    case 'duration':
+                        description = 'from last period';
+                        break;
+                    default:
+                        description = 'from last period';
                 }
                 
-                // Add random variation
-                const randomVariation = Math.random() * 50 - 25;
-                
-                // Calculate visitors with trend
-                const visitors = Math.max(
-                    Math.floor((baseVisitors + (i * 3)) * dayMultiplier + randomVariation),
-                    50
-                );
-                
-                data.push([date.getTime(), visitors]);
+                return `${arrow} ${absChange}% ${description}`;
             }
-            
-            return data;
-        }
 
-        // 🗺️ Generate realistic heatmap data
-        function generateTimeBlocks() {
-            const timeBlocks = [];
-            const periods = 8; // 8 time blocks of 3 hours each
-
-            for (let block = 0; block < periods; block++) {
-                const blockData = {
-                    name: `Block ${block + 1}`,
-                    data: []
-                };
-
-                // Generate data for each day
-                for (let day = 0; day < 7; day++) {
-                    let value;
+            // Helper function to update rate changes display
+            function updateRateChanges(data) {
+                document.querySelectorAll('.rate-change').forEach(element => {
+                    const changeType = element.dataset.change;
+                    const value = data[changeType];
                     
-                    // Late night & early morning (blocks 0-1)
-                    if (block <= 1) {
-                        value = Math.floor(Math.random() * 15);
+                    if (value !== undefined) {
+                        const type = changeType === 'bounceChange' ? 'bounce' : 
+                                   changeType === 'durationChange' ? 'duration' : 'increase';
+                        
+                        element.textContent = formatRateChange(value, type);
+                        element.classList.remove('text-green-400', 'text-red-400');
+                        
+                        // Add color based on whether the change is good or bad
+                        if (changeType === 'bounceChange') {
+                            element.classList.add(value < 0 ? 'text-green-400' : 'text-red-400');
+                        } else {
+                            element.classList.add(value >= 0 ? 'text-green-400' : 'text-red-400');
+                        }
                     }
-                    // Morning & late morning (blocks 2-3)
-                    else if (block <= 3) {
-                        value = Math.floor(Math.random() * 35) + 25;
-                    }
-                    // Afternoon & late afternoon (blocks 4-5)
-                    else if (block <= 5) {
-                        value = Math.floor(Math.random() * 25) + 50;
-                    }
-                    // Evening & night (blocks 6-7)
-                    else {
-                        value = Math.floor(Math.random() * 40) + 35;
-                    }
-
-                    // Reduce weekend activity
-                    if (day >= 5) {
-                        value = Math.floor(value * 0.6);
-                    }
-
-                    blockData.data.push(value);
-                }
-                timeBlocks.push(blockData);
+                });
             }
-            return timeBlocks;
-        }
+
+            // Function to fetch and update visitor stats
+            async function updateVisitorStats(days = 30) {
+                try {
+                    const response = await fetch(`/api/analytics/visitor-stats?days=${days}`);
+                    const data = await response.json();
+                    
+                    const series = [{
+                        name: 'Daily Visitors',
+                        data: data.dailyVisitors.map(point => [
+                            new Date(point.date).getTime(),
+                            point.visitors
+                        ])
+                    }];
+                    
+                    visitorChart.updateSeries(series);
+
+                    // Update stats and rates
+                    const bounceRate = data.bounceRate != null ? Math.round(data.bounceRate) : 0;
+                    const avgDuration = data.avgSessionDuration != null ? data.avgSessionDuration : 0;
+                    
+                    const bounceRateElement = document.getElementById('bounceRate');
+                    const avgSessionElement = document.getElementById('avgSessionDuration');
+                    
+                    if (bounceRate > 0 || bounceRateElement.textContent === '0%') {
+                        bounceRateElement.textContent = `${bounceRate}%`;
+                    }
+                    
+                    if (avgDuration > 0 || avgSessionElement.textContent === '0m') {
+                        avgSessionElement.textContent = formatDuration(avgDuration);
+                    }
+
+                    // Update rate changes
+                    updateRateChanges(data);
+                } catch (error) {
+                    console.error('Error fetching visitor stats:', error);
+                    // Don't update values on error to preserve existing data
+                }
+            }
+
+            // Function to fetch and update heatmap data
+            async function updateHeatmap(days = 7) {
+                try {
+                    const response = await fetch(`/api/analytics/activity-heatmap?days=${days}`);
+                    if (!response.ok) {
+                        throw new Error(`Server responded with status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    const transformedData = transformHeatmapData(data);
+                    heatmapChart.updateSeries(transformedData);
+                } catch (error) {
+                    console.error('Error fetching heatmap data:', error);
+                    // Set empty data with proper structure when API fails
+                    const emptyData = generateEmptyHeatmapData();
+                    heatmapChart.updateSeries(emptyData);
+                }
+            }
+
+            // Helper function to generate empty heatmap data
+            function generateEmptyHeatmapData() {
+                return Array.from({ length: 8 }, (_, i) => ({
+                    name: `${String(i * 3).padStart(2, '0')}:00-${String((i * 3) + 3).padStart(2, '0')}:00`,
+                    data: Array(7).fill(0)
+                }));
+            }
+
+            // Helper function to transform heatmap data
+            function transformHeatmapData(data) {
+                if (!data || !Array.isArray(data)) {
+                    return generateEmptyHeatmapData();
+                }
+
+                const timeBlocks = [];
+                for (let hour = 0; hour < 24; hour += 3) {
+                    timeBlocks.push({
+                        name: `${String(hour).padStart(2, '0')}:00-${String(hour + 3).padStart(2, '0')}:00`,
+                        data: Array(7).fill(0) // Initialize with zeros for each day
+                    });
+                }
+
+                // Fill in actual data
+                data.forEach(point => {
+                    if (point && typeof point.hour === 'number' && typeof point.dayOfWeek === 'number') {
+                        const blockIndex = Math.floor(point.hour / 3);
+                        // PostgreSQL's EXTRACT(DOW) returns 0-6 for Sun-Sat, we need 1-7 for Mon-Sun
+                        const dayIndex = (point.dayOfWeek + 6) % 7; // Convert Sunday=0 to Sunday=6
+                        if (timeBlocks[blockIndex]) {
+                            timeBlocks[blockIndex].data[dayIndex] = point.count || 0;
+                        }
+                    }
+                });
+
+                return timeBlocks;
+            }
+
+            // Helper function to format duration
+            function formatDuration(seconds) {
+                if (!seconds) return '0m';
+                const minutes = Math.round(seconds / 60);
+                if (minutes < 60) return `${minutes}m`;
+                const hours = Math.floor(minutes / 60);
+                const remainingMinutes = minutes % 60;
+                return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+            }
+
+            // Make functions globally available
+            window.updateVisitorStats = updateVisitorStats;
+            window.updateHeatmap = updateHeatmap;
+
+            // Initial load
+            updateVisitorStats();
+            updateHeatmap();
+
+            // Refresh every 5 minutes
+            setInterval(() => {
+                updateVisitorStats();
+                updateHeatmap();
+            }, 5 * 60 * 1000);
+        });
     </script>
 </body>
 </html>

@@ -171,7 +171,7 @@ public class BenefitService {
      * 🔄 Convert entity to DTO - The benefit transformer
      */
     private BenefitCardDTO toDTO(Benefit benefit) {
-        return new BenefitCardDTO(
+        return  new BenefitCardDTO(
             benefit.getId(),
             benefit.getTitle(),
             benefit.getDescription(),
