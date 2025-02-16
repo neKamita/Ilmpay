@@ -345,9 +345,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const avgDuration = data.avgSessionDuration != null ? data.avgSessionDuration : 0;
                 const avgSessionElement = document.getElementById('avgSessionDuration');
 
-                if (avgDuration > 0 || avgSessionElement.textContent === '0m') {
-                    avgSessionElement.textContent = this.formatDuration(avgDuration);
-                }
+                // *** LOGGING ADDED HERE ***
+                Logger.debug('AdminCharts', 'Raw avgSessionDuration from API:', data.avgSessionDuration);
+                const formattedDuration = this.formatDuration(avgDuration);
+                Logger.debug('AdminCharts', 'Formatted avgSessionDuration:', formattedDuration);
+                Logger.debug('AdminCharts', 'avgSessionElement.textContent (before):', avgSessionElement.textContent);
+
+                avgSessionElement.textContent = formattedDuration;
+
+                // *** LOGGING ADDED HERE ***
+                Logger.debug('AdminCharts', 'avgSessionElement.textContent (after):', avgSessionElement.textContent);
+
 
                 // Update rate changes
                 this.updateRateChanges(data);
@@ -357,38 +365,56 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        AdminCharts.updateHeatmap = async function (days = 7) {
-            try {
-                const response = await fetch(`/api/analytics/activity-heatmap?days=${days}`);
-                if (!response.ok) {
-                    throw new Error(`Server responded with status: ${response.status}`);
-                }
-                const data = await response.json();
+      AdminCharts.updateHeatmap = async function (days = 7) {
+        try {
+          const response = await fetch(`/api/analytics/activity-heatmap?days=${days}`);
+          if (!response.ok) {
+            throw new Error(`Server responded with status: ${response.status}`);
+          }
+          const data = await response.json();
 
-                const transformedData = this.transformHeatmapData(data);
+          const transformedData = this.transformHeatmapData(data);
 
-                if (this.heatmapChart) {
-                    this.heatmapChart.updateSeries(transformedData);
-                }
+          if (this.heatmapChart) {
+            this.heatmapChart.updateSeries(transformedData);
+          }
 
-            } catch (error) {
-                console.error('Error fetching heatmap data:', error);
-                // Set empty data with proper structure when API fails
-                const emptyData = this.generateEmptyHeatmapData();
-                if (this.heatmapChart) {
-                    this.heatmapChart.updateSeries(emptyData);
-                }
-            }
-        };
+        } catch (error) {
+          console.error('Error fetching heatmap data:', error);
+          // Set empty data with proper structure when API fails
+          const emptyData = this.generateEmptyHeatmapData();
+          if (this.heatmapChart) {
+            this.heatmapChart.updateSeries(emptyData);
+          }
+        }
+      };
+
+      // Function to update bounce rate
+      AdminCharts.updateBounceRate = async function() {
+        try {
+          const response = await fetch(`/api/analytics/visitor-stats?days=1`); // Could use a dedicated endpoint later
+          const data = await response.json();
+          const bounceRateElement = document.getElementById('bounceRate');
+          if (bounceRateElement) {
+            bounceRateElement.textContent = data.bounceRate.toFixed(1) + '%'; // Format to 1 decimal place
+          }
+        } catch (error) {
+          console.error('Error fetching bounce rate:', error);
+        }
+      };
 
         // Helper function to format duration
-        AdminCharts.formatDuration = function(seconds) {
-            if (!seconds) return '0m';
-            const minutes = Math.round(seconds / 60);
-            if (minutes < 60) return `${minutes}m`;
-            const hours = Math.floor(minutes / 60);
-            const remainingMinutes = minutes % 60;
-            return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+       AdminCharts.formatDuration = function(seconds) {
+          if (!seconds) return '0s';
+          const minutes = Math.floor(seconds / 60); // Use Math.floor instead of Math.round
+          if (minutes < 1) {
+            return `${Math.round(seconds)}s`; // Display seconds if less than 1 minute
+          } else if (minutes < 60) {
+            return `${minutes}m`;
+          }
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
         };
 
         // Helper function to update rate changes display
@@ -424,29 +450,58 @@ document.addEventListener('DOMContentLoaded', () => {
                     description = 'from last period';
             }
 
-            return `${arrow} ${absChange}% ${description}`;
-        };
+      return `${arrow} ${absChange}% ${description}`;
+    };
 
-        // Make functions globally available
-        window.updateVisitorStats = AdminCharts.updateVisitorStats.bind(AdminCharts);
-        window.updateHeatmap = AdminCharts.updateHeatmap.bind(AdminCharts);
+    // Function to update today's visitors
+    AdminCharts.updateTodaysVisitors = async function() {
+      try {
+        const response = await fetch(`/api/analytics/visitor-stats?days=1`);
+        const data = await response.json();
+
+        const todaysVisitorsElement = document.getElementById('todaysVisitors');
+        if (todaysVisitorsElement) {
+          todaysVisitorsElement.textContent = data.totalVisitors;
+        }
+
+        // Update rate changes for today's visitors
+        const todaysVisitorsRateChange = document.querySelector('p[data-change="activeChange"]');
+        if(todaysVisitorsRateChange){
+            const type =  'increase';
+            todaysVisitorsRateChange.textContent = this.formatRateChange(data.visitorChange, type);
+            todaysVisitorsRateChange.classList.remove('text-green-400', 'text-red-400');
+            todaysVisitorsRateChange.classList.add(data.visitorChange >= 0 ? 'text-green-400' : 'text-red-400');
+        }
+
+      } catch (error) {
+        console.error('Error fetching today\'s visitors:', error);
+      }
+    };
+
+    // Make functions globally available
+    window.updateVisitorStats = AdminCharts.updateVisitorStats.bind(AdminCharts);
+    window.updateHeatmap = AdminCharts.updateHeatmap.bind(AdminCharts);
 
 
-        // Initial load
-        AdminCharts.updateVisitorStats();
-        AdminCharts.updateHeatmap();
+    // Initial load
+    AdminCharts.updateVisitorStats();
+    AdminCharts.updateHeatmap();
+    AdminCharts.updateTodaysVisitors();
+    AdminCharts.updateBounceRate();
 
-        // Refresh every 5 minutes
-        setInterval(() => {
-            AdminCharts.updateVisitorStats();
-            AdminCharts.updateHeatmap();
-        }, 5 * 60 * 1000);
+    // Refresh every 5 minutes
+    setInterval(() => {
+      AdminCharts.updateVisitorStats();
+      AdminCharts.updateHeatmap();
+      AdminCharts.updateTodaysVisitors();
+      AdminCharts.updateBounceRate();
+    }, 5 * 60 * 1000);
 
 
-        Logger.info('Admin', '✨ Admin panel is ready for action!');
-    } catch (error) {
-        Logger.error('Admin', '😅 Houston, we have a problem', error);
-    } finally {
-        Logger.groupEnd();
-    }
+    Logger.info('Admin', '✨ Admin panel is ready for action!');
+  } catch (error) {
+    Logger.error('Admin', '😅 Houston, we have a problem', error);
+  } finally {
+    Logger.groupEnd();
+  }
 });

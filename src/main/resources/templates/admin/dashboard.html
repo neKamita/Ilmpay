@@ -45,8 +45,8 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm">Total Visitors</p>
-                                <p class="text-3xl font-bold mt-2" th:text="${totalVisitors}">15,487</p>
-                                <p class="text-xs mt-1 opacity-75" id="bounceRate">0%</p> <!-- Bounce Rate Display -->
+                                <p class="text-3xl font-bold mt-2" id="totalVisitors" th:text="${totalVisitors}"></p>
+                                <p class="text-xs mt-1 opacity-75" id="bounceRate"></p> <!-- Bounce Rate Display -->
                                 <p class="text-xs mt-1 opacity-75 rate-change" data-change="visitorChange"></p>
                             </div>
                             <i data-lucide="users" class="w-12 h-12 opacity-75"></i>
@@ -60,7 +60,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm">Today's Visitors</p>
-                                <p class="text-3xl font-bold mt-2" th:text="${todayVisitors}">234</p>
+                                <p class="text-3xl font-bold mt-2" id="todaysVisitors" th:text="${todayVisitors}">234</p>
                                 <p class="text-xs mt-1 opacity-75 rate-change" data-change="activeChange"></p>
                             </div>
                             <i data-lucide="user-plus" class="w-12 h-12 opacity-75"></i>
@@ -75,7 +75,7 @@
                             <div>
                                 <p class="text-sm">Active Users</p>
                                 <p class="text-3xl font-bold mt-2" th:text="${activeUsers}">7,256</p>
-                                <p class="text-xs mt-1 opacity-75 rate-change" data-change="durationChange"></p>
+                                <p class="text-xs mt-1 opacity-75 rate-change" data-change="activeChange"></p>
                             </div>
                             <i data-lucide="user-check" class="w-12 h-12 opacity-75"></i>
                         </div>
@@ -88,7 +88,7 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-sm">Avg Session</p>
-                                <p class="text-3xl font-bold mt-2" id="avgSessionDuration">8m 45s</p>
+                                <p class="text-3xl font-bold mt-2" id="avgSessionDuration"></p>
                                 <p class="text-xs mt-1 opacity-75 rate-change" data-change="durationChange"></p>
                             </div>
                             <i data-lucide="clock" class="w-12 h-12 opacity-75"></i>
