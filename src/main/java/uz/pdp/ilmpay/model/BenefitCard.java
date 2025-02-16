@@ -19,8 +19,9 @@ public class BenefitCard {
     
     private String title;
     private String description;
+
     private String iconUrl;
     private int displayOrder;
     private boolean active;
     private LocalDateTime createdAt;
-} 
+}

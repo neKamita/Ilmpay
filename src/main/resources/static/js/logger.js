@@ -74,10 +74,10 @@ class Logger {
         }
 
         // Format console output
-        const prefix = `[${timestamp}] ${level} ${component}:`;
-        console.log(prefix, message);
+        const prefix = `${level} ${component}:`; // Removed timestamp from prefix
+        console.log(`[${timestamp}]`, prefix, message); // Added timestamp to console.log
         if (data) {
-            console.log(data);
+            console.log(`[${timestamp}]`, data); // Added timestamp to data log
         }
     }
 

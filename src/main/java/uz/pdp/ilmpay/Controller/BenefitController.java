@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.ilmpay.dto.BenefitCardDTO;
 import uz.pdp.ilmpay.dto.ReorderItemDTO;
 import uz.pdp.ilmpay.service.BenefitService;
+import uz.pdp.ilmpay.service.TranslationService;
 import uz.pdp.ilmpay.payload.EntityResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import jakarta.validation.Valid;
 import java.util.List;
+
 
 /**
  * 🎯 BenefitController: The API endpoints for our benefits!
@@ -26,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BenefitController {
     private final BenefitService benefitService;
+    private final TranslationService translationService;
 
     /**
      * 📋 Gets all active benefits
@@ -103,7 +107,7 @@ public class BenefitController {
             // Use JSON DTO if available, otherwise use form DTO
             BenefitCardDTO dto = jsonDto != null ? jsonDto : formDto;
             log.info("🎁 Creating new benefit: {}", dto);
-            
+
             // Create the benefit
             BenefitCardDTO created = benefitService.create(dto);
             log.info("✨ Successfully created benefit with id: {}", created.getId());
@@ -152,7 +156,7 @@ public class BenefitController {
             // Use JSON DTO if available, otherwise use form DTO
             BenefitCardDTO dto = jsonDto != null ? jsonDto : formDto;
             log.info("🔄 Updating benefit {} with data: {}", id, dto);
-            
+
             // Update the benefit
             BenefitCardDTO updated = benefitService.update(id, dto);
             log.info("✨ Successfully updated benefit {}", id);

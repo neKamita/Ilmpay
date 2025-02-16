@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.i18n.LocaleContextHolder;
 import uz.pdp.ilmpay.dto.BenefitCardDTO;
 import uz.pdp.ilmpay.exception.ResourceNotFoundException;
 import uz.pdp.ilmpay.model.BenefitCard;
 import uz.pdp.ilmpay.repository.BenefitCardRepository;
+import uz.pdp.ilmpay.service.TranslationService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BenefitCardService {
     private final BenefitCardRepository benefitCardRepository;
+    private final TranslationService translationService;
 
     public List<BenefitCardDTO> findAllActive() {
         return benefitCardRepository.findByActiveTrueOrderByDisplayOrderAsc()
@@ -89,13 +92,14 @@ public class BenefitCardService {
         }
     }
 
-    private BenefitCardDTO toDTO(BenefitCard card) {
-        return new BenefitCardDTO(
-            card.getId(),
-            card.getTitle(),
-            card.getDescription(),
-            card.getDisplayOrder(),
-            card.isActive()
-        );
-    }
+  private BenefitCardDTO toDTO(BenefitCard card) {
+       String currentLanguage = LocaleContextHolder.getLocale().getLanguage();
+       return BenefitCardDTO.builder()
+               .id(card.getId())
+               .title(currentLanguage.equals("en") ? card.getTitle() : translationService.translate(card.getTitle(),"en",currentLanguage))
+               .description(currentLanguage.equals("en") ? card.getDescription() : translationService.translate(card.getDescription(),"en",currentLanguage))
+               .displayOrder(card.getDisplayOrder())
+               .active(card.isActive())
+               .build();
+   }
 }

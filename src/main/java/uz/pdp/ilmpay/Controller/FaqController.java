@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.ilmpay.dto.FaqDTO;
 import uz.pdp.ilmpay.payload.EntityResponse;
 import uz.pdp.ilmpay.service.FaqService;
+import uz.pdp.ilmpay.service.TranslationService;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ import java.util.List;
 @Slf4j
 public class FaqController {
     private final FaqService faqService;
+    private final TranslationService translationService;
 
     /**
      * 📚 Get all active FAQs

@@ -56,10 +56,10 @@
         
         <main class="flex-1 p-8">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-900">Benefits Management</h1>
+                <h1 class="text-2xl font-bold text-gray-900" th:text="#{admin.benefits.management.title}">Benefits Management</h1>
                 <button class="btn-primary flex items-center space-x-2" onclick="Modal.show('benefit')">
                     <i data-lucide="plus" class="w-4 h-4"></i>
-                    <span>Add New Benefit</span>
+                    <span th:text="#{admin.benefits.add.button}">Add New Benefit</span>
                 </button>
             </div>
 
@@ -67,24 +67,24 @@
                 <!-- Benefits Grid -->
                 <div id="benefitList" class="benefits-cards">
                     <!-- Enhanced Benefit Cards -->
-                    <div th:each="benefit : ${benefits}" 
-                         class="benefit-card relative" 
+                    <div th:each="benefit : ${benefits}"
+                         class="benefit-card relative"
                          th:data-id="${benefit.id}"
                          th:data-order="${benefit.displayOrder}">
                         <!-- Drag Handle -->
                         <div class="drag-handle absolute -top-2 -right-2 p-1 bg-gray-100 rounded-full cursor-move hover:bg-gray-200 transition-colors">
                             <i data-lucide="grip" class="w-4 h-4 text-gray-500"></i>
                         </div>
-                        
+
                         <!-- Display Order Badge -->
                         <div class="benefit-number order-display" th:text="${benefit.displayOrder}">1</div>
-                        
-                        <!-- Title -->
-                        <h3 class="font-ruda text-2xl font-bold text-gray-900" th:text="${benefit.title}">Benefit Title</h3>
-                        
-                        <!-- Description -->
-                        <p class="font-ruda text-sm text-gray-600 text-center" th:text="${benefit.description}">Benefit description goes here...</p>
-                        
+
+    <!-- Title -->
+    <h3 class="font-ruda text-2xl font-bold text-gray-900" th:text="${benefit.title}">Benefit Title</h3>
+
+    <!-- Description -->
+    <p class="font-ruda text-sm text-gray-600 text-center" th:text="${benefit.description}">Benefit description goes here...</p>
+
                         <!-- Admin Actions -->
                         <div class="benefit-actions">
                             <button class="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg"

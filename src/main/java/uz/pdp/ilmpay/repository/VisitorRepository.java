@@ -25,13 +25,14 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     long count();
 
     // Daily visitor statistics
-    @Query("SELECT DATE(v.visitTime) as date, COUNT(DISTINCT v.ipAddress) as count " +
-           "FROM Visitor v " +
-           "WHERE v.visitTime BETWEEN :startDate AND :endDate " +
-           "GROUP BY DATE(v.visitTime) " +
-           "ORDER BY date")
-    List<Object[]> getDailyVisitorStats(@Param("startDate") LocalDateTime startDate, 
-                                      @Param("endDate") LocalDateTime endDate);
+    @Query(value="-- Daily visitor statistics query - startDate: :startDate, endDate: :endDate\nSELECT DATE(v.visit_time) as date, COUNT(DISTINCT v.ip_address) as count " +
+            "FROM visitors v " +
+            "WHERE v.visit_time BETWEEN :startDate AND :endDate " +
+            "GROUP BY DATE(v.visit_time) " +
+            "ORDER BY date", nativeQuery = true)
+    List<Object[]> getDailyVisitorStats(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 
     // Hourly activity heatmap data
     @Query(value = 

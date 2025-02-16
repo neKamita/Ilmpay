@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.pdp.ilmpay.dto.TestimonialDTO;
 import uz.pdp.ilmpay.dto.ReorderItemDTO;
 import uz.pdp.ilmpay.service.TestimonialService;
+import uz.pdp.ilmpay.service.TranslationService;
 import uz.pdp.ilmpay.payload.EntityResponse;
 
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestimonialController {
     private final TestimonialService testimonialService;
+    private final TranslationService translationService;
 
     /**
      * 📋 Gets all active testimonials
@@ -98,9 +100,12 @@ public class TestimonialController {
     public ResponseEntity<EntityResponse<TestimonialDTO>> createTestimonial(@Valid @RequestBody TestimonialDTO dto) {
         try {
             log.info("✨ Creating new testimonial from: {}", dto.getName());
+
+            // Translate the name and comment
+
             TestimonialDTO created = testimonialService.create(dto);
             log.info("🎉 Successfully created testimonial");
-            
+
             return ResponseEntity.ok(
                 EntityResponse.<TestimonialDTO>builder()
                     .success(true)
@@ -132,9 +137,12 @@ public class TestimonialController {
             @Valid @RequestBody TestimonialDTO dto) {
         try {
             log.info("✏️ Updating testimonial with id: {}", id);
+
+            // Translate the name and comment
+
             TestimonialDTO updated = testimonialService.update(id, dto);
             log.info("✨ Successfully updated testimonial");
-            
+
             return ResponseEntity.ok(
                 EntityResponse.<TestimonialDTO>builder()
                     .success(true)

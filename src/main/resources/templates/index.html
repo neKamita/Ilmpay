@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -34,30 +34,30 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#home" th:classappend="${currentPage == 'home' ? 'active' : ''}" 
+                        <a class="nav-link" href="#home" th:classappend="${currentPage == 'home' ? 'active' : ''}"
                            th:href="@{/}" th:text="#{nav.home}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#support" th:classappend="${currentPage == 'features' ? 'active' : ''}" 
-                           th:href="@{#support}" th:text="#{nav.about}">Support</a>
+                        <a class="nav-link" href="#support" th:classappend="${currentPage == 'features' ? 'active' : ''}"
+                           th:href="@{#support}" th:text="#{nav.support}">Support</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#benefits" th:classappend="${currentPage == 'about' ? 'active' : ''}" 
-                           th:href="@{#benefits}" th:text="#{nav.features}">Benefits</a>
+                        <a class="nav-link" href="#benefits" th:classappend="${currentPage == 'about' ? 'active' : ''}"
+                           th:href="@{#benefits}" th:text="#{nav.benefits}">Benefits</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#testimonials" th:classappend="${currentPage == 'blog' ? 'active' : ''}" 
-                           th:href="@{#testimonials}" th:text="#{nav.blog}">Testimonials</a>
+                        <a class="nav-link" href="#testimonials" th:classappend="${currentPage == 'blog' ? 'active' : ''}"
+                           th:href="@{#testimonials}" th:text="#{nav.testimonials}">Testimonials</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#faq" th:classappend="${currentPage == 'faq' ? 'active' : ''}" 
+                        <a class="nav-link" href="#faq" th:classappend="${currentPage == 'faq' ? 'active' : ''}"
                            th:href="@{#faq}" th:text="#{nav.faq}">FAQ</a>
                     </li>
                 </ul>
-                <!-- Right-aligned items -->
+                
                 <ul class="navbar-nav navbar-right">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" 
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-globe"></i>
                         </a>
@@ -127,17 +127,17 @@
             <div class="benefits-badge">
                 <span>
                     <img th:src="@{/images/Star 1.svg}" class="benefits-badge-star" th:alt="#{hero.welcome.alt}">
-                    Awesome Benefit From Us
+                    <span th:text="#{benefits.badge}">Awesome Benefit From Us</span>
                 </span>
             </div>
             
-            <h2 class="benefits-title">
+            <h2 class="benefits-title" th:text="#{benefits.title.dynamic}">
                 IlmPay believes in education's power, breaking financial barriers.<br>
                 Download and join test challenges – win, we'll cover tuition fees!
             </h2>
             
             <div class="benefits-cards">
-                <!-- Dynamic benefits from database -->
+                
                 <div th:each="benefit : ${benefits}" class="benefit-card">
                     <div class="benefit-number" th:text="${benefit.displayOrder}">1</div>
                     <h3 class="font-ruda text-2xl font-bold text-gray-900" th:text="${benefit.title}">Benefit Title</h3>
@@ -233,11 +233,11 @@
             <div class="faq-badge">
                 <span>
                     <img th:src="@{/images/Star 1.svg}" class="faq-badge-star" alt="Star icon">
-                    <h1 class="faq-span-title">Questions</h1>
+                    <h1 class="faq-span-title" th:text="#{faq.span.title}">Questions</h1>
                 </span>
             </div>
             
-            <h2 class="faq-title text-center">
+            <h2 class="faq-title text-center" th:text="#{faq.title}">
                 Frequently Asked Questions
             </h2>
 
@@ -264,9 +264,9 @@
             <img class="download-circle download-circle-large" th:src="@{/images/download-2.svg}" alt="Decorative circle">
             <div class="container">
                 <div class="download-content">
-                    <h2>Download & Install IlmPay Now and<br>No Need to Pay Your Tuition AnyMore!</h2>
+                    <h2 th:text="#{download.title}">Download & Install IlmPay Now and<br>No Need to Pay Your Tuition AnyMore!</h2>
                     
-                    <p>Don't let financial constraints hinder your educational aspirations. Take the first step towards a brighter future with IlmPay. Download the app now and start your journey towards academic success!</p>
+                    <p th:text="#{download.description}">Don't let financial constraints hinder your educational aspirations. Take the first step towards a brighter future with IlmPay. Download the app now and start your journey towards academic success!</p>
                     
                     <div class="download-buttons">
                         <a th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
@@ -293,53 +293,53 @@
                 <div class="footer-logo">
                     <img th:src="@{/images/logo.svg}" alt="IlmPay Logo">
                 </div>
-                <p class="footer-description">
+                <p class="footer-description" th:text="#{footer.description}">
                     IlmPay is an e-wallet app that allows you to store money, make payments, and perform other financial transactions electronically through your mobile device.
                 </p>
             </div>
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>COMPANY</h3>
+                    <h3 th:text="#{footer.company}">COMPANY</h3>
                     <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Career</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Blog</a></li>
+                        <li><a href="#" th:text="#{footer.about}">About Us</a></li>
+                        <li><a href="#" th:text="#{footer.team}">Our Team</a></li>
+                        <li><a href="#" th:text="#{footer.career}">Career</a></li>
+                        <li><a href="#" th:text="#{footer.contact}">Contact Us</a></li>
+                        <li><a href="#" th:text="#{footer.blog}">Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>SUPPORT</h3>
+                    <h3 th:text="#{footer.support}">SUPPORT</h3>
                     <ul>
-                        <li><a href="#">Getting Started</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Server Status</a></li>
-                        <li><a href="#">Report a Bug</a></li>
-                        <li><a href="#">Chat Support</a></li>
+                        <li><a href="#" th:text="#{footer.getting_started}">Getting Started</a></li>
+                        <li><a href="#" th:text="#{footer.help_center}">Help Center</a></li>
+                        <li><a href="#" th:text="#{footer.server_status}">Server Status</a></li>
+                        <li><a href="#" th:text="#{footer.report_bug}">Report a Bug</a></li>
+                        <li><a href="#" th:text="#{footer.chat_support}">Chat Support</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>PRODUCTS</h3>
+                    <h3 th:text="#{footer.products}">PRODUCTS</h3>
                     <ul>
-                        <li><a href="#">Features</a></li>
-                        <li><a href="#">Review</a></li>
-                        <li><a href="#">Update</a></li>
+                        <li><a href="#" th:text="#{footer.features}">Features</a></li>
+                        <li><a href="#" th:text="#{footer.review}">Review</a></li>
+                        <li><a href="#" th:text="#{footer.update}">Update</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3>DOWNLOADS</h3>
+                    <h3 th:text="#{footer.downloads}">DOWNLOADS</h3>
                     <ul>
-                        <li><a href="#">iOS</a></li>
-                        <li><a href="#">Android</a></li>
+                        <li><a href="#" th:text="#{footer.ios}">iOS</a></li>
+                        <li><a href="#" th:text="#{footer.android}">Android</a></li>
                     </ul>
                 </div>
                 <div class="footer-column footer-newsletter">
-                    <h3>SUBSCRIBE TO OUR NEWSLETTER</h3>
-                    <p>IlmPay is an e-wallet app that allows you to
+                    <h3 th:text="#{footer.newsletter}">SUBSCRIBE TO OUR NEWSLETTER</h3>
+                    <p th:text="#{footer.newsletter.description}">IlmPay is an e-wallet app that allows you to
                         store money, make payments, and perform othe</p>
                     <div class="footer-buttons">
                         <a href="#" class="app-store-button">
-                            <img th:src="@{/images/register-btn.svg}" alt="Download on App Store">
+                            <img th:src="@{/images/register-btn.svg}"  alt="Download on App Store">
                         </a>
                         <a href="#" class="play-store-button">
                             <img th:src="@{/images/register-btn-2.svg}" alt="Get it on Google Play">
@@ -348,7 +348,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>Copyright 2023 IlmPay | All Rights Reserved</p>
+                <p th:text="#{footer.copyright}">Copyright 2023 IlmPay | All Rights Reserved</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>

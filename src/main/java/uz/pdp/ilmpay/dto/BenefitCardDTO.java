@@ -25,7 +25,7 @@ public class BenefitCardDTO {
     
     @NotBlank(message = "Description is required")
     private String description;
-    
+
     @Min(value = 1, message = "Display order must be at least 1")
     @Max(value = 4, message = "Display order cannot be more than 4")
     private int displayOrder;

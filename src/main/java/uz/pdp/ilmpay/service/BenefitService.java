@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.i18n.LocaleContextHolder;
 import uz.pdp.ilmpay.dto.BenefitCardDTO;
 import uz.pdp.ilmpay.dto.ReorderItemDTO;
 import uz.pdp.ilmpay.model.Benefit;
 import uz.pdp.ilmpay.repository.BenefitRepository;
+import uz.pdp.ilmpay.service.TranslationService;
 
 import java.util.List;
 import java.util.Map;
@@ -25,15 +27,16 @@ import java.util.stream.Collectors;
 public class BenefitService {
 
     private final BenefitRepository benefitRepository;
+     private final TranslationService translationService;
 
     /**
      * 📚 Get all active benefits - Collecting all the goodies in one place
      */
     public List<BenefitCardDTO> findAllActive() {
         return benefitRepository.findByActiveTrueOrderByDisplayOrderAsc()
-            .stream()
-            .map(this::toDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -170,13 +173,14 @@ public class BenefitService {
     /**
      * 🔄 Convert entity to DTO - The benefit transformer
      */
-    private BenefitCardDTO toDTO(Benefit benefit) {
-        return  new BenefitCardDTO(
-            benefit.getId(),
-            benefit.getTitle(),
-            benefit.getDescription(),
-            benefit.getDisplayOrder(),
-            benefit.isActive()
-        );
-    }
+private BenefitCardDTO toDTO(Benefit benefit) {
+     String currentLanguage = LocaleContextHolder.getLocale().getLanguage();
+     return BenefitCardDTO.builder()
+             .id(benefit.getId())
+             .title(currentLanguage.equals("en") ? benefit.getTitle() : translationService.translate(benefit.getTitle(),"en",currentLanguage))
+             .description(currentLanguage.equals("en") ? benefit.getDescription() : translationService.translate(benefit.getDescription(),"en",currentLanguage))
+             .displayOrder(benefit.getDisplayOrder())
+             .active(benefit.isActive())
+             .build();
+ }
 }

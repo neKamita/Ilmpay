@@ -30,10 +30,10 @@
         
         <main class="flex-1 p-8">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-900">FAQ Management</h1>
+                <h1 class="text-2xl font-bold text-gray-900" th:text="#{admin.faqs.management.title}">FAQ Management</h1>
                 <button class="btn-primary flex items-center space-x-2" onclick="window.Modal.show('faq')">
                     <i class="fas fa-plus"></i>
-                    <span>Add New FAQ</span>
+                    <span th:text="#{admin.faqs.add.button}">Add New FAQ</span>
                 </button>
             </div>
 
@@ -41,15 +41,15 @@
             <div class="space-y-4" id="faqList">
                 <div th:each="faq : ${faqs}" class="faq-item bg-white rounded-lg shadow-sm p-4" th:data-id="${faq.id}">
                     <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <h3 class="text-lg font-semibold text-gray-900" th:text="${faq.question}">FAQ Question</h3>
-                            <p class="mt-1 text-gray-600" th:text="${faq.answer}">FAQ Answer</p>
-                            <div class="mt-2 text-sm text-gray-500">
-                                Order: <span th:text="${faq.displayOrder}">1</span>
-                            </div>
-                        </div>
+        <div class="flex-1">
+            <h3 class="text-lg font-semibold text-gray-900" th:text="${faq.question}">FAQ Question</h3>
+            <p class="mt-1 text-gray-600" th:text="${faq.answer}">FAQ Answer</p>
+            <div class="mt-2 text-sm text-gray-500">
+                Order: <span th:text="${faq.displayOrder}">1</span>
+            </div>
+        </div>
                         <div class="flex items-center space-x-2">
-                            <button onclick="window.Modal.show('faq', this.dataset.id)" 
+                            <button onclick="window.Modal.show('faq', this.dataset.id)"
                                     th:data-id="${faq.id}"
                                     class="btn-icon edit-btn" title="Edit">
                                 <i class="fas fa-edit"></i>

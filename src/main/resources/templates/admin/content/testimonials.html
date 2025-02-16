@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -55,10 +55,10 @@
         
         <main class="flex-1 p-8">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-900">Testimonials Management</h1>
+                <h1 class="text-2xl font-bold text-gray-900" th:text="#{admin.testimonials.management.title}">Testimonials Management</h1>
                 <button class="btn-primary flex items-center space-x-2" onclick="Modal.show('testimonial')">
                     <i class="fas fa-plus"></i>
-                    <span>Add New Testimonial</span>
+                    <span th:text="#{admin.testimonials.add.button}">Add New Testimonial</span>
                 </button>
             </div>
 
@@ -69,30 +69,30 @@
                         <i class="fas fa-grip-vertical text-gray-500"></i>
                     </div>
 
-                    <p class="testimonial-text" th:text="${testimonial.comment}">I really like this e-wallet app because it's incredibly convenient...</p>
-                    <div class="testimonial-author">
-                        <img th:if="${testimonial.avatarUrl != null and !testimonial.avatarUrl.isEmpty()}" 
-                             th:src="${testimonial.avatarUrl}" 
-                             th:alt="${testimonial.name}" 
-                             class="author-image">
-                        <img th:unless="${testimonial.avatarUrl != null and !testimonial.avatarUrl.isEmpty()}" 
-                             th:src="@{/images/default-avatar.svg}" 
-                             th:alt="${testimonial.name}" 
-                             class="author-image">
-                        <div class="author-info">
-                            <h4 th:text="${testimonial.name}">Student Name</h4>
-                            <div class="rating">
-                                <th:block th:each="i : ${#numbers.sequence(1, testimonial.rating)}">
-                                    <img th:src="@{/images/Star.svg}" alt="Star rating">
-                                </th:block>
-                            </div>
-                        </div>
+    <p class="testimonial-text" th:text="${testimonial.comment}">I really like this e-wallet app because it's incredibly convenient...</p>
+    <div class="testimonial-author">
+        <img th:if="${testimonial.avatarUrl != null and !testimonial.avatarUrl.isEmpty()}"
+             th:src="${testimonial.avatarUrl}"
+             th:alt="${testimonial.name}"
+             class="author-image">
+        <img th:unless="${testimonial.avatarUrl != null and !testimonial.avatarUrl.isEmpty()}"
+             th:src="@{/images/default-avatar.svg}"
+             th:alt="${testimonial.name}"
+             class="author-image">
+        <div class="author-info">
+            <h4 th:text="${testimonial.name}">Student Name</h4>
+            <div class="rating">
+                <th:block th:each="i : ${#numbers.sequence(1, testimonial.rating)}">
+                    <img th:src="@{/images/Star.svg}" alt="Star rating">
+                </th:block>
+            </div>
+        </div>
                         <div class="testimonial-actions">
-                            <button th:onclick="'Modal.show(\'testimonial\', ' + ${testimonial.id} + ')'" 
+                            <button th:onclick="'Modal.show(\'testimonial\', ' + ${testimonial.id} + ')'"
                                     class="btn-icon edit-btn" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button th:onclick="'deleteItem(\'testimonial\', ' + ${testimonial.id} + ')'" 
+                            <button th:onclick="'deleteItem(\'testimonial\', ' + ${testimonial.id} + ')'"
                                     class="btn-icon delete-btn" title="Delete">
                                 <i class="fas fa-trash-alt"></i>
                             </button>

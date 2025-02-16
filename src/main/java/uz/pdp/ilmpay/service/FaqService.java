@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.i18n.LocaleContextHolder;
+import uz.pdp.ilmpay.service.TranslationService;
 import uz.pdp.ilmpay.dto.FaqDTO;
 import uz.pdp.ilmpay.exception.ResourceNotFoundException;
 import uz.pdp.ilmpay.model.Faq;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FaqService {
     private final FaqRepository faqRepository;
+    private final TranslationService translationService;
 
     /**
      * 📚 Get all active FAQs
@@ -134,11 +137,16 @@ public class FaqService {
     /**
      * 🔄 Convert FAQ entity to DTO
      */
-    private FaqDTO toDTO(Faq faq) {
+   private FaqDTO toDTO(Faq faq) {
+        String currentLanguage = LocaleContextHolder.getLocale().getLanguage();
         FaqDTO dto = new FaqDTO();
         dto.setId(faq.getId());
         dto.setQuestion(faq.getQuestion());
         dto.setAnswer(faq.getAnswer());
+        if(!currentLanguage.equals("en")){
+            dto.setQuestion(translationService.translate(faq.getQuestion(),"en",currentLanguage));
+            dto.setAnswer(translationService.translate(faq.getAnswer(),"en",currentLanguage));
+        }
         dto.setDisplayOrder(faq.getDisplayOrder());
         dto.setActive(faq.isActive());
         dto.setCreatedAt(faq.getCreatedAt());

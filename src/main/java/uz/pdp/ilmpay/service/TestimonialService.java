@@ -1,4 +1,4 @@
-package uz.pdp.ilmpay.service;
+    package uz.pdp.ilmpay.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 /**
  * 🌟 Testimonial Service
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class TestimonialService {
     private final TestimonialRepository testimonialRepository;
     private final S3Service s3Service;
+    private final TranslationService translationService;
 
     // S3 folder for testimonial avatars
     private static final String S3_FOLDER = "testimonials";
@@ -185,15 +187,20 @@ public class TestimonialService {
         }
     }
 
-    private TestimonialDTO toDTO(Testimonial testimonial) {
+   private TestimonialDTO toDTO(Testimonial testimonial) {
+        String currentLanguage = LocaleContextHolder.getLocale().getLanguage();
         TestimonialDTO dto = new TestimonialDTO();
         dto.setId(testimonial.getId());
         dto.setName(testimonial.getName());
         dto.setComment(testimonial.getComment());
+        if(!currentLanguage.equals("en")){
+            dto.setName(translationService.translate(testimonial.getName(),"en",currentLanguage));
+            dto.setComment(translationService.translate(testimonial.getComment(),"en",currentLanguage));
+        }
         dto.setRating(testimonial.getRating());
         dto.setAvatarUrl(testimonial.getAvatarUrl());
         dto.setActive(testimonial.isActive());
-        dto.setOrder(testimonial.getOrder()); // Add order support
+        dto.setOrder(testimonial.getOrder());
         return dto;
     }
 
