@@ -1,0 +1,359 @@
+/* 🎨 Media Queries - Making everything beautiful on all screens! */
+
+/* Extra Small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+    /* 📱 Global adjustments for tiny screens */
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* 🦸‍♂️ Hero section adjustments */
+    .hero-content {
+        padding-top: 20px;
+        text-align: center;
+        transform: translateY(0);
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .app-store-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .store-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* 🤝 Support section fixes */
+    .support-logo {
+        width: 120px !important;
+        height: 40px !important;
+        margin: 0 0.5rem;
+    }
+
+    /* 💪 Benefits section improvements */
+    .benefits-title {
+        font-size: 1.8rem;
+        padding: 0 10px;
+    }
+
+    .benefit-card {
+        width: 100%;
+        max-width: 290px;
+        margin-bottom: 15px;
+    }
+
+    /* 🎁 Offer section mobile optimization */
+    .offer-content {
+        text-align: center;
+        padding: 0 10px;
+    }
+
+    .offer-title {
+        font-size: 1.8rem;
+    }
+
+    .app-screen {
+        width: 200px;
+        height: auto;
+        transform: translateX(0);
+    }
+
+    .orange-circle {
+        width: 300px;
+        height: 300px;
+        right: -150px;
+    }
+
+    /* 💬 Testimonial section adjustments */
+    .testimonial-title {
+        font-size: 1.8rem;
+        padding: 0 10px;
+    }
+
+    .testimonial-card {
+        width: 100%;
+        max-width: 305px;
+        margin: 0 auto;
+    }
+
+    /* ❓ FAQ section mobile fixes */
+    .faq-title {
+        font-size: 1.8rem;
+        padding: 0 10px;
+    }
+
+    .accordion-button {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+
+    /* 📱 Download section mobile optimization */
+    .download-section {
+        padding: 40px 15px;
+    }
+
+    .download-banner {
+        padding: 20px;
+    }
+
+    .download-content h2 {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    .download-image {
+        display: none;
+    }
+
+    .faq-section{
+        padding: 40px 0px;
+    }
+
+    .download-section{
+        min-height: auto;
+    }
+
+    .footer-circle-small{
+        display: none;
+    }
+    .testimonial-ellipse-top{
+        display: none;
+    }
+
+    .hero-image-container{
+        right: auto;
+    }
+    .footer-column h3{
+        text-align: center;
+    }
+
+    /* 🦶 Footer mobile improvements */
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-column ul li a {
+        justify-content: center;
+    }
+
+    .footer-buttons {
+        justify-content: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .store-button {
+        width: auto;
+    }
+
+    .offer-image{
+        justify-content: start;
+    }
+
+    .hero-image-container{
+        right: 0px;
+    }
+    .testimonial-card{
+        width: auto;
+    }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .benefit-card {
+        width: calc(50% - 20px);
+    }
+
+    .offer-image {
+        margin-top: 60px;
+    }
+
+    .app-screen {
+        transform: translateX(50px);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .hero-content h1 {
+        font-size: 3.2rem;
+    }
+
+    .benefit-card {
+        width: calc(33.333% - 20px);
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .hero-content h1 {
+        font-size: 3.5rem;
+    }
+
+    .container {
+        max-width: 1140px;
+        margin: 0 auto;
+    }
+
+
+}
+
+@media (max-width: 1200px) {
+    .hero-ellipse-bottom {
+        display: none;
+    }
+    
+}
+
+@media (max-width: 1000px) {
+    .hero-ellipse-top {
+        display: none;
+    }
+
+    .hero-image-container{
+        bottom: -250px;
+    }
+    .hero-image{
+        scale: 0.8;
+    }
+
+    .front{
+        --x-offset: -50px!important;
+    }
+    .text{
+        --x-offset: 100px!important;
+    }
+    .reward{
+        --x-offset: 150px!important;
+    }
+
+    .benefits-ellipse-bottom{
+        display: none;
+    }
+
+    .orange-circle{
+        display: none;
+    }
+
+    .phones-image{
+        scale: 0.5;
+    }
+    .download-image{
+        bottom: -210px;
+        right: -280px;
+        z-index: 1;
+    }
+
+    .download-circle-large{
+        display: none;
+    }
+
+}
+
+
+
+/* XXL devices (extra large desktops, 1400px and up) */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+}
+
+/* 🌅 Landscape mode optimizations */
+@media (max-height: 600px) and (orientation: landscape) {
+    .hero-section {
+        min-height: auto;
+        padding: 100px 0;
+    }
+
+    .hero-content {
+        transform: none;
+    }
+
+    .hero-image-container {
+        transform: scale(0.8);
+    }
+}
+
+/* 📱 Device-specific fixes */
+/* iPhone SE and similar small devices */
+@media (max-width: 375px) {
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .store-button {
+        padding: 8px 16px;
+    }
+
+    .store-button-text small {
+        font-size: 10px;
+    }
+
+    .store-button-text span {
+        font-size: 14px;
+    }
+
+    .hero-image{
+        scale: 0.6;
+    }
+
+    .text{
+        --x-offset: 50px!important;
+    }
+
+    .reward{
+        --x-offset: 100px!important;
+    }
+}
+
+/* 🖥️ High-resolution displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Ensure images remain crisp on retina displays */
+    img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* 🎨 Print styles */
+@media print {
+    .navbar,
+    .app-store-buttons,
+    .download-section,
+    .footer-section {
+        display: none;
+    }
+
+    .hero-content,
+    .benefits-section,
+    .testimonial-section {
+        page-break-inside: avoid;
+    }
+}
