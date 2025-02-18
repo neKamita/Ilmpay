@@ -90,11 +90,19 @@
                         <h1 th:text="#{hero.title}">Empowering Students to Achieve Their Dreams</h1>
                         <p th:text="#{hero.description}">Are you a student dreaming of pursuing higher education but struggling to meet the financial demands? Look no further! IlmPay is here to support you on your educational journey.</p>
                         <div class="app-store-buttons">
-                            <a th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
-                                <img th:src="@{/images/Google Play Black.svg}" th:alt="#{app.playstore.alt}">
+                            <a href="#" class="store-button play-store-button" th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
+                                <i class="fab fa-google-play"></i>
+                                <div class="store-button-text">
+                                    <small>Get it on</small>
+                                    <span>Google Play</span>
+                                </div>
                             </a>
-                            <a th:href="@{${@environment.getProperty('app.appstore.url')}}" target="_blank">
-                                <img th:src="@{/images/App Store Black.svg}" th:alt="#{app.appstore.alt}">
+                            <a href="#" class="store-button app-store-button" th:href="@{${@environment.getProperty('app.appstore.url')}}" target="_blank">
+                                <i class="fab fa-apple"></i>
+                                <div class="store-button-text">
+                                    <small>Download on the</small>
+                                    <span>App Store</span>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -269,11 +277,19 @@
                     <p th:text="#{download.description}">Don't let financial constraints hinder your educational aspirations. Take the first step towards a brighter future with IlmPay. Download the app now and start your journey towards academic success!</p>
                     
                     <div class="download-buttons">
-                        <a th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
-                            <img th:src="@{/images/Google Play Black.svg}" alt="Get it on Google Play">
+                        <a href="#" class="store-button play-store-button" th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
+                            <i class="fab fa-google-play"></i>
+                            <div class="store-button-text">
+                                <small>Get it on</small>
+                                <span>Google Play</span>
+                            </div>
                         </a>
-                        <a th:href="@{${@environment.getProperty('app.appstore.url')}}" target="_blank">
-                            <img th:src="@{/images/App Store Black.svg}" alt="Download on App Store">
+                        <a href="#" class="store-button app-store-button" th:href="@{${@environment.getProperty('app.appstore.url')}}" target="_blank">
+                            <i class="fab fa-apple"></i>
+                            <div class="store-button-text">
+                                <small>Download on the</small>
+                                <span>App Store</span>
+                            </div>
                         </a>
                     </div>
                 </div>
@@ -338,11 +354,19 @@
                     <p th:text="#{footer.newsletter.description}">IlmPay is an e-wallet app that allows you to
                         store money, make payments, and perform othe</p>
                     <div class="footer-buttons">
-                        <a href="#" class="app-store-button">
-                            <img th:src="@{/images/register-btn.svg}"  alt="Download on App Store">
+                        <a href="#" class="store-button app-store-button">
+                            <i class="fab fa-apple"></i>
+                            <div class="store-button-text">
+                                <small>Download on the</small>
+                                <span>App Store</span>
+                            </div>
                         </a>
-                        <a href="#" class="play-store-button">
-                            <img th:src="@{/images/register-btn-2.svg}" alt="Get it on Google Play">
+                        <a href="#" class="store-button play-store-button">
+                            <i class="fab fa-google-play"></i>
+                            <div class="store-button-text">
+                                <small>Get it on</small>
+                                <span>Google Play</span>
+                            </div>
                         </a>
                     </div>
                 </div>
@@ -375,4 +399,3 @@
         <script src="/js/smooth-scroll.js" type="module"></script>
     </th:block>
 </body>
-</html>
