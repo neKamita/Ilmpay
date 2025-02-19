@@ -27,13 +27,13 @@ spring:
 
   # Database Configuration
   datasource:
-    #url: jdbc:postgresql://viaduct.proxy.rlwy.net:13686/railway
-    #username: postgres
-    #password: WJIYUGKGgpoxPstmeMTvCKxnGtMDRhvX
-
-    url: jdbc:postgresql://localhost:5432/ilmpay
+    url: jdbc:postgresql://viaduct.proxy.rlwy.net:13686/railway
     username: postgres
-    password: root123
+    password: WJIYUGKGgpoxPstmeMTvCKxnGtMDRhvX
+
+    #url: jdbc:postgresql://localhost:5432/ilmpay
+    #username: postgres
+    #password: root123
     driver-class-name: org.postgresql.Driver
   
   # JPA Configuration
