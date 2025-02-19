@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import uz.pdp.ilmpay.model.Visitor;
 import uz.pdp.ilmpay.repository.VisitorRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.temporal.ChronoUnit;
@@ -28,13 +30,15 @@ public class VisitorService {
 
     private final VisitorRepository visitorRepository;
     private final HttpServletRequest request;
+    private final HttpSession session;
 
     @Value("${session.timeout.minutes:30}") // Default to 30 minutes
     private int sessionTimeoutMinutes;
 
-    public VisitorService(VisitorRepository visitorRepository, HttpServletRequest request) {
+    public VisitorService(VisitorRepository visitorRepository, HttpServletRequest request, HttpSession session) {
         this.visitorRepository = visitorRepository;
         this.request = request;
+        this.session = session;
     }
 
     /**
@@ -176,64 +180,68 @@ public class VisitorService {
     }
 
     /**
-     * 📝 Record a new visit
-     * Rolling out the virtual red carpet!
-     */
-    /**
-     * Update session information for a visitor
-     */
-    public void updateVisitorSession(String ipAddress, Long duration, boolean bounced) {
-        // Look for visits in the last hour from this IP
-        LocalDateTime cutoffTime = LocalDateTime.now().minus(1, ChronoUnit.HOURS);
-        List<Visitor> recentVisits = visitorRepository.findRecentByIpAddress(ipAddress, cutoffTime);
-
-        if (!recentVisits.isEmpty()) {
-            Visitor lastVisit = recentVisits.get(0);
-            // Set the last visit as inactive if the duration exceeds the timeout
-            if (duration > sessionTimeoutMinutes * 60) {
-                lastVisit.setActive(false);
-            }
-            lastVisit.setSessionDuration(duration);
-            lastVisit.setBounced(bounced);
-            visitorRepository.save(lastVisit);
-        }
-    }
-
-    /**
-     * Record a new visit
-     * Rolling out the virtual red carpet!
+     * 📝 Record a page visit and update session information
+     * Now with improved session tracking!
      */
     public void recordVisit(String page) {
         try {
+            String sessionId = session.getId();
             String clientIp = getClientIp();
-            // Deactivate previous visits from the same IP
-            List<Visitor> previousVisits = visitorRepository.findRecentByIpAddress(clientIp, LocalDateTime.now().minusHours(1));
-            for (Visitor prevVisit : previousVisits) {
-                prevVisit.setActive(false);
-                visitorRepository.save(prevVisit);
+            LocalDateTime now = LocalDateTime.now();
+
+            // Try to find an existing active visitor record for this session
+            LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(sessionTimeoutMinutes);
+            List<Visitor> recentVisitors = visitorRepository.findRecentBySessionId(sessionId, cutoffTime);
+            Optional<Visitor> existingVisitor = recentVisitors.isEmpty() ? Optional.empty() : Optional.of(recentVisitors.get(0));
+
+            if (existingVisitor.isPresent()) {
+                // Update existing visitor
+                Visitor visitor = existingVisitor.get();
+                visitor.setLastActiveTime(now);
+                visitor.setLastPageVisited(page);
+                visitor.setPageVisitCount(visitor.getPageVisitCount() + 1);
+                
+                // Calculate and update session duration
+                long durationSeconds = ChronoUnit.SECONDS.between(visitor.getFirstVisitTime(), now);
+                visitor.setSessionDuration(durationSeconds);
+                
+                // Check if session has expired
+                if (durationSeconds > sessionTimeoutMinutes * 60) {
+                    visitor.setActive(false);
+                }
+                
+                visitorRepository.save(visitor);
+                log.info("Updated visit for session {} on page {}", sessionId, page);
+            } else {
+                // Create new visitor record
+                Visitor visitor = new Visitor();
+                visitor.setSessionId(sessionId);
+                visitor.setIpAddress(clientIp);
+                visitor.setUserAgent(request.getHeader("User-Agent"));
+                visitor.setFirstVisitTime(now);
+                visitor.setLastActiveTime(now);
+                visitor.setLastPageVisited(page);
+                visitor.setActive(true);
+                visitor.setPageVisitCount(1);
+                
+                visitorRepository.save(visitor);
+                log.info("Recorded new visit from IP: {} with session {} on page {}", clientIp, sessionId, page);
             }
-
-            Visitor visitor = new Visitor();
-            visitor.setIpAddress(clientIp);
-            visitor.setUserAgent(request.getHeader("User-Agent"));
-            visitor.setVisitTime(LocalDateTime.now());
-            visitor.setPageVisited(page);
-            visitor.setActive(true); // Mark as active
-
-            visitorRepository.save(visitor);
-            System.out.printf("Recorded visit from IP: %s to page: %s%n", visitor.getIpAddress(), page);
         } catch (Exception e) {
-            System.err.println("Failed to record visit: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Failed to record visit: {}", e.getMessage(), e);
         }
     }
 
+    /**
+     * 🔍 Get client's IP address
+     * Handles proxy scenarios too!
+     */
     private String getClientIp() {
         String xfHeader = request.getHeader("X-Forwarded-For");
         if (xfHeader == null) {
             return request.getRemoteAddr();
         }
-        return xfHeader.split(",")[0];
+        return xfHeader.split(",")[0].trim();
     }
 
     /**

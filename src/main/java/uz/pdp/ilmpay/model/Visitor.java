@@ -3,21 +3,74 @@ package uz.pdp.ilmpay.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * 👥 Visitor Entity
+ * Tracks user visits and sessions with improved session management
+ *
+ * @author Your Friendly Neighborhood Developer
+ * @version 2.1 (The "Session Master" Edition)
+ */
 @Entity
-@Table(name = "visitors")
+@Table(name = "visitors", indexes = {
+    @Index(name = "idx_session_id", columnList = "sessionId"),
+    @Index(name = "idx_last_active", columnList = "lastActiveTime")
+})
 public class Visitor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // 🔑 Session tracking
+    @Column(nullable = false)
+    private String sessionId; // Spring Session ID
     
+    @Column(nullable = false)
     private String ipAddress;
+    
     private String userAgent;
-    private LocalDateTime visitTime;
-    private String pageVisited;
+    
+    // ⏰ Timestamp tracking
+    @Column(nullable = false)
+    private LocalDateTime firstVisitTime; // When the session started
+    
+    @Column(nullable = false)
+    private LocalDateTime lastActiveTime; // Last activity timestamp
+    
+    private String lastPageVisited;
     private boolean isDownloaded;
-    private boolean isActive;
-    private boolean bounced = false;
-    private Long sessionDuration; // Duration in seconds
+    
+    // 📊 Analytics data
+    private boolean isActive = true;
+    private boolean bounced = true; // Initially true, set to false if user views multiple pages
+    private Long sessionDuration; // Duration in seconds, updated on session end
+    
+    // 🔄 Visit counter
+    private int pageVisitCount = 1; // Tracks number of pages visited in this session
+
+    @PreUpdate
+    protected void onUpdate() {
+        // If user visits more than one page, they haven't bounced
+        if (pageVisitCount > 1) {
+            bounced = false;
+        }
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
 
     public String getIpAddress() {
         return ipAddress;
@@ -35,20 +88,28 @@ public class Visitor {
         this.userAgent = userAgent;
     }
 
-    public LocalDateTime getVisitTime() {
-        return visitTime;
+    public LocalDateTime getFirstVisitTime() {
+        return firstVisitTime;
     }
 
-    public void setVisitTime(LocalDateTime visitTime) {
-        this.visitTime = visitTime;
+    public void setFirstVisitTime(LocalDateTime firstVisitTime) {
+        this.firstVisitTime = firstVisitTime;
     }
 
-    public String getPageVisited() {
-        return pageVisited;
+    public LocalDateTime getLastActiveTime() {
+        return lastActiveTime;
     }
 
-    public void setPageVisited(String pageVisited) {
-        this.pageVisited = pageVisited;
+    public void setLastActiveTime(LocalDateTime lastActiveTime) {
+        this.lastActiveTime = lastActiveTime;
+    }
+
+    public String getLastPageVisited() {
+        return lastPageVisited;
+    }
+
+    public void setLastPageVisited(String lastPageVisited) {
+        this.lastPageVisited = lastPageVisited;
     }
 
     public boolean isDownloaded() {
@@ -81,5 +142,13 @@ public class Visitor {
 
     public void setSessionDuration(Long sessionDuration) {
         this.sessionDuration = sessionDuration;
+    }
+
+    public int getPageVisitCount() {
+        return pageVisitCount;
+    }
+
+    public void setPageVisitCount(int pageVisitCount) {
+        this.pageVisitCount = pageVisitCount;
     }
 }

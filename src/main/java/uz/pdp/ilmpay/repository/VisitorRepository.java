@@ -9,26 +9,31 @@ import uz.pdp.ilmpay.model.Visitor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 @Repository
 public interface VisitorRepository extends JpaRepository<Visitor, Long> {
-    long countByVisitTimeBetween(LocalDateTime start, LocalDateTime end);
+    Optional<Visitor> findBySessionId(String sessionId);
+    long countByFirstVisitTimeBetween(LocalDateTime start, LocalDateTime end);
+    
+    @Query("SELECT v FROM Visitor v WHERE v.sessionId = :sessionId AND v.isActive = true")
+    Optional<Visitor> findActiveBySessionId(@Param("sessionId") String sessionId);
     long countByIsDownloadedTrue();
     long countByIsActiveTrue();
     long countByBouncedTrue();
     
-    @Query("SELECT COUNT(DISTINCT v.ipAddress) FROM Visitor v")
+    @Query("SELECT COUNT(DISTINCT v.sessionId) FROM Visitor v")
     long countUniqueVisitors();
     
-    @Query("SELECT COUNT(DISTINCT v.ipAddress) FROM Visitor v WHERE v.visitTime >= :startTime")
+    @Query("SELECT COUNT(DISTINCT v.sessionId) FROM Visitor v WHERE v.firstVisitTime >= :startTime")
     long countTodayUniqueVisitors(@Param("startTime") LocalDateTime startTime);
 
     long count();
 
     // Daily visitor statistics
-    @Query(value="-- Daily visitor statistics query - startDate: :startDate, endDate: :endDate\nSELECT DATE(v.visit_time) as date, COUNT(DISTINCT v.ip_address) as count " +
+    @Query(value="-- Daily visitor statistics query - startDate: :startDate, endDate: :endDate\nSELECT DATE(v.first_visit_time) as date, COUNT(DISTINCT v.session_id) as count " +
             "FROM visitors v " +
-            "WHERE v.visit_time BETWEEN :startDate AND :endDate " +
-            "GROUP BY DATE(v.visit_time) " +
+            "WHERE v.first_visit_time BETWEEN :startDate AND :endDate " +
+            "GROUP BY DATE(v.first_visit_time) " +
             "ORDER BY date", nativeQuery = true)
     List<Object[]> getDailyVisitorStats(
             @Param("startDate") LocalDateTime startDate,
@@ -36,12 +41,12 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
 
     // Hourly activity heatmap data
     @Query(value = 
-           "SELECT EXTRACT(HOUR FROM visit_time) as hour, " +
-           "EXTRACT(DOW FROM visit_time) as day_of_week, " +
-           "COUNT(DISTINCT ip_address) as count " +
+           "SELECT EXTRACT(HOUR FROM first_visit_time) as hour, " +
+           "EXTRACT(DOW FROM first_visit_time) as day_of_week, " +
+           "COUNT(DISTINCT session_id) as count " +
            "FROM visitors " +
-           "WHERE visit_time BETWEEN :startDate AND :endDate " +
-           "GROUP BY EXTRACT(HOUR FROM visit_time), EXTRACT(DOW FROM visit_time)", 
+           "WHERE first_visit_time BETWEEN :startDate AND :endDate " +
+           "GROUP BY EXTRACT(HOUR FROM first_visit_time), EXTRACT(DOW FROM first_visit_time)", 
            nativeQuery = true)
     List<Object[]> getActivityHeatmap(@Param("startDate") LocalDateTime startDate, 
                                     @Param("endDate") LocalDateTime endDate);
@@ -52,7 +57,7 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
            "ELSE COUNT(CASE WHEN v.bounced = true THEN 1 END) * 100.0 / COUNT(*) END, " +
            "0.0) " +
            "FROM Visitor v " +
-           "WHERE v.visitTime BETWEEN :startDate AND :endDate")
+           "WHERE v.firstVisitTime BETWEEN :startDate AND :endDate")
     Double getBounceRate(@Param("startDate") LocalDateTime startDate, 
                         @Param("endDate") LocalDateTime endDate);
 
@@ -62,25 +67,25 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
            "ELSE AVG(COALESCE(v.sessionDuration, 0)) END, " +
            "0.0) " +
            "FROM Visitor v " +
-           "WHERE v.visitTime BETWEEN :startDate AND :endDate")
+           "WHERE v.firstVisitTime BETWEEN :startDate AND :endDate")
     Double getAverageSessionDuration(@Param("startDate") LocalDateTime startDate, 
                                    @Param("endDate") LocalDateTime endDate);
 
     @Query("SELECT v FROM Visitor v " +
-           "WHERE v.ipAddress = :ipAddress " +
-           "AND v.visitTime > :cutoffTime " +
-           "ORDER BY v.visitTime DESC")
-    List<Visitor> findRecentByIpAddress(@Param("ipAddress") String ipAddress, 
+           "WHERE v.sessionId = :sessionId " +
+           "AND v.lastActiveTime > :cutoffTime " +
+           "ORDER BY v.lastActiveTime DESC")
+    List<Visitor> findRecentBySessionId(@Param("sessionId") String sessionId, 
                                       @Param("cutoffTime") LocalDateTime cutoffTime);
 
     // Get visitors count for a specific period
-    @Query("SELECT COUNT(DISTINCT v.ipAddress) FROM Visitor v WHERE v.visitTime BETWEEN :startDate AND :endDate")
+    @Query("SELECT COUNT(DISTINCT v.sessionId) FROM Visitor v WHERE v.firstVisitTime BETWEEN :startDate AND :endDate")
     long getVisitorsCountForPeriod(@Param("startDate") LocalDateTime startDate, 
                                   @Param("endDate") LocalDateTime endDate);
 
     // Get active users for a specific period
-    @Query("SELECT COUNT(DISTINCT v.ipAddress) FROM Visitor v " +
-           "WHERE v.isActive = true AND v.visitTime BETWEEN :startDate AND :endDate")
+    @Query("SELECT COUNT(DISTINCT v.sessionId) FROM Visitor v " +
+           "WHERE v.isActive = true AND v.lastActiveTime BETWEEN :startDate AND :endDate")
     long getActiveUsersForPeriod(@Param("startDate") LocalDateTime startDate, 
                                 @Param("endDate") LocalDateTime endDate);
 
@@ -90,7 +95,7 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
            "ELSE COUNT(CASE WHEN v.bounced = true THEN 1 END) * 100.0 / COUNT(*) END, " +
            "0.0) " +
            "FROM Visitor v " +
-           "WHERE v.visitTime BETWEEN :startDate AND :endDate")
+           "WHERE v.firstVisitTime BETWEEN :startDate AND :endDate")
     Double getBounceRateForPeriod(@Param("startDate") LocalDateTime startDate, 
                                  @Param("endDate") LocalDateTime endDate);
 
@@ -100,7 +105,7 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
            "ELSE AVG(COALESCE(v.sessionDuration, 0)) END, " +
            "0.0) " +
            "FROM Visitor v " +
-           "WHERE v.visitTime BETWEEN :startDate AND :endDate")
+           "WHERE v.firstVisitTime BETWEEN :startDate AND :endDate")
     Double getAvgSessionDurationForPeriod(@Param("startDate") LocalDateTime startDate, 
                                         @Param("endDate") LocalDateTime endDate);
 }
