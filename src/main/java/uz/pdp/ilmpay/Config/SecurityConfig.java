@@ -3,7 +3,8 @@ package uz.pdp.ilmpay.Config;
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,10 +29,11 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
  * @author Your Security Guard Developer
  * @version 1.0 (The "Fort Knox" Edition)
  */
-@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
     /**
      * 🛡️ Configure security filter chain
