@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 🌍 Translation Service
  * Making the world a smaller place, one translation at a time!
  */
 @Service
+@Slf4j
 public class TranslationService {
 
     @Value("${google.cloud.translation.api-key}")
@@ -33,19 +35,44 @@ public class TranslationService {
                 .getService();
     }
 
+    /**
+     * 🌐 Safely translates text to target language
+     */
     public String translate(String text, String targetLanguageCode) {
-        Translation translation = translate.translate(
-                text,
-                Translate.TranslateOption.targetLanguage(targetLanguageCode)
-        );
-        return translation.getTranslatedText();
+        if (text == null || text.trim().isEmpty()) {
+            return text;
+        }
+        try {
+            Translation translation = translate.translate(
+                    text,
+                    Translate.TranslateOption.targetLanguage(targetLanguageCode)
+            );
+            log.debug("🔄 Translated text to {}: {} -> {}", targetLanguageCode, text, translation.getTranslatedText());
+            return translation.getTranslatedText();
+        } catch (Exception e) {
+            log.error("❌ Translation failed for text: {}, target language: {}, error: {}", text, targetLanguageCode, e.getMessage());
+            return text; // Return original text if translation fails
+        }
     }
+
+    /**
+     * 🌐 Safely translates text from source to target language
+     */
     public String translate(String text, String sourceLanguageCode, String targetLanguageCode) {
-        Translation translation = translate.translate(
-                text,
-                Translate.TranslateOption.sourceLanguage(sourceLanguageCode),
-                Translate.TranslateOption.targetLanguage(targetLanguageCode)
-        );
-        return translation.getTranslatedText();
+        if (text == null || text.trim().isEmpty() || sourceLanguageCode.equals(targetLanguageCode)) {
+            return text;
+        }
+        try {
+            Translation translation = translate.translate(
+                    text,
+                    Translate.TranslateOption.sourceLanguage(sourceLanguageCode),
+                    Translate.TranslateOption.targetLanguage(targetLanguageCode)
+            );
+            log.debug("🔄 Translated text from {} to {}: {} -> {}", sourceLanguageCode, targetLanguageCode, text, translation.getTranslatedText());
+            return translation.getTranslatedText();
+        } catch (Exception e) {
+            log.error("❌ Translation failed for text: {}, source: {}, target: {}, error: {}", text, sourceLanguageCode, targetLanguageCode, e.getMessage());
+            return text; // Return original text if translation fails
+        }
     }
 }
