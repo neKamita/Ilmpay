@@ -3,6 +3,7 @@ package uz.pdp.ilmpay.Config;
 import java.util.HashSet;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,6 +28,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
  * @author Your Security Guard Developer
  * @version 1.0 (The "Fort Knox" Edition)
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -40,12 +42,26 @@ public class SecurityConfig {
         // 🎭 Setting up our security theater
         http
             .csrf(AbstractHttpConfigurer::disable)  // 🚫 CSRF? Ain't nobody got time for that!
-            .authorizeHttpRequests(auth -> auth
-                // 🎫 VIP areas - Admin only!
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                // 🎪 Public areas - Everyone's welcome!
-                .anyRequest().permitAll()
+            // 🎭 Allow HTMX headers
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.sameOrigin())
+                .addHeaderWriter((request, response) -> {
+                    response.setHeader("Access-Control-Allow-Headers", "HX-Request, HX-Trigger, HX-Target, HX-Swap");
+                    response.setHeader("Access-Control-Expose-Headers", "HX-Push, HX-Redirect, HX-Refresh, HX-Trigger");
+                })
             )
+            .authorizeHttpRequests(auth -> {
+                log.debug("🔐 Configuring security rules...");
+                return auth
+                    // 🎫 VIP areas - Admin only!
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    // Allow HTMX-specific endpoints
+                    .requestMatchers("/hx/**").permitAll()
+                    // Explicitly permit root path
+                    .requestMatchers("/").permitAll()
+                    // 🎪 Public areas - Everyone's welcome!
+                    .anyRequest().permitAll();
+            })
             .formLogin(form -> form
                 .loginPage("/admin/login")  // 🎯 Custom login page
                 .defaultSuccessUrl("/admin/dashboard")  // 🎉 Where to go after login
