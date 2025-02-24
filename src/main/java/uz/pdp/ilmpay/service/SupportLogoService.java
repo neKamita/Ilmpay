@@ -2,6 +2,9 @@ package uz.pdp.ilmpay.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +34,7 @@ public class SupportLogoService {
     // S3 folder for support logos
     private static final String S3_FOLDER = "support-logos";
 
+    @Cacheable(value = "supportLogos", key = "'allActive'") // Cache the result of this method
     public List<SupportLogoDTO> findAllActive() {
         log.info("🔍 Fetching all active support logos");
         List<SupportLogo> logos = supportLogoRepository.findByActiveTrueOrderByDisplayOrder();
@@ -40,6 +44,7 @@ public class SupportLogoService {
                 .collect(Collectors.toList());
     }
 
+    @CacheEvict(value = "supportLogos", allEntries = true) // Clear cache on create
     public SupportLogoDTO create(SupportLogoDTO dto) {
         log.info("🎨 Starting creation of new support logo: {}", dto.getName());
         validateLogo(dto);
@@ -82,6 +87,8 @@ public class SupportLogoService {
         }
     }
 
+    @CachePut(value = "supportLogos", key = "'allActive'") // Update cache on update
+    @CacheEvict(value = "supportLogos", key = "#id") // Clear individual cache entry
     public SupportLogoDTO update(Long id, SupportLogoDTO dto) {
         log.info("🔄 Starting update of support logo id: {}, name: {}", id, dto.getName());
 
@@ -162,23 +169,19 @@ public class SupportLogoService {
         supportLogoRepository.save(logo);
     }
 
+    @Cacheable(value = "supportLogos", key = "#id") // Cache individual logo
     public SupportLogoDTO findById(Long id) {
         SupportLogo logo = supportLogoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Logo not found with id: " + id));
         return toDTO(logo);
     }
 
-    /**
-     * 🔄 Reorders support logos based on the provided order list
-     * Makes our gallery look just the way we want! ✨
-     *
-     * @param reorderItems List of items with their new display order
-     * @return List of reordered support logos
-     */
+    @CacheEvict(value = "supportLogos", allEntries = true) // Clear cache on reorder
+
     @Transactional
     public List<SupportLogoDTO> reorder(List<ReorderItemDTO> reorderItems) {
         log.info("🔄 Starting reorder operation for {} items", reorderItems.size());
-        
+
         try {
             // Validate input
             if (reorderItems == null || reorderItems.isEmpty()) {
@@ -256,6 +259,8 @@ public class SupportLogoService {
             throw e;
         }
     }
+
+    @CacheEvict(value = "supportLogos", allEntries = true) // Clear cache on delete
 
     private void validateLogo(SupportLogoDTO dto) {
         // For create, require either image file or URL

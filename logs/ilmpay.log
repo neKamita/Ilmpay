@@ -509,3 +509,3304 @@
         id=?
 2025-02-24 21:35:09 [http-nio-8080-exec-1] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page home
 2025-02-24 21:35:09 [http-nio-8080-exec-1] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET / | Time: 4023ms | Result: ModelAndView [view="index"; model={currentPage=home, supportLogos=[], benefits=[BenefitCardDTO(id=1, title=Привет, description=Привет, displayOrder=1, active=true)], testimonials=[], faqs=[]}]
+2025-02-24 21:35:18 [http-nio-8080-exec-10] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:35:18 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:35:18.662381214, endDate: 2025-02-24T21:35:18.662381214
+2025-02-24 21:35:18 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/activity-heatmap | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getActivityHeatmap | Args: [7]
+2025-02-24 21:35:18 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    SELECT
+        EXTRACT(HOUR FROM first_visit_time) as hour,
+        EXTRACT(DOW FROM first_visit_time) as day_of_week,
+        COUNT(DISTINCT session_id) as count 
+    FROM
+        visitors 
+    WHERE
+        first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        EXTRACT(HOUR FROM first_visit_time),
+        EXTRACT(DOW FROM first_visit_time)
+2025-02-24 21:35:18 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:35:18 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:35:18 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-9] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [30]
+2025-02-24 21:35:19 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 30, startDate: 2025-01-25T21:35:19.080430151, endDate: 2025-02-24T21:35:19.080430151
+2025-02-24 21:35:19 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:35:19 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:35:19 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:35:19 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:19 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getActivityHeatmap
+2025-02-24 21:35:19 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/activity-heatmap | Time: 1258ms | Result: <200 OK OK,[{dayOfWeek=1, hour=16, count=1}, {dayOfWeek=1, hour=21, count=2}],[]>
+2025-02-24 21:35:20 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:35:20 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:20 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:20 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:20 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:20 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:20 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:20 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:35:20 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:35:20 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=330.0, previous=0.0, change=100.0
+2025-02-24 21:35:20 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:35:20 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:35:20 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:21 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:35:21 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:35:21 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:35:21 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=330.0, previous=0.0, change=100.0
+2025-02-24 21:35:21 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:35:21 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:35:21 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:35:21 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:35:21 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:35:21 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:35:21 [http-nio-8080-exec-10] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3066ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=330.0, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:35:22 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:35:22 [http-nio-8080-exec-9] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3000ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=330.0, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:35:23 [http-nio-8080-exec-2] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:35:23 [http-nio-8080-exec-2] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:35:23.156491504, endDate: 2025-02-24T21:35:23.156491504
+2025-02-24 21:35:23 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:35:23 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:23 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:23 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:35:24 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:35:24 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:24 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:24 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:24 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:35:25 [http-nio-8080-exec-2] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:35:25 [http-nio-8080-exec-2] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:35:25 [http-nio-8080-exec-2] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=331.0, previous=0.0, change=100.0
+2025-02-24 21:35:25 [http-nio-8080-exec-2] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:35:25 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:35:25 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:35:25 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:35:26 [http-nio-8080-exec-2] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:35:26 [http-nio-8080-exec-2] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3022ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=331.0, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:35:27 [http-nio-8080-exec-3] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> POST /api/analytics/session-update | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: updateSessionData | Args: [13, false, org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@41d6adad]
+2025-02-24 21:35:27 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:35:27 [http-nio-8080-exec-5] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET / | Class: uz.pdp.ilmpay.Controller.HomeController | Method: home | Args: []
+2025-02-24 21:35:27 [http-nio-8080-exec-5] INFO  u.p.i.service.SupportLogoService - 🔍 Fetching all active support logos
+2025-02-24 21:35:27 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        sl1_0.id,
+        sl1_0.active,
+        sl1_0.created_at,
+        sl1_0.display_order,
+        sl1_0.image_url,
+        sl1_0.name,
+        sl1_0.website_url 
+    from
+        support_logos sl1_0 
+    where
+        sl1_0.active=true 
+    order by
+        sl1_0.display_order
+2025-02-24 21:35:28 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:35:28 [http-nio-8080-exec-5] INFO  u.p.i.service.SupportLogoService - ✨ Found 0 active support logos
+2025-02-24 21:35:28 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:35:28 [http-nio-8080-exec-5] INFO  u.p.ilmpay.Controller.HomeController - 🤝 Found 0 support logos for homepage
+2025-02-24 21:35:28 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        bc1_0.id,
+        bc1_0.active,
+        bc1_0.created_at,
+        bc1_0.description,
+        bc1_0.display_order,
+        bc1_0.icon_url,
+        bc1_0.title 
+    from
+        benefit_cards bc1_0 
+    where
+        bc1_0.active 
+    order by
+        bc1_0.display_order
+2025-02-24 21:35:28 [http-nio-8080-exec-3] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page session-update
+2025-02-24 21:35:28 [http-nio-8080-exec-3] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> POST /api/analytics/session-update | Time: 923ms | Result: <200 OK OK,[]>
+2025-02-24 21:35:29 [http-nio-8080-exec-5] INFO  u.p.ilmpay.Controller.HomeController - 🎁 Found 1 benefits for homepage
+2025-02-24 21:35:29 [http-nio-8080-exec-5] INFO  u.p.ilmpay.Controller.HomeController - Benefit: Salom (Order: 1)
+2025-02-24 21:35:29 [http-nio-8080-exec-5] INFO  u.p.ilmpay.Controller.HomeController - 🔍 Fetching all active testimonials
+2025-02-24 21:35:29 [http-nio-8080-exec-5] INFO  u.p.i.service.TestimonialService - 🔍 Fetching all active testimonials
+2025-02-24 21:35:29 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        t1_0.id,
+        t1_0.avatar_url,
+        t1_0.comment,
+        t1_0.created_at,
+        t1_0.is_active,
+        t1_0.name,
+        t1_0.display_order,
+        t1_0.rating 
+    from
+        testimonials t1_0 
+    where
+        t1_0.is_active 
+    order by
+        t1_0.display_order
+2025-02-24 21:35:29 [http-nio-8080-exec-5] INFO  u.p.i.service.TestimonialService - ✨ Found 0 active testimonials
+2025-02-24 21:35:29 [http-nio-8080-exec-5] INFO  u.p.ilmpay.Controller.HomeController - 🎭 Found 0 testimonials for homepage
+2025-02-24 21:35:29 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        f1_0.id,
+        f1_0.active,
+        f1_0.answer,
+        f1_0.created_at,
+        f1_0.display_order,
+        f1_0.question,
+        f1_0.updated_at 
+    from
+        faqs f1_0 
+    where
+        f1_0.active 
+    order by
+        f1_0.display_order
+2025-02-24 21:35:30 [http-nio-8080-exec-5] INFO  u.p.ilmpay.Controller.HomeController - 🤔 Found 0 FAQs for homepage
+2025-02-24 21:35:30 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:35:30 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:35:30 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:35:31 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page home
+2025-02-24 21:35:31 [http-nio-8080-exec-5] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET / | Time: 3309ms | Result: ModelAndView [view="index"; model={currentPage=home, supportLogos=[], benefits=[BenefitCardDTO(id=1, title=Salom, description=Salom, displayOrder=1, active=true)], testimonials=[], faqs=[]}]
+2025-02-24 21:38:41 [http-nio-8080-exec-1] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET / | Class: uz.pdp.ilmpay.Controller.HomeController | Method: home | Args: []
+2025-02-24 21:38:41 [http-nio-8080-exec-1] INFO  u.p.i.service.SupportLogoService - 🔍 Fetching all active support logos
+2025-02-24 21:38:41 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        sl1_0.id,
+        sl1_0.active,
+        sl1_0.created_at,
+        sl1_0.display_order,
+        sl1_0.image_url,
+        sl1_0.name,
+        sl1_0.website_url 
+    from
+        support_logos sl1_0 
+    where
+        sl1_0.active=true 
+    order by
+        sl1_0.display_order
+2025-02-24 21:38:41 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> POST /api/analytics/session-update | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: updateSessionData | Args: [187, true, org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@1f520cad]
+2025-02-24 21:38:41 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:41 [http-nio-8080-exec-1] INFO  u.p.i.service.SupportLogoService - ✨ Found 0 active support logos
+2025-02-24 21:38:41 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:42 [http-nio-8080-exec-1] INFO  u.p.ilmpay.Controller.HomeController - 🤝 Found 0 support logos for homepage
+2025-02-24 21:38:42 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        bc1_0.id,
+        bc1_0.active,
+        bc1_0.created_at,
+        bc1_0.description,
+        bc1_0.display_order,
+        bc1_0.icon_url,
+        bc1_0.title 
+    from
+        benefit_cards bc1_0 
+    where
+        bc1_0.active 
+    order by
+        bc1_0.display_order
+2025-02-24 21:38:42 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:42 [http-nio-8080-exec-9] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> POST /api/analytics/session-update | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: updateSessionData | Args: [209, true, org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@1e6a9493]
+2025-02-24 21:38:42 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:42 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page session-update
+2025-02-24 21:38:42 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> POST /api/analytics/session-update | Time: 936ms | Result: <200 OK OK,[]>
+2025-02-24 21:38:42 [http-nio-8080-exec-7] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /admin/content/benefits | Class: uz.pdp.ilmpay.Controller.AdminController | Method: benefitsPage | Args: [{}, SecurityContextHolderAwareRequestWrapper[ org.springframework.security.web.header.HeaderWriterFilter$HeaderWriterRequest@5d6c2f00]]
+2025-02-24 21:38:42 [http-nio-8080-exec-7] INFO  u.p.i.Controller.AdminController - 📈 Loading benefits management page
+2025-02-24 21:38:42 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        bc1_0.id,
+        bc1_0.active,
+        bc1_0.created_at,
+        bc1_0.description,
+        bc1_0.display_order,
+        bc1_0.icon_url,
+        bc1_0.title 
+    from
+        benefit_cards bc1_0 
+    where
+        bc1_0.active 
+    order by
+        bc1_0.display_order
+2025-02-24 21:38:42 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:42 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:43 [http-nio-8080-exec-1] INFO  u.p.ilmpay.Controller.HomeController - 🎁 Found 1 benefits for homepage
+2025-02-24 21:38:43 [http-nio-8080-exec-1] INFO  u.p.ilmpay.Controller.HomeController - Benefit: Salom (Order: 1)
+2025-02-24 21:38:43 [http-nio-8080-exec-1] INFO  u.p.ilmpay.Controller.HomeController - 🔍 Fetching all active testimonials
+2025-02-24 21:38:43 [http-nio-8080-exec-1] INFO  u.p.i.service.TestimonialService - 🔍 Fetching all active testimonials
+2025-02-24 21:38:43 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        t1_0.id,
+        t1_0.avatar_url,
+        t1_0.comment,
+        t1_0.created_at,
+        t1_0.is_active,
+        t1_0.name,
+        t1_0.display_order,
+        t1_0.rating 
+    from
+        testimonials t1_0 
+    where
+        t1_0.is_active 
+    order by
+        t1_0.display_order
+2025-02-24 21:38:43 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page session-update
+2025-02-24 21:38:43 [http-nio-8080-exec-9] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> POST /api/analytics/session-update | Time: 924ms | Result: <200 OK OK,[]>
+2025-02-24 21:38:43 [http-nio-8080-exec-1] INFO  u.p.i.service.TestimonialService - ✨ Found 0 active testimonials
+2025-02-24 21:38:43 [http-nio-8080-exec-7] INFO  u.p.i.Controller.AdminController - ✨ Benefits page loaded successfully
+2025-02-24 21:38:43 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:43 [http-nio-8080-exec-1] INFO  u.p.ilmpay.Controller.HomeController - 🎭 Found 0 testimonials for homepage
+2025-02-24 21:38:43 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        f1_0.id,
+        f1_0.active,
+        f1_0.answer,
+        f1_0.created_at,
+        f1_0.display_order,
+        f1_0.question,
+        f1_0.updated_at 
+    from
+        faqs f1_0 
+    where
+        f1_0.active 
+    order by
+        f1_0.display_order
+2025-02-24 21:38:43 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:44 [http-nio-8080-exec-1] INFO  u.p.ilmpay.Controller.HomeController - 🤔 Found 0 FAQs for homepage
+2025-02-24 21:38:44 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:44 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:44 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:44 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:44 [http-nio-8080-exec-7] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page benefitsPage
+2025-02-24 21:38:44 [http-nio-8080-exec-7] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /admin/content/benefits | Time: 2136ms | Result: admin/content/benefits
+2025-02-24 21:38:45 [http-nio-8080-exec-1] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page home
+2025-02-24 21:38:45 [http-nio-8080-exec-1] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET / | Time: 3474ms | Result: ModelAndView [view="index"; model={currentPage=home, supportLogos=[], benefits=[BenefitCardDTO(id=1, title=Salom, description=Salom, displayOrder=1, active=true)], testimonials=[], faqs=[]}]
+2025-02-24 21:38:55 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/activity-heatmap | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getActivityHeatmap | Args: [7]
+2025-02-24 21:38:55 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    SELECT
+        EXTRACT(HOUR FROM first_visit_time) as hour,
+        EXTRACT(DOW FROM first_visit_time) as day_of_week,
+        COUNT(DISTINCT session_id) as count 
+    FROM
+        visitors 
+    WHERE
+        first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        EXTRACT(HOUR FROM first_visit_time),
+        EXTRACT(DOW FROM first_visit_time)
+2025-02-24 21:38:55 [http-nio-8080-exec-5] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:38:55 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:38:55.364172358, endDate: 2025-02-24T21:38:55.364172358
+2025-02-24 21:38:55 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:38:55 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [30]
+2025-02-24 21:38:55 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 30, startDate: 2025-01-25T21:38:55.561191135, endDate: 2025-02-24T21:38:55.561191135
+2025-02-24 21:38:55 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:38:55 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:55 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:55 [http-nio-8080-exec-10] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:38:55 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:38:55.637428113, endDate: 2025-02-24T21:38:55.637428113
+2025-02-24 21:38:55 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:38:55 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:55 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:55 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:55 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getActivityHeatmap
+2025-02-24 21:38:56 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/activity-heatmap | Time: 1182ms | Result: <200 OK OK,[{dayOfWeek=1, hour=16, count=1}, {dayOfWeek=1, hour=21, count=2}],[]>
+2025-02-24 21:38:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:57 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:57 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:38:57 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:38:57 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=402.3333333333333, previous=0.0, change=100.0
+2025-02-24 21:38:57 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:38:57 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:57 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:57 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:57 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:38:57 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:38:57 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:38:57 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=402.3333333333333, previous=0.0, change=100.0
+2025-02-24 21:38:57 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:38:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:57 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:58 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:38:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:38:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=402.3333333333333, previous=0.0, change=100.0
+2025-02-24 21:38:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:38:58 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:38:58 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:38:58 [http-nio-8080-exec-5] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 2980ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=402.3333333333333, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:38:58 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:58 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:38:58 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:38:58 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:38:58 [http-nio-8080-exec-10] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3188ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=402.3333333333333, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:38:59 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:38:59 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3491ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=402.3333333333333, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:43:55 [http-nio-8080-exec-5] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/activity-heatmap | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getActivityHeatmap | Args: [7]
+2025-02-24 21:43:55 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    SELECT
+        EXTRACT(HOUR FROM first_visit_time) as hour,
+        EXTRACT(DOW FROM first_visit_time) as day_of_week,
+        COUNT(DISTINCT session_id) as count 
+    FROM
+        visitors 
+    WHERE
+        first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        EXTRACT(HOUR FROM first_visit_time),
+        EXTRACT(DOW FROM first_visit_time)
+2025-02-24 21:43:55 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [30]
+2025-02-24 21:43:55 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 30, startDate: 2025-01-25T21:43:55.936868850, endDate: 2025-02-24T21:43:55.936868850
+2025-02-24 21:43:55 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:43:55 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:43:55 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:43:55.940789539, endDate: 2025-02-24T21:43:55.940789539
+2025-02-24 21:43:55 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:43:55 [http-nio-8080-exec-10] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:43:55 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:43:55.992403903, endDate: 2025-02-24T21:43:55.992403903
+2025-02-24 21:43:55 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:43:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:43:56 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:43:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-5] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:43:56 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:43:56 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-5] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getActivityHeatmap
+2025-02-24 21:43:57 [http-nio-8080-exec-5] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/activity-heatmap | Time: 1160ms | Result: <200 OK OK,[{dayOfWeek=1, hour=16, count=1}, {dayOfWeek=1, hour=21, count=2}],[]>
+2025-02-24 21:43:57 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:57 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:58 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:58 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=502.6666666666667, previous=0.0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:43:58 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:43:58 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=502.6666666666667, previous=0.0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:43:58 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:43:58 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+            end)*100.0)/count(*)) 
+    end, 0.0) 
+from
+    visitors v1_0 
+where
+    v1_0.first_visit_time between ? and ?
+2025-02-24 21:43:58 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:43:58 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:43:58 [http-nio-8080-exec-10] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:43:58 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:43:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=3, previous=0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=3, previous=0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=502.6666666666667, previous=0.0, change=100.0
+2025-02-24 21:43:58 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=0.0, previous=0.0, change=0.0
+2025-02-24 21:43:58 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:43:59 [http-nio-8080-exec-10] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:43:59 [http-nio-8080-exec-10] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3271ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=502.6666666666667, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:43:59 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:43:59 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:43:59 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3564ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=502.6666666666667, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:43:59 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:44:00 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:44:00 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 4134ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=3}], bounceChange=0.0, totalVisitors=3, activeChange=100.0, avgSessionDuration=502.6666666666667, durationChange=100.0, visitorChange=100.0, activeUsers=3, bounceRate=0.0},[]>
+2025-02-24 21:44:46 [SpringApplicationShutdownHook] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-02-24 21:44:46 [tomcat-shutdown] INFO  o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-02-24 21:44:46 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-02-24 21:44:46 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-02-24 21:44:47 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-02-24 21:45:04 [main] INFO  uz.pdp.ilmpay.IlmpayApplication - Starting IlmpayApplication using Java 23.0.2 with PID 323170 (/home/lantanium/Documents/Ilmpay/target/classes started by lantanium in /home/lantanium/Documents/Ilmpay)
+2025-02-24 21:45:04 [main] DEBUG uz.pdp.ilmpay.IlmpayApplication - Running with Spring Boot v3.2.3, Spring v6.1.4
+2025-02-24 21:45:04 [main] INFO  uz.pdp.ilmpay.IlmpayApplication - No active profile set, falling back to 1 default profile: "default"
+2025-02-24 21:45:05 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-24 21:45:05 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 33 ms. Found 8 JPA repository interfaces.
+2025-02-24 21:45:05 [main] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'webMvcConfig' of type [uz.pdp.ilmpay.Config.WebMvcConfig$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [methodValidationPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-02-24 21:45:05 [main] WARN  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-02-24 21:45:05 [main] INFO  o.s.w.s.a.s.AnnotationActionEndpointMapping - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2025-02-24 21:45:05 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-02-24 21:45:05 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-02-24 21:45:05 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-02-24 21:45:05 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-02-24 21:45:05 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1296 ms
+2025-02-24 21:45:06 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-02-24 21:45:08 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@3a116ca6
+2025-02-24 21:45:08 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-02-24 21:45:09 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://viaduct.proxy.rlwy.net:13686/railway (PostgreSQL 16.4)
+2025-02-24 21:45:13 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "public": 13
+2025-02-24 21:45:13 [main] WARN  o.f.core.internal.command.DbMigrate - outOfOrder mode is active. Migration of schema "public" may not be reproducible.
+2025-02-24 21:45:13 [main] WARN  o.f.core.internal.command.DbMigrate - Schema "public" has a version (13) that is newer than the latest available migration (5) !
+2025-02-24 21:45:14 [main] INFO  o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2025-02-24 21:45:15 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-02-24 21:45:15 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.4.4.Final
+2025-02-24 21:45:15 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-02-24 21:45:15 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-02-24 21:45:16 [main] WARN  org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-24 21:45:17 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-02-24 21:45:18 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-02-24 21:45:18 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-02-24 21:45:20 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2025-02-24 21:45:21 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint(s) beneath base path '/actuator'
+2025-02-24 21:45:21 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@c202a19, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4bc1f06d, org.springframework.security.web.context.SecurityContextHolderFilter@31962524, org.springframework.security.web.header.HeaderWriterFilter@5f6e202, org.springframework.web.filter.CorsFilter@2afb361c, org.springframework.security.web.authentication.logout.LogoutFilter@d94e783, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@5af56d01, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@9caa933, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@27a705e8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@52073425, org.springframework.security.web.access.ExceptionTranslationFilter@696fbbdf, org.springframework.security.web.access.intercept.AuthorizationFilter@cf79a7]
+2025-02-24 21:45:21 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-02-24 21:45:21 [main] INFO  uz.pdp.ilmpay.IlmpayApplication - Started IlmpayApplication in 17.511 seconds (process running for 17.961)
+2025-02-24 21:45:22 [RMI TCP Connection(1)-127.0.0.1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-24 21:45:22 [RMI TCP Connection(1)-127.0.0.1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-02-24 21:45:22 [RMI TCP Connection(1)-127.0.0.1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-02-24 21:45:26 [http-nio-8080-exec-2] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET / | Class: uz.pdp.ilmpay.Controller.HomeController | Method: home | Args: []
+2025-02-24 21:45:26 [http-nio-8080-exec-1] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> POST /api/analytics/session-update | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: updateSessionData | Args: [397, true, org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@73f22384]
+2025-02-24 21:45:26 [http-nio-8080-exec-2] INFO  u.p.i.service.SupportLogoService - 🔍 Fetching all active support logos
+2025-02-24 21:45:27 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:27 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        sl1_0.id,
+        sl1_0.active,
+        sl1_0.created_at,
+        sl1_0.display_order,
+        sl1_0.image_url,
+        sl1_0.name,
+        sl1_0.website_url 
+    from
+        support_logos sl1_0 
+    where
+        sl1_0.active=true 
+    order by
+        sl1_0.display_order
+2025-02-24 21:45:27 [http-nio-8080-exec-2] INFO  u.p.i.service.SupportLogoService - ✨ Found 0 active support logos
+2025-02-24 21:45:27 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:27 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /admin/content/benefits | Class: uz.pdp.ilmpay.Controller.AdminController | Method: benefitsPage | Args: [{}, SecurityContextHolderAwareRequestWrapper[ org.springframework.security.web.header.HeaderWriterFilter$HeaderWriterRequest@17d303de]]
+2025-02-24 21:45:27 [http-nio-8080-exec-4] INFO  u.p.i.Controller.AdminController - 📈 Loading benefits management page
+2025-02-24 21:45:27 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        bc1_0.id,
+        bc1_0.active,
+        bc1_0.created_at,
+        bc1_0.description,
+        bc1_0.display_order,
+        bc1_0.icon_url,
+        bc1_0.title 
+    from
+        benefit_cards bc1_0 
+    where
+        bc1_0.active 
+    order by
+        bc1_0.display_order
+2025-02-24 21:45:27 [http-nio-8080-exec-3] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> POST /api/analytics/session-update | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: updateSessionData | Args: [394, true, org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@6ad7568b]
+2025-02-24 21:45:27 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:27 [http-nio-8080-exec-2] INFO  u.p.ilmpay.Controller.HomeController - 🤝 Found 0 support logos for homepage
+2025-02-24 21:45:27 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        bc1_0.id,
+        bc1_0.active,
+        bc1_0.created_at,
+        bc1_0.description,
+        bc1_0.display_order,
+        bc1_0.icon_url,
+        bc1_0.title 
+    from
+        benefit_cards bc1_0 
+    where
+        bc1_0.active 
+    order by
+        bc1_0.display_order
+2025-02-24 21:45:27 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:27 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:27 [http-nio-8080-exec-3] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:27 [http-nio-8080-exec-1] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page session-update
+2025-02-24 21:45:27 [http-nio-8080-exec-1] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> POST /api/analytics/session-update | Time: 1046ms | Result: <200 OK OK,[]>
+2025-02-24 21:45:28 [http-nio-8080-exec-3] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page session-update
+2025-02-24 21:45:28 [http-nio-8080-exec-3] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> POST /api/analytics/session-update | Time: 946ms | Result: <200 OK OK,[]>
+2025-02-24 21:45:28 [http-nio-8080-exec-2] INFO  u.p.ilmpay.Controller.HomeController - 🎁 Found 1 benefits for homepage
+2025-02-24 21:45:28 [http-nio-8080-exec-2] INFO  u.p.ilmpay.Controller.HomeController - Benefit: Salom (Order: 1)
+2025-02-24 21:45:28 [http-nio-8080-exec-2] INFO  u.p.ilmpay.Controller.HomeController - 🔍 Fetching all active testimonials
+2025-02-24 21:45:28 [http-nio-8080-exec-2] INFO  u.p.i.service.TestimonialService - 🔍 Fetching all active testimonials
+2025-02-24 21:45:28 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        t1_0.id,
+        t1_0.avatar_url,
+        t1_0.comment,
+        t1_0.created_at,
+        t1_0.is_active,
+        t1_0.name,
+        t1_0.display_order,
+        t1_0.rating 
+    from
+        testimonials t1_0 
+    where
+        t1_0.is_active 
+    order by
+        t1_0.display_order
+2025-02-24 21:45:28 [http-nio-8080-exec-4] INFO  u.p.i.Controller.AdminController - ✨ Benefits page loaded successfully
+2025-02-24 21:45:28 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:28 [http-nio-8080-exec-2] INFO  u.p.i.service.TestimonialService - ✨ Found 0 active testimonials
+2025-02-24 21:45:29 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:29 [http-nio-8080-exec-2] INFO  u.p.ilmpay.Controller.HomeController - 🎭 Found 0 testimonials for homepage
+2025-02-24 21:45:29 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        f1_0.id,
+        f1_0.active,
+        f1_0.answer,
+        f1_0.created_at,
+        f1_0.display_order,
+        f1_0.question,
+        f1_0.updated_at 
+    from
+        faqs f1_0 
+    where
+        f1_0.active 
+    order by
+        f1_0.display_order
+2025-02-24 21:45:29 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:29 [http-nio-8080-exec-2] INFO  u.p.ilmpay.Controller.HomeController - 🤔 Found 0 FAQs for homepage
+2025-02-24 21:45:29 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:29 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page benefitsPage
+2025-02-24 21:45:29 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /admin/content/benefits | Time: 2443ms | Result: admin/content/benefits
+2025-02-24 21:45:29 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:30 [http-nio-8080-exec-2] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:30 [http-nio-8080-exec-2] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page home
+2025-02-24 21:45:30 [http-nio-8080-exec-2] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET / | Time: 3701ms | Result: ModelAndView [view="index"; model={currentPage=home, supportLogos=[], benefits=[BenefitCardDTO(id=1, title=Salom, description=Salom, displayOrder=1, active=true)], testimonials=[], faqs=[]}]
+2025-02-24 21:45:36 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [30]
+2025-02-24 21:45:36 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 30, startDate: 2025-01-25T21:45:36.454196514, endDate: 2025-02-24T21:45:36.454196514
+2025-02-24 21:45:36 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:45:36 [http-nio-8080-exec-9] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/activity-heatmap | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getActivityHeatmap | Args: [7]
+2025-02-24 21:45:36 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    SELECT
+        EXTRACT(HOUR FROM first_visit_time) as hour,
+        EXTRACT(DOW FROM first_visit_time) as day_of_week,
+        COUNT(DISTINCT session_id) as count 
+    FROM
+        visitors 
+    WHERE
+        first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        EXTRACT(HOUR FROM first_visit_time),
+        EXTRACT(DOW FROM first_visit_time)
+2025-02-24 21:45:36 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:36 [http-nio-8080-exec-7] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:45:36 [http-nio-8080-exec-7] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:45:36.872794331, endDate: 2025-02-24T21:45:36.872794331
+2025-02-24 21:45:36 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:45:36 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:36 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:37 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - 🚀 Request -> GET /api/analytics/visitor-stats | Class: uz.pdp.ilmpay.Controller.AnalyticsController | Method: getVisitorStats | Args: [1]
+2025-02-24 21:45:37 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - getVisitorStats - days: 1, startDate: 2025-02-23T21:45:37.189168169, endDate: 2025-02-24T21:45:37.189168169
+2025-02-24 21:45:37 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    -- Daily visitor statistics query - startDate: :startDate, endDate: :endDate SELECT
+        DATE(v.first_visit_time) as date,
+        COUNT(DISTINCT v.session_id) as count 
+    FROM
+        visitors v 
+    WHERE
+        v.first_visit_time BETWEEN ? AND ? 
+    GROUP BY
+        DATE(v.first_visit_time) 
+    ORDER BY
+        date
+2025-02-24 21:45:37 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-9] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:37 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+        end, 0.0) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-9] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getActivityHeatmap
+2025-02-24 21:45:37 [http-nio-8080-exec-9] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/activity-heatmap | Time: 1174ms | Result: <200 OK OK,[{dayOfWeek=1, hour=16, count=2}, {dayOfWeek=1, hour=21, count=2}],[]>
+2025-02-24 21:45:37 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:45:37 [http-nio-8080-exec-6] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler processing failed: java.lang.NoSuchMethodError: 'org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxExceptionHandlerExceptionResolver.getExceptionHandlerMethod(org.springframework.web.method.HandlerMethod, java.lang.Exception, org.springframework.web.context.request.ServletWebRequest)'] with root cause
+java.lang.NoSuchMethodError: 'org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxExceptionHandlerExceptionResolver.getExceptionHandlerMethod(org.springframework.web.method.HandlerMethod, java.lang.Exception, org.springframework.web.context.request.ServletWebRequest)'
+	at io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxExceptionHandlerExceptionResolver.doResolveHandlerMethodException(HtmxExceptionHandlerExceptionResolver.java:31)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:175)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1357)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1160)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340)
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:142)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-02-24 21:45:37 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+        end, 0.0) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+        end, 0.0) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        count(distinct v1_0.session_id) 
+    from
+        visitors v1_0 
+    where
+        v1_0.is_active=true 
+        and v1_0.last_active_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+                end)*100.0)/count(*)) 
+            end, 0.0) 
+        from
+            visitors v1_0 
+        where
+            v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+        end, 0.0) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+        end, 0.0) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+                end)*100.0)/count(*)) 
+            end, 0.0) 
+        from
+            visitors v1_0 
+        where
+            v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+                end)*100.0)/count(*)) 
+            end, 0.0) 
+        from
+            visitors v1_0 
+        where
+            v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(v1_0.session_duration)=0 
+                then 0.0 
+            else avg(coalesce(v1_0.session_duration, 0)) 
+        end, 0.0) 
+    from
+        visitors v1_0 
+    where
+        v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=4, previous=0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=4, previous=0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=402.0, previous=0.0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=25.0, previous=0.0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:38 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+                end)*100.0)/count(*)) 
+            end, 0.0) 
+        from
+            visitors v1_0 
+        where
+            v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+                end)*100.0)/count(*)) 
+            end, 0.0) 
+        from
+            visitors v1_0 
+        where
+            v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:38 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:38 [http-nio-8080-exec-7] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=4, previous=0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-7] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=4, previous=0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-7] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=402.0, previous=0.0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-7] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=25.0, previous=0.0, change=100.0
+2025-02-24 21:45:38 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:39 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        coalesce(case 
+            when count(*)=0 
+                then 0.0 
+            else ((count(case 
+                when v1_0.bounced=true 
+                    then 1 
+                end)*100.0)/count(*)) 
+            end, 0.0) 
+        from
+            visitors v1_0 
+        where
+            v1_0.first_visit_time between ? and ?
+2025-02-24 21:45:39 [http-nio-8080-exec-4] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:39 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:39 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Visitors: current=4, previous=0, change=100.0
+2025-02-24 21:45:39 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Active Users: current=4, previous=0, change=100.0
+2025-02-24 21:45:39 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Avg Duration: current=402.0, previous=0.0, change=100.0
+2025-02-24 21:45:39 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Comparison Stats - Bounce Rate: current=25.0, previous=0.0, change=100.0
+2025-02-24 21:45:39 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.session_id=? 
+        and v1_0.last_active_time>? 
+    order by
+        v1_0.last_active_time desc
+2025-02-24 21:45:39 [http-nio-8080-exec-7] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:39 [http-nio-8080-exec-4] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:45:39 [http-nio-8080-exec-4] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3093ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=4}], bounceChange=100.0, totalVisitors=4, activeChange=100.0, avgSessionDuration=402.0, durationChange=100.0, visitorChange=100.0, activeUsers=4, bounceRate=25.0},[]>
+2025-02-24 21:45:39 [http-nio-8080-exec-5] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler processing failed: java.lang.NoSuchMethodError: 'org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxExceptionHandlerExceptionResolver.getExceptionHandlerMethod(org.springframework.web.method.HandlerMethod, java.lang.Exception, org.springframework.web.context.request.ServletWebRequest)'] with root cause
+java.lang.NoSuchMethodError: 'org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxExceptionHandlerExceptionResolver.getExceptionHandlerMethod(org.springframework.web.method.HandlerMethod, java.lang.Exception, org.springframework.web.context.request.ServletWebRequest)'
+	at io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxExceptionHandlerExceptionResolver.doResolveHandlerMethodException(HtmxExceptionHandlerExceptionResolver.java:31)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:175)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1357)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1160)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1106)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340)
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.session.web.http.SessionRepositoryFilter.doFilterInternal(SessionRepositoryFilter.java:142)
+	at org.springframework.session.web.http.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:82)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2025-02-24 21:45:39 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    select
+        v1_0.id,
+        v1_0.bounced,
+        v1_0.first_visit_time,
+        v1_0.ip_address,
+        v1_0.is_active,
+        v1_0.is_downloaded,
+        v1_0.last_active_time,
+        v1_0.last_page_visited,
+        v1_0.page_visit_count,
+        v1_0.session_duration,
+        v1_0.session_id,
+        v1_0.user_agent 
+    from
+        visitors v1_0 
+    where
+        v1_0.id=?
+2025-02-24 21:45:39 [http-nio-8080-exec-8] DEBUG org.hibernate.SQL - 
+    update
+        visitors 
+    set
+        bounced=?,
+        first_visit_time=?,
+        ip_address=?,
+        is_active=?,
+        is_downloaded=?,
+        last_active_time=?,
+        last_page_visited=?,
+        page_visit_count=?,
+        session_duration=?,
+        session_id=?,
+        user_agent=? 
+    where
+        id=?
+2025-02-24 21:45:39 [http-nio-8080-exec-7] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:45:39 [http-nio-8080-exec-7] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3027ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=4}], bounceChange=100.0, totalVisitors=4, activeChange=100.0, avgSessionDuration=402.0, durationChange=100.0, visitorChange=100.0, activeUsers=4, bounceRate=25.0},[]>
+2025-02-24 21:45:40 [http-nio-8080-exec-8] INFO  u.pdp.ilmpay.service.VisitorService - Updated visit for session 23293834-6235-40c7-919b-c42165e35cd9 on page getVisitorStats
+2025-02-24 21:45:40 [http-nio-8080-exec-8] INFO  uz.pdp.ilmpay.aspect.LoggingAspect - ✅ Response -> GET /api/analytics/visitor-stats | Time: 3084ms | Result: <200 OK OK,{dailyVisitors=[{date=2025-02-24, visitors=4}], bounceChange=100.0, totalVisitors=4, activeChange=100.0, avgSessionDuration=402.0, durationChange=100.0, visitorChange=100.0, activeUsers=4, bounceRate=25.0},[]>

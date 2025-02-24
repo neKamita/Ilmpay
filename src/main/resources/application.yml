@@ -14,7 +14,7 @@ spring:
 
   # Thymeleaf Configuration
   thymeleaf:
-    cache: false
+    cache: true # Enabling Thymeleaf caching for performance
     enabled: true
     prefix: classpath:/templates/
     suffix: .html

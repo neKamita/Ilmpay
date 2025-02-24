@@ -2,6 +2,9 @@ package uz.pdp.ilmpay.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -23,6 +26,7 @@ public class BenefitCardService {
     private final BenefitCardRepository benefitCardRepository;
     private final TranslationService translationService;
 
+    @Cacheable(value = "benefitCards", key = "'allActive'")
     public List<BenefitCardDTO> findAllActive() {
         return benefitCardRepository.findByActiveTrueOrderByDisplayOrderAsc()
             .stream()
@@ -30,9 +34,10 @@ public class BenefitCardService {
             .collect(Collectors.toList());
     }
 
+    @CacheEvict(value = "benefitCards", allEntries = true)
     public BenefitCardDTO create(BenefitCardDTO dto) {
         validateBenefitCard(dto);
-        
+
         BenefitCard card = new BenefitCard();
         card.setTitle(dto.getTitle());
         card.setDescription(dto.getDescription());
@@ -44,9 +49,11 @@ public class BenefitCardService {
         return toDTO(benefitCardRepository.save(card));
     }
 
+    @CachePut(value = "benefitCards", key = "#id")
+    @CacheEvict(value = "benefitCards", allEntries = true)
     public BenefitCardDTO update(Long id, BenefitCardDTO dto) {
         validateBenefitCard(dto);
-        
+
         BenefitCard card = benefitCardRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Benefit card not found with id: " + id));
 
@@ -59,24 +66,19 @@ public class BenefitCardService {
         return toDTO(benefitCardRepository.save(card));
     }
 
+    @CacheEvict(value = "benefitCards", allEntries = true)
     public void delete(Long id) {
         BenefitCard card = benefitCardRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Benefit card not found with id: " + id));
-            
+
         card.setActive(false);
         log.info("Soft deleting benefit card with id: {}", id);
         benefitCardRepository.save(card);
     }
 
-    /**
-     * Retrieves a benefit by its id.
-     * 
-     * @param id the benefit id
-     * @return the BenefitCardDTO representing the benefit
-     * @throws ResourceNotFoundException if the benefit is not found
-     * 
-     * Note: If benefit not found, we raise a flag louder than a bug in production!
-     */
+    
+
+    @Cacheable(value = "benefitCards", key = "#id")
     public BenefitCardDTO findById(Long id) {
         return benefitCardRepository.findById(id)
                 .map(this::toDTO)
