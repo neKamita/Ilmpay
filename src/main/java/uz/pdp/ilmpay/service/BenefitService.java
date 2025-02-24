@@ -3,6 +3,8 @@ package uz.pdp.ilmpay.service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -32,6 +34,7 @@ public class BenefitService {
     /**
      * 📚 Get all active benefits - Collecting all the goodies in one place
      */
+    @Cacheable(value = "benefits", key = "'allActive'")
     public List<BenefitCardDTO> findAllActive() {
         return benefitRepository.findByActiveTrueOrderByDisplayOrderAsc()
                 .stream()
@@ -42,6 +45,7 @@ public class BenefitService {
     /**
      * 🎯 Get benefit by ID - The benefit treasure hunt
      */
+    @Cacheable(value = "benefits", key = "#id")
     public BenefitCardDTO findById(Long id) {
         return benefitRepository.findById(id)
             .map(this::toDTO)
@@ -53,6 +57,7 @@ public class BenefitService {
     /**
      * ✨ Create new benefit - The benefit birth center
      */
+    @CacheEvict(value = "benefits", allEntries = true)
     public BenefitCardDTO create(BenefitCardDTO dto) {
         validateBenefitCard(dto);
         
@@ -69,6 +74,7 @@ public class BenefitService {
     /**
      * 🔄 Update benefit - The benefit makeover station
      */
+    @CacheEvict(value = "benefits", allEntries = true)
     public BenefitCardDTO update(Long id, BenefitCardDTO dto) {
         validateBenefitCard(dto);
         
@@ -87,6 +93,7 @@ public class BenefitService {
     /**
      * 🗑️ Delete benefit - The benefit retirement home
      */
+    @CacheEvict(value = "benefits", allEntries = true)
     public void delete(Long id) {
         Benefit benefit = benefitRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Benefit not found with id: " + id));
@@ -104,6 +111,7 @@ public class BenefitService {
      * @return List of reordered benefits
      */
     @Transactional
+    @CacheEvict(value = "benefits", allEntries = true)
     public List<BenefitCardDTO> reorder(List<ReorderItemDTO> reorderItems) {
         log.info("🔄 Starting reorder of {} benefits", reorderItems.size());
 

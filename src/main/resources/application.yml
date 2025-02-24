@@ -1,5 +1,11 @@
 # Spring Configuration
 spring:
+  # Cache Configuration
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=1h
+
   session:
     store-type: jdbc
     jdbc:

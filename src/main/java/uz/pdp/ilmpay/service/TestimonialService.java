@@ -1,7 +1,9 @@
-    package uz.pdp.ilmpay.service;
+        package uz.pdp.ilmpay.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.pdp.ilmpay.dto.TestimonialDTO;
@@ -35,6 +37,7 @@ public class TestimonialService {
     // S3 folder for testimonial avatars
     private static final String S3_FOLDER = "testimonials";
 
+    @Cacheable(value = "testimonials", key = "'allActive'")
     public List<TestimonialDTO> findAllActive() {
         log.info("🔍 Fetching all active testimonials");
         List<TestimonialDTO> testimonials = testimonialRepository.findByIsActiveTrueOrderByOrderAsc()
@@ -45,6 +48,7 @@ public class TestimonialService {
         return testimonials;
     }
 
+    @CacheEvict(value = "testimonials", allEntries = true)
     public TestimonialDTO create(TestimonialDTO dto) {
         log.info("🎭 Creating new testimonial from: {}", dto.getName());
         validateTestimonial(dto);
@@ -75,6 +79,7 @@ public class TestimonialService {
         return toDTO(saved);
     }
 
+    @CacheEvict(value = "testimonials", allEntries = true)
     public TestimonialDTO update(Long id, TestimonialDTO dto) {
         log.info("🔄 Updating testimonial id: {}", id);
         validateTestimonial(dto);
@@ -116,6 +121,7 @@ public class TestimonialService {
         return toDTO(saved);
     }
 
+    @Cacheable(value = "testimonials", key = "#id")
     public TestimonialDTO findById(Long id) {
         log.info("🔍 Finding testimonial by id: {}", id);
         Testimonial testimonial = testimonialRepository.findById(id)
@@ -127,6 +133,7 @@ public class TestimonialService {
         return toDTO(testimonial);
     }
 
+    @CacheEvict(value = "testimonials", allEntries = true)
     public void delete(Long id) {
         log.info("🗑️ Soft deleting testimonial id: {}", id);
         Testimonial testimonial = testimonialRepository.findById(id)
@@ -148,6 +155,7 @@ public class TestimonialService {
      * @return List of reordered testimonials
      */
     @Transactional
+    @CacheEvict(value = "testimonials", allEntries = true)
     public List<TestimonialDTO> reorder(List<ReorderItemDTO> reorderItems) {
         log.info("🔄 Starting reorder of {} testimonials", reorderItems.size());
 

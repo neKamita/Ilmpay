@@ -4,6 +4,7 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
@@ -38,6 +39,7 @@ public class TranslationService {
     /**
      * 🌐 Safely translates text to target language
      */
+    @Cacheable(value = "translations", key = "'single_' + #text + '_' + #targetLanguageCode", cacheManager = "translationCacheManager")
     public String translate(String text, String targetLanguageCode) {
         if (text == null || text.trim().isEmpty()) {
             return text;
@@ -58,6 +60,7 @@ public class TranslationService {
     /**
      * 🌐 Safely translates text from source to target language
      */
+    @Cacheable(value = "translations", key = "'dual_' + #text + '_' + #sourceLanguageCode + '_' + #targetLanguageCode", cacheManager = "translationCacheManager")
     public String translate(String text, String sourceLanguageCode, String targetLanguageCode) {
         if (text == null || text.trim().isEmpty() || sourceLanguageCode.equals(targetLanguageCode)) {
             return text;

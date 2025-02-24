@@ -2,6 +2,8 @@ package uz.pdp.ilmpay.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -30,6 +32,7 @@ public class FaqService {
     /**
      * 📚 Get all active FAQs
      */
+    @Cacheable(value = "faqs", key = "'allActive'")
     public List<FaqDTO> findAllActive() {
         return faqRepository.findByActiveTrueOrderByDisplayOrderAsc()
             .stream()
@@ -40,6 +43,7 @@ public class FaqService {
     /**
      * 🔍 Find FAQ by ID
      */
+    @Cacheable(value = "faqs", key = "#id")
     public FaqDTO findById(Long id) {
         log.info("🔍 Finding FAQ with id: {}", id);
         return toDTO(faqRepository.findById(id)
@@ -49,6 +53,7 @@ public class FaqService {
     /**
      * ➕ Create a new FAQ
      */
+    @CacheEvict(value = "faqs", allEntries = true)
     public FaqDTO create(FaqDTO dto) {
         validateFaq(dto);
         
@@ -66,6 +71,7 @@ public class FaqService {
     /**
      * 📝 Update an existing FAQ
      */
+    @CacheEvict(value = "faqs", allEntries = true)
     public FaqDTO update(Long id, FaqDTO dto) {
         validateFaq(dto);
         
@@ -84,6 +90,7 @@ public class FaqService {
     /**
      * 🗑️ Delete a FAQ
      */
+    @CacheEvict(value = "faqs", allEntries = true)
     public void delete(Long id) {
         Faq faq = faqRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("FAQ not found with id: " + id));
@@ -95,6 +102,7 @@ public class FaqService {
     /**
      * 🔄 Reorder FAQs
      */
+    @CacheEvict(value = "faqs", allEntries = true)
     public List<FaqDTO> reorder(List<FaqDTO> dtos) {
         log.info("🔄 Reordering {} FAQs", dtos.size());
         
