@@ -52,7 +52,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> {
                 log.debug("🔐 Configuring security rules...");
-                return auth
+                auth
                     // 🎫 VIP areas - Admin only!
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     // Allow HTMX-specific endpoints
