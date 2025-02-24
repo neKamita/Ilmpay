@@ -78,6 +78,13 @@ aws:
     bucket: ${AWS_S3_BUCKET:ilmpay}
     region: ${AWS_REGION:eu-north-1}
 
+# Google Cloud Configuration
+google:
+  cloud:
+    translation:
+      api-key: AIzaSyBtEHuWbcaPxPpSQbmv2mxG3zQdawrE9fc
+    project-id: cline-450814
+
 # Logging Configuration
 logging:
   level:
