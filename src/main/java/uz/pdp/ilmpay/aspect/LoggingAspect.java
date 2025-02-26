@@ -1,6 +1,7 @@
 package uz.pdp.ilmpay.aspect;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,8 +14,8 @@ import java.util.Arrays;
 
 @Aspect
 @Component
-@Slf4j
 public class LoggingAspect {
+    private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
     // 🎭 Aspect for logging controller methods
     @Around("execution(* uz.pdp.ilmpay.Controller.*.*(..))")

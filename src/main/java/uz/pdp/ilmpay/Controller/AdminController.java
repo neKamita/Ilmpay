@@ -36,7 +36,6 @@ public class AdminController {
     private final BenefitCardService benefitCardService;
     private final TestimonialService testimonialService;
     private final FaqService faqService;
-    private final VisitorService visitorService;
 
     @GetMapping("/login")
     public String login() {
@@ -55,12 +54,6 @@ public class AdminController {
 
         // 🧭 Track the current path for navigation
         model.addAttribute("currentPath", request.getRequestURI());
-
-        // 📊 Load all the stats that make us look good
-        model.addAttribute("totalVisitors", visitorService.getTotalVisitors());
-        model.addAttribute("todayVisitors", visitorService.getTodayVisitors());
-        model.addAttribute("appDownloads", visitorService.getAppDownloads());
-        model.addAttribute("activeUsers", visitorService.getActiveUsers());
 
         // 🎨 Load content for management
         model.addAttribute("supportLogos", supportLogoService.findAllActive());

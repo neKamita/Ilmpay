@@ -27,13 +27,15 @@ import java.util.stream.Collectors;
 public class VisitorService {
 
     private static final Logger log = LoggerFactory.getLogger(VisitorService.class);
-
     private final VisitorRepository visitorRepository;
     private final HttpServletRequest request;
     private final HttpSession session;
 
     @Value("${session.timeout.minutes:30}") // Default to 30 minutes
     private int sessionTimeoutMinutes;
+
+    @Value("${active.user.threshold.minutes:15}") // Consider user active if activity within last 15 minutes
+    private int activeThresholdMinutes;
 
     public VisitorService(VisitorRepository visitorRepository, HttpServletRequest request, HttpSession session) {
         this.visitorRepository = visitorRepository;
@@ -42,36 +44,82 @@ public class VisitorService {
     }
 
     /**
+     * 🧹 Cleanup expired sessions
+     * Called periodically to maintain data accuracy
+     */
+    private void cleanupExpiredSessions() {
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(sessionTimeoutMinutes);
+        visitorRepository.findAll().stream()
+            .filter(v -> v.isActive() && v.getLastActiveTime().isBefore(cutoffTime))
+            .forEach(v -> {
+                v.setActive(false);
+                v.setSessionDuration(ChronoUnit.SECONDS.between(v.getFirstVisitTime(), v.getLastActiveTime()));
+                visitorRepository.save(v);
+                log.info("Marked session as inactive: {} (duration: {} seconds)", v.getSessionId(), v.getSessionDuration());
+            });
+    }
+
+    /**
+     * Check if visitor stats should be calculated
+     * Always returns true since access control is handled by @PreAuthorize
+     */
+    private boolean shouldCalculateStats() {
+        log.debug("Stats calculation requested - access control handled by security annotations");
+        return true;
+    }
+
+    /**
      * 📊 Get total number of visitors
-     * Every visitor counts! (literally)
+     * Only calculates when needed for admin dashboard
      */
     public Long getTotalVisitors() {
+        if (!shouldCalculateStats()) {
+            return 0L;
+        }
         return visitorRepository.countUniqueVisitors();
     }
 
     /**
      * 🎯 Get today's visitor count
-     * Fresh faces of the day!
+     * Only calculates when needed for admin dashboard
      */
     public Long getTodayVisitors() {
+        if (!shouldCalculateStats()) {
+            return 0L;
+        }
         LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0);
         return visitorRepository.countTodayUniqueVisitors(startOfDay);
     }
 
     /**
      * 📱 Get total app downloads
-     * Because who doesn't love our app?
+     * Only calculates when needed for admin dashboard
      */
     public Long getAppDownloads() {
+        if (!shouldCalculateStats()) {
+            return 0L;
+        }
         return visitorRepository.countByIsDownloadedTrue();
     }
 
     /**
      * 🌟 Get number of active users
-     * The real MVPs of our platform!
+     * Uses time-based activity tracking for accuracy
      */
     public Long getActiveUsers() {
-        return visitorRepository.countByIsActiveTrue();
+        if (!shouldCalculateStats()) {
+            return 0L;
+        }
+        
+        // Cleanup expired sessions first
+        cleanupExpiredSessions();
+        
+        // Consider users active if they have activity within the threshold
+        LocalDateTime cutoffTime = LocalDateTime.now().minusMinutes(activeThresholdMinutes);
+        long activeCount = visitorRepository.countRecentlyActiveUsers(cutoffTime);
+        
+        log.info("Active users count: {} (threshold: {} minutes)", activeCount, activeThresholdMinutes);
+        return activeCount;
     }
 
     /**
@@ -141,6 +189,10 @@ public class VisitorService {
     }
 
     public Map<String, Object> getVisitorStats(int days) {
+        if (!shouldCalculateStats()) {
+            return new HashMap<>();
+        }
+
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(days);
 
@@ -161,8 +213,13 @@ public class VisitorService {
 
     /**
      * 🌡️ Get activity heatmap data
+     * Only calculates when needed for admin dashboard
      */
     public List<Map<String, Object>> getActivityHeatmap(int days) {
+        if (!shouldCalculateStats()) {
+            return List.of();
+        }
+
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(days);
 
@@ -181,7 +238,7 @@ public class VisitorService {
 
     /**
      * 📝 Record a page visit and update session information
-     * Now with improved session tracking!
+     * Enhanced with proper session management and status tracking
      */
     public void recordVisit(String page) {
         try {
@@ -195,19 +252,35 @@ public class VisitorService {
             Optional<Visitor> existingVisitor = recentVisitors.isEmpty() ? Optional.empty() : Optional.of(recentVisitors.get(0));
 
             if (existingVisitor.isPresent()) {
-                // Update existing visitor
+                // Update existing visitor with improved session handling
                 Visitor visitor = existingVisitor.get();
+                LocalDateTime previousActiveTime = visitor.getLastActiveTime();
                 visitor.setLastActiveTime(now);
                 visitor.setLastPageVisited(page);
                 visitor.setPageVisitCount(visitor.getPageVisitCount() + 1);
                 
-                // Calculate and update session duration
+                // Update session duration
                 long durationSeconds = ChronoUnit.SECONDS.between(visitor.getFirstVisitTime(), now);
                 visitor.setSessionDuration(durationSeconds);
                 
-                // Check if session has expired
-                if (durationSeconds > sessionTimeoutMinutes * 60) {
+                // Check for session timeout
+                if (ChronoUnit.MINUTES.between(previousActiveTime, now) > sessionTimeoutMinutes) {
+                    log.info("Session timed out - creating new session for {}", sessionId);
                     visitor.setActive(false);
+                    visitorRepository.save(visitor);
+                    
+                    // Create new session
+                    visitor = new Visitor();
+                    visitor.setSessionId(sessionId);
+                    visitor.setIpAddress(clientIp);
+                    visitor.setUserAgent(request.getHeader("User-Agent"));
+                    visitor.setFirstVisitTime(now);
+                    visitor.setLastActiveTime(now);
+                    visitor.setLastPageVisited(page);
+                    visitor.setActive(true);
+                    visitor.setPageVisitCount(1);
+                } else {
+                    visitor.setActive(true);
                 }
                 
                 visitorRepository.save(visitor);

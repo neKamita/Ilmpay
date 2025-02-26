@@ -41,12 +41,13 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
 
     // Hourly activity heatmap data
     @Query(value = 
-           "SELECT EXTRACT(HOUR FROM first_visit_time) as hour, " +
-           "EXTRACT(DOW FROM first_visit_time) as day_of_week, " +
+           "SELECT CAST(EXTRACT(HOUR FROM first_visit_time) AS INTEGER) as hour, " +
+           "CAST(EXTRACT(DOW FROM first_visit_time) AS INTEGER) as day_of_week, " +
            "COUNT(DISTINCT session_id) as count " +
            "FROM visitors " +
            "WHERE first_visit_time BETWEEN :startDate AND :endDate " +
-           "GROUP BY EXTRACT(HOUR FROM first_visit_time), EXTRACT(DOW FROM first_visit_time)", 
+           "GROUP BY EXTRACT(HOUR FROM first_visit_time), EXTRACT(DOW FROM first_visit_time) " +
+           "ORDER BY hour, day_of_week", 
            nativeQuery = true)
     List<Object[]> getActivityHeatmap(@Param("startDate") LocalDateTime startDate, 
                                     @Param("endDate") LocalDateTime endDate);
@@ -84,8 +85,25 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
                                   @Param("endDate") LocalDateTime endDate);
 
     // Get active users for a specific period
+    /**
+     * Get count of active users based on recent activity
+     * @param cutoffTime The time threshold for considering a user active
+     * @return Count of users with activity after cutoffTime
+     */
     @Query("SELECT COUNT(DISTINCT v.sessionId) FROM Visitor v " +
-           "WHERE v.isActive = true AND v.lastActiveTime BETWEEN :startDate AND :endDate")
+           "WHERE v.lastActiveTime > :cutoffTime")
+    long countRecentlyActiveUsers(@Param("cutoffTime") LocalDateTime cutoffTime);
+
+    /**
+     * Get count of active users for a specific period with proper session handling
+     * @param startDate Start of the period
+     * @param endDate End of the period
+     * @return Count of active users in the period
+     */
+    @Query("SELECT COUNT(DISTINCT v.sessionId) FROM Visitor v " +
+           "WHERE v.lastActiveTime BETWEEN :startDate AND :endDate " +
+           "AND v.sessionDuration IS NOT NULL " +
+           "AND v.isActive = true")
     long getActiveUsersForPeriod(@Param("startDate") LocalDateTime startDate, 
                                 @Param("endDate") LocalDateTime endDate);
 

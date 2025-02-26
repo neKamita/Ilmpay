@@ -1,4 +1,4 @@
-// 📦 Import our trusty Logger - The debugger's best friend
+ // 📦 Import our trusty Logger - The debugger's best friend
 import { Logger } from './logger.js';
 
 // 🎭 Admin Panel Functionality - Where the magic happens! ✨
@@ -155,10 +155,18 @@ const AdminCharts = {
 
         const initialDays = document.querySelector('#visitorTrendsPeriod').value; // Get initial value from dropdown
 
-        fetch(`/api/analytics/visitor-stats?days=${initialDays}`)
+        fetch(`/api/analytics/dashboard?days=${initialDays}`)
             .then(response => response.json())
             .then(data => {
                 console.log("Visitor Stats Data:", data); // Added log
+                // Update stats cards
+                if (data.totalVisitors) {
+                    document.getElementById('totalVisitors').textContent = data.totalVisitors;
+                }
+                if (data.todayVisitors) {
+                    document.getElementById('todaysVisitors').textContent = data.todayVisitors;
+                }
+
                 const options = {
                     chart: {
                         type: 'area',
@@ -168,16 +176,14 @@ const AdminCharts = {
                     },
                     series: [{
                         name: 'Daily Visitors',
-                        data: data.dailyVisitors.map(point => [new Date(point.date).getTime(), point.visitors])
+                        data: data.dailyVisitors?.map(point => [new Date(point.date).getTime(), point.visitors]) || []
                     }],
                     xaxis: {
                         type: 'datetime',
                         labels: {
                             format: 'dd MMM',
                             style: { colors: '#718096' }
-                        },
-                        min: new Date(data.dailyVisitors[0].date).getTime(), // Set initial x-axis range
-                        max: new Date(data.dailyVisitors[data.dailyVisitors.length - 1].date).getTime(),
+                        }
                     },
                     yaxis: {
                         labels: {
@@ -212,7 +218,7 @@ const AdminCharts = {
         const el = document.querySelector('#heatmapChart');
         if (!el) return;
 
-        fetch(`/api/analytics/activity-heatmap?days=7`)
+        fetch('/api/analytics/activity-heatmap?days=7')
             .then(response => response.json())
             .then(data => {
                 const options = {
@@ -308,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //Move existing functions into the AdminCharts object
         AdminCharts.updateVisitorStats = async function(days = 30) {
             try {
-                const response = await fetch(`/api/analytics/visitor-stats?days=${days}`);
+                const response = await fetch(`/api/analytics/dashboard?days=${days}`);
                 const data = await response.json();
 
                 const series = [{
@@ -345,16 +351,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const avgDuration = data.avgSessionDuration != null ? data.avgSessionDuration : 0;
                 const avgSessionElement = document.getElementById('avgSessionDuration');
 
-                // *** LOGGING ADDED HERE ***
-                Logger.debug('AdminCharts', 'Raw avgSessionDuration from API:', data.avgSessionDuration);
-                const formattedDuration = this.formatDuration(avgDuration);
-                Logger.debug('AdminCharts', 'Formatted avgSessionDuration:', formattedDuration);
-                Logger.debug('AdminCharts', 'avgSessionElement.textContent (before):', avgSessionElement.textContent);
+                // Only update session duration if element exists
+                if (avgSessionElement) {
+                    // *** LOGGING ADDED HERE ***
+                    Logger.debug('AdminCharts', 'Raw avgSessionDuration from API:', data.avgSessionDuration);
+                    const formattedDuration = this.formatDuration(avgDuration);
+                    Logger.debug('AdminCharts', 'Formatted avgSessionDuration:', formattedDuration);
+                    Logger.debug('AdminCharts', 'avgSessionElement.textContent (before):', avgSessionElement.textContent);
 
-                avgSessionElement.textContent = formattedDuration;
+                    avgSessionElement.textContent = formattedDuration;
 
-                // *** LOGGING ADDED HERE ***
-                Logger.debug('AdminCharts', 'avgSessionElement.textContent (after):', avgSessionElement.textContent);
+                    // *** LOGGING ADDED HERE ***
+                    Logger.debug('AdminCharts', 'avgSessionElement.textContent (after):', avgSessionElement.textContent);
+                }
 
 
                 // Update rate changes
@@ -392,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Function to update bounce rate
       AdminCharts.updateBounceRate = async function() {
         try {
-          const response = await fetch(`/api/analytics/visitor-stats?days=1`); // Could use a dedicated endpoint later
+          const response = await fetch('/api/analytics/metrics');
           const data = await response.json();
           const bounceRateElement = document.getElementById('bounceRate');
           if (bounceRateElement) {
@@ -456,12 +465,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to update today's visitors
     AdminCharts.updateTodaysVisitors = async function() {
       try {
-        const response = await fetch(`/api/analytics/visitor-stats?days=1`);
+        const response = await fetch('/api/analytics/metrics');
         const data = await response.json();
 
         const todaysVisitorsElement = document.getElementById('todaysVisitors');
         if (todaysVisitorsElement) {
           todaysVisitorsElement.textContent = data.totalVisitors;
+        }
+
+        // Update active users count
+        const activeUsersElement = document.getElementById('activeUsers');
+        if (activeUsersElement && data.activeUsers !== undefined) {
+          activeUsersElement.textContent = data.activeUsers;
         }
 
         // Update rate changes for today's visitors
