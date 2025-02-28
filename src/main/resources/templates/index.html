@@ -5,22 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="#{app.title}">Ilmpay - Your Learning Journey Starts Here</title>
     
-    <!-- Thymeleaf fragment for common head elements -->
-    <th:block th:fragment="common-head">
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css">
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <!-- Custom CSS -->
-        <link rel="stylesheet" th:href="@{/css/style.css}">
-        <link rel="stylesheet" th:href="@{/css/media.css}">
-        <!-- Owl Carousel CSS -->
+    <!-- Early connection to critical domains -->
+    <th:block th:replace="~{fragments/optimized-resources :: preconnect}"></th:block>
+    
+    <!-- Critical CSS for above-the-fold content -->
+    <th:block th:replace="~{fragments/optimized-resources :: critical-css}"></th:block>
+    
+    <!-- Bootstrap CSS - Load asynchronously -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" 
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
+    
+    <!-- Google Fonts - Preload important fonts -->
+    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" 
+          type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <!-- Custom CSS - Load with optimized order -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/media.css}" media="(max-width: 1200px)">
+    
+    <!-- Owl Carousel CSS - Load asynchronously -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" as="style" 
+          onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" as="style" 
+          onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-        
-    </th:block>
+    </noscript>
 </head>
 <body>
     <!-- Mobile Menu -->
@@ -122,9 +135,9 @@
             <div class="support-carousel owl-carousel">
                 <div th:each="logo : ${supportLogos}" class="support-logo-item">
                     <a th:if="${logo.websiteUrl}" th:href="${logo.websiteUrl}" target="_blank" rel="noopener noreferrer">
-                        <img th:src="${logo.imageUrl}" th:alt="${logo.name}" class="support-logo">
+                        <img th:src="${logo.imageUrl}" th:alt="${logo.name}" class="support-logo" loading="lazy">
                     </a>
-                    <img th:unless="${logo.websiteUrl}" th:src="${logo.imageUrl}" th:alt="${logo.name}" class="support-logo">
+                    <img th:unless="${logo.websiteUrl}" th:src="${logo.imageUrl}" th:alt="${logo.name}" class="support-logo" loading="lazy">
                 </div>
             </div>
         </div>
@@ -382,19 +395,9 @@
             </div>
         </div>
     </footer>
-    <!-- Thymeleaf fragment for common scripts -->
-    <th:block th:fragment="common-scripts">
-        <!-- jQuery must load first -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Then Bootstrap -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Then Owl Carousel -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-        <!-- Then Lucide -->
-        <script src="https://unpkg.com/lucide@latest"></script>
-        <!-- Finally our custom JS -->
-        <script th:src="@{/js/main.js}"></script>
-
-        <script src="/js/smooth-scroll.js" type="module"></script>
-    </th:block>
+    <!-- Initialize optimized image loading for non-critical images -->
+    <th:block th:replace="~{fragments/optimized-resources :: optimized-image-loading}"></th:block>
+    
+    <!-- Load all scripts in optimized order -->
+    <th:block th:replace="~{fragments/optimized-resources :: optimized-scripts}"></th:block>
 </body>
