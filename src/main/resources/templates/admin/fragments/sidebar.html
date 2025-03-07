@@ -1,7 +1,8 @@
 <nav th:fragment="sidebar" class="w-64 bg-white border-r min-h-screen flex flex-col transition-all duration-300" id="sidebar">
     <!-- Collapse Button -->
-    <button id="sidebarToggle" class="absolute -right-3 top-5 bg-white border border-gray-200 rounded-full p-1.5 shadow-sm hover:bg-gray-50">
+    <button id="sidebarToggle" class="absolute -right-3 top-5 bg-white border border-gray-200 rounded-full p-1.5 shadow-sm hover:bg-gray-50" title="Toggle Sidebar">
         <i data-lucide="chevrons-left" class="w-4 h-4 transition-transform duration-300"></i>
+        <span class="sr-only">Toggle Sidebar</span>
     </button>
     
     <!-- Header -->
@@ -31,7 +32,8 @@
                 <button onclick="toggleSubmenu('content-menu')" 
                         class="w-full flex items-center justify-between p-3 rounded-lg transition-colors duration-200"
                         th:with="currentUri=${currentPath}"
-                        th:classappend="${#strings.startsWith(currentUri, '/admin/content')} ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-100'">
+                        th:classappend="${#strings.startsWith(currentUri, '/admin/content')} ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-100'"
+                        title="Toggle Content Menu">
                     <div class="flex items-center space-x-3">
                         <i data-lucide="file-text" class="w-5 h-5"></i>
                         <span>Content</span>
@@ -40,6 +42,7 @@
                        class="w-4 h-4 transition-transform duration-200"
                        th:classappend="${#strings.startsWith(currentUri, '/admin/content')} ? 'rotate-90' : ''">
                     </i>
+                    <span class="sr-only">Toggle Content Menu</span>
                 </button>
                 
                 <div id="content-menu" 
@@ -69,6 +72,12 @@
                        th:classappend="${currentUri == '/admin/content/faqs'} ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-100'">
                         <i data-lucide="help-circle" class="w-4 h-4"></i>
                         <span>FAQs</span>
+                    </a>
+                    <a href="/admin/content/translations"
+                       class="flex items-center space-x-3 p-2 rounded-lg text-sm transition-colors duration-200"
+                       th:classappend="${currentUri == '/admin/content/translations'} ? 'bg-indigo-50 text-indigo-600' : 'text-gray-600 hover:bg-gray-100'">
+                        <i data-lucide="globe" class="w-4 h-4"></i>
+                        <span>Translations</span>
                     </a>
                 </div>
             </div>

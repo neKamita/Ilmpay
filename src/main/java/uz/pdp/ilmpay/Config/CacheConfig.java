@@ -27,19 +27,23 @@ public class CacheConfig {
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCacheNames(Arrays.asList(
-            "translations",     // For translation results
-            "benefits",        // For benefit content
-            "benefitCards",    // For benefit cards content
-            "faqs",           // For FAQ content
-            "supportLogos",    // For support logos
-            "testimonials"     // For testimonials
+                "translations", // For translation results
+                "translationsByLanguage", // For translations by language
+                "translationsByKey", // For translations by key
+                "allTranslationKeys", // For all translation keys
+                "allTranslations", // For paginated translations
+                "benefits", // For benefit content
+                "benefitCards", // For benefit cards content
+                "faqs", // For FAQ content
+                "supportLogos", // For support logos
+                "testimonials" // For testimonials
         ));
-        
+
         // Default cache configuration
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(1, TimeUnit.HOURS));
-        
+
         return cacheManager;
     }
 
@@ -48,11 +52,16 @@ public class CacheConfig {
      */
     @Bean
     public CacheManager translationCacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("translations");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager(
+                "translations",
+                "translationsByLanguage",
+                "translationsByKey",
+                "allTranslationKeys",
+                "allTranslations");
         cacheManager.setCaffeine(Caffeine.newBuilder()
-                .maximumSize(2000)
+                .maximumSize(5000)
                 .expireAfterWrite(24, TimeUnit.HOURS));
-        
+
         return cacheManager;
     }
 }

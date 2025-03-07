@@ -230,13 +230,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // 🔗 Smooth scroll for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
+            // Skip language switcher links
+            if (this.classList.contains('dropdown-item') && this.href.includes('lang=')) {
+                return;
+            }
+            
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+            const href = this.getAttribute('href');
+            
+            // Check if href is a valid selector (not empty, starts with #, and has more than just #)
+            if (href && href !== '#' && href.startsWith('#') && href.length > 1) {
+                try {
+                    // Try to use the href as a selector
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                } catch (error) {
+                    // 🐞 Log error if querySelector fails
+                    console.error(`Invalid selector: ${href}`, error);
+                }
             }
         });
     });

@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+            <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -34,6 +34,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     </noscript>
+    
+    <!-- Set the language attribute for dynamic translations -->
+    <script th:inline="javascript">
+        document.documentElement.lang = /*[[${#locale.language}]]*/ 'en';
+    </script>
 </head>
 <body>
     <!-- Mobile Menu -->
@@ -42,30 +47,30 @@
             <a class="navbar-brand" href="#">
                 <img th:src="@{/images/logo.svg}" alt="#{nav.logo.alt}" class="mobile-logo">
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#home" th:classappend="${currentPage == 'home' ? 'active' : ''}"
-                           th:href="@{/}" th:text="#{nav.home}">Home</a>
+                           th:href="@{/}" th:text="#{nav.home}" data-translation-key="nav.home">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#support" th:classappend="${currentPage == 'features' ? 'active' : ''}"
-                           th:href="@{#support}" th:text="#{nav.support}">Support</a>
+                           th:href="@{#support}" th:text="#{nav.support}" data-translation-key="nav.support">Support</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#benefits" th:classappend="${currentPage == 'about' ? 'active' : ''}"
-                           th:href="@{#benefits}" th:text="#{nav.benefits}">Benefits</a>
+                           th:href="@{#benefits}" th:text="#{nav.benefits}" data-translation-key="nav.benefits">Benefits</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#testimonials" th:classappend="${currentPage == 'blog' ? 'active' : ''}"
-                           th:href="@{#testimonials}" th:text="#{nav.testimonials}">Testimonials</a>
+                           th:href="@{#testimonials}" th:text="#{nav.testimonials}" data-translation-key="nav.testimonials">Testimonials</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#faq" th:classappend="${currentPage == 'faq' ? 'active' : ''}"
-                           th:href="@{#faq}" th:text="#{nav.faq}">FAQ</a>
+                           th:href="@{#faq}" th:text="#{nav.faq}" data-translation-key="nav.faq">FAQ</a>
                     </li>
                 </ul>
                 
@@ -82,7 +87,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="download-btn" th:href="@{#download}" th:text="#{nav.download}">Download</a>
+                        <a class="download-btn" th:href="@{#download}" th:text="#{nav.download}" data-translation-key="nav.download">Download</a>
                     </li>
                 </ul>
             </div>
@@ -91,18 +96,18 @@
 
     <!-- Hero Section -->
     <section id="home" class="hero-section">
-        <img class="hero-ellipse hero-ellipse-top" th:src="@{/images/elips.svg}" alt="Decorative shape">
-        <img class="hero-ellipse hero-ellipse-bottom" th:src="@{/images/elips.svg}" alt="Decorative shape">
+        <img class="hero-ellipse hero-ellipse-top" th:src="@{/images/elips.svg}" alt="Decorative shape" title="Decorative shape">
+        <img class="hero-ellipse hero-ellipse-bottom" th:src="@{/images/elips.svg}" alt="Decorative shape" title="Decorative shape">
         <div class="container position-relative h-100">
             <div class="row h-100">
                 <div class="col-lg-6">
                     <div class="hero-content">
                         <div class="welcome-badge">
-                            <img th:src="@{/images/Star 1.svg}" th:alt="#{hero.welcome.alt}">
-                            <span th:text="#{hero.welcome}">Welcome to a Modern Scholarship App</span>
+                            <img th:src="@{/images/Star 1.svg}" th:alt="#{hero.welcome.alt}" title="Star icon">
+                            <span th:text="#{hero.welcome}" data-translation-key="hero.welcome">Welcome to a Modern Scholarship App</span>
                         </div>
-                        <h1 th:text="#{hero.title}">Empowering Students to Achieve Their Dreams</h1>
-                        <p th:text="#{hero.description}">Are you a student dreaming of pursuing higher education but struggling to meet the financial demands? Look no further! IlmPay is here to support you on your educational journey.</p>
+                        <h1 th:text="#{hero.title}" data-translation-key="hero.title">Empowering Students to Achieve Their Dreams</h1>
+                        <p th:text="#{hero.description}" data-translation-key="hero.description">Are you a student dreaming of pursuing higher education but struggling to meet the financial demands? Look no further! IlmPay is here to support you on your educational journey.</p>
                         <div class="app-store-buttons">
                             <a href="#" class="store-button play-store-button" th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
                                 <i class="fab fa-google-play"></i>
@@ -123,15 +128,15 @@
                 </div>
             </div>
             <div class="hero-image-container">
-                <img class="hero-image front" th:src="@{/images/iPhone-13-Pro-Front.svg}" alt="IlmPay App Screenshot">
-                <img class="hero-image text" th:src="@{/images/iPhone-13-Pro-Text.svg}" alt="IlmPay Features">
-                <img class="hero-image reward" th:src="@{/images/iPhone-13-Pro-Reward.svg}" alt="IlmPay Rewards">
+                <img class="hero-image front" th:src="@{/images/iPhone-13-Pro-Front.svg}" alt="IlmPay App Screenshot" title="IlmPay App Screenshot">
+                <img class="hero-image text" th:src="@{/images/iPhone-13-Pro-Text.svg}" alt="IlmPay Features" title="IlmPay Features">
+                <img class="hero-image reward" th:src="@{/images/iPhone-13-Pro-Reward.svg}" alt="IlmPay Rewards" title="IlmPay Rewards">
             </div>
         </div>
     </section>
     <section id="support" class="support-section">
         <div class="container">
-            <h3 class="support-title text-center" th:text="#{support.title}">Support By</h3>
+            <h3 class="support-title text-center" th:text="#{support.title}" data-translation-key="support.title">Support By</h3>
             <div class="support-carousel owl-carousel">
                 <div th:each="logo : ${supportLogos}" class="support-logo-item">
                     <a th:if="${logo.websiteUrl}" th:href="${logo.websiteUrl}" target="_blank" rel="noopener noreferrer">
@@ -143,17 +148,17 @@
         </div>
     </section>
     <section id="benefits" class="benefits-section">
-        <img class="benefits-ellipse benefits-ellipse-top" th:src="@{/images/elips.svg}" alt="Decorative shape">
-        <img class="benefits-ellipse benefits-ellipse-bottom" th:src="@{/images/elips.svg}" alt="Decorative shape">
+        <img class="benefits-ellipse benefits-ellipse-top" th:src="@{/images/elips.svg}" alt="Decorative shape" title="Decorative shape">
+        <img class="benefits-ellipse benefits-ellipse-bottom" th:src="@{/images/elips.svg}" alt="Decorative shape" title="Decorative shape">
         <div class="container">
             <div class="benefits-badge">
                 <span>
-                    <img th:src="@{/images/Star 1.svg}" class="benefits-badge-star" th:alt="#{hero.welcome.alt}">
-                    <span th:text="#{benefits.badge}">Awesome Benefit From Us</span>
+                    <img th:src="@{/images/Star 1.svg}" class="benefits-badge-star" th:alt="#{hero.welcome.alt}" title="Star icon">
+                    <span th:text="#{benefits.badge}" data-translation-key="benefits.badge">Awesome Benefit From Us</span>
                 </span>
             </div>
             
-            <h2 class="benefits-title" th:text="#{benefits.title.dynamic}">
+            <h2 class="benefits-title" th:text="#{benefits.title.dynamic}" data-translation-key="benefits.title.dynamic">
                 IlmPay believes in education's power, breaking financial barriers.<br>
                 Download and join test challenges – win, we'll cover tuition fees!
             </h2>
@@ -176,45 +181,45 @@
                 <div class="col-lg-6">
                     <div class="offer-content">
                         <div class="offer-badge">
-                            <img th:src="@{/images/Star 1.svg}" class="offer-badge-star" alt="Star icon">
-                            <span th:text="#{offer.badge}">Anywhere, Anytime with IlmPay</span>
+                            <img th:src="@{/images/Star 1.svg}" class="offer-badge-star" alt="Star icon" title="Star icon">
+                            <span th:text="#{offer.badge}" data-translation-key="offer.badge">Anywhere, Anytime with IlmPay</span>
                         </div>
                         
-                        <h2 class="offer-title" th:text="#{offer.title}">What We Offer</h2>
+                        <h2 class="offer-title" th:text="#{offer.title}" data-translation-key="offer.title">What We Offer</h2>
                         
-                        <p class="offer-description" th:text="#{offer.description}">
+                        <p class="offer-description" th:text="#{offer.description}" data-translation-key="offer.description">
                             At IlmPay, we believe in the transformative power of education and are committed to breaking down financial barriers for students. Our platform offers a unique opportunity for students to download and participate in test challenges. But that's not all – if you win, we'll cover your tuition fees!
                         </p>
                         
-                        <a href="#" class="download-apps-btn" th:text="#{offer.button}">Download Apps</a>
+                        <a href="#" class="download-apps-btn" th:text="#{offer.button}" data-translation-key="offer.button">Download Apps</a>
                     </div>
                 </div>
                 
                 <div class="col-lg-6">
                     <div class="offer-image">
-                        <img th:src="@{/images/Iphone-pro-13-Straigt.png}" alt="IlmPay App Interface" class="app-screen">
-                        <div class="orange-circle"></div>
+                        <img th:src="@{/images/Iphone-pro-13-Straigt.png}" alt="IlmPay App Interface" class="app-screen" title="IlmPay App Interface">
+                        <div class="orange-circle" role="presentation" aria-hidden="true"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <section id="testimonials" class="testimonial-section">
-        <svg class="testimonial-ellipse testimonial-ellipse-top" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="testimonial-ellipse testimonial-ellipse-top" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" alt="Decorative circle" title="Decorative circle">
             <circle cx="200" cy="200" r="150" stroke="white" stroke-width="50"/>
         </svg>
-        <svg class="testimonial-ellipse testimonial-ellipse-bottom" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="testimonial-ellipse testimonial-ellipse-bottom" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" alt="Decorative circle" title="Decorative circle">
             <circle cx="200" cy="200" r="150" stroke="white" stroke-width="50"/>
         </svg>
         <div class="container">
             <div class="testimonial-badge">
                 <span>
-                    <img th:src="@{/images/Star 1.svg}" class="testimonial-badge-star" alt="Star icon">
-                    <h1 class="testimonial-span-title" th:text="#{testimonial.badge}">Testimonial</h1>
+                    <img th:src="@{/images/Star 1.svg}" class="testimonial-badge-star" alt="Star icon" title="Star icon">
+                    <h1 class="testimonial-span-title" th:text="#{testimonial.badge}" data-translation-key="testimonial.badge">Testimonial</h1>
                 </span>
             </div>
             
-            <h2 class="testimonial-title" th:text="#{testimonial.title}">What Our Happy Students Says</h2>
+            <h2 class="testimonial-title" th:text="#{testimonial.title}" data-translation-key="testimonial.title">What Our Happy Students Says</h2>
             
             <div class="testimonial-carousel owl-carousel owl-theme">
                 <div th:each="testimonial : ${testimonials}" class="testimonial-card">
@@ -232,17 +237,17 @@
                             <h4 th:text="${testimonial.name}">Student Name</h4>
                             <div class="rating">
                                 <th:block th:each="i : ${#numbers.sequence(1, testimonial.rating)}">
-                                    <img th:src="@{/images/Star.svg}" alt="Star rating">
+                                    <img th:src="@{/images/Star.svg}" alt="Star rating" title="Star rating">
                                 </th:block>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="custom-dots-container">
+            <div class="custom-dots-container" role="tablist" aria-label="Testimonial navigation">
                 <div th:each="testimonial, stat : ${testimonials}" 
                      th:class="${stat.index == 0 ? 'custom-dot active' : 'custom-dot'}"
-                     th:attr="data-index=${stat.index}">
+                     th:attr="data-index=${stat.index}, aria-label=${'Testimonial ' + (stat.index + 1)}, role='tab', title=${'Testimonial ' + (stat.index + 1)}">
                 </div>
             </div>
         </div>
@@ -252,12 +257,12 @@
         <div class="container">
             <div class="faq-badge">
                 <span>
-                    <img th:src="@{/images/Star 1.svg}" class="faq-badge-star" alt="Star icon">
-                    <h1 class="faq-span-title" th:text="#{faq.span.title}">Questions</h1>
+                    <img th:src="@{/images/Star 1.svg}" class="faq-badge-star" alt="Star icon" title="Star icon">
+                    <h1 class="faq-span-title" th:text="#{faq.span.title}" data-translation-key="faq.span.title">Questions</h1>
                 </span>
             </div>
             
-            <h2 class="faq-title text-center" th:text="#{faq.title}">
+            <h2 class="faq-title text-center" th:text="#{faq.title}" data-translation-key="faq.title">
                 Frequently Asked Questions
             </h2>
 
@@ -280,13 +285,13 @@
     </section>
     <section class="download-section">
         <div class="download-banner">
-            <img class="download-circle download-circle-small" th:src="@{/images/download-1.svg}" alt="Decorative circle">
-            <img class="download-circle download-circle-large" th:src="@{/images/download-2.svg}" alt="Decorative circle">
+            <img class="download-circle download-circle-small" th:src="@{/images/download-1.svg}" alt="Decorative circle" title="Decorative circle">
+            <img class="download-circle download-circle-large" th:src="@{/images/download-2.svg}" alt="Decorative circle" title="Decorative circle">
             <div class="container">
                 <div class="download-content">
-                    <h2 th:text="#{download.title}">Download & Install IlmPay Now and<br>No Need to Pay Your Tuition AnyMore!</h2>
+                    <h2 th:text="#{download.title}" data-translation-key="download.title">Download & Install IlmPay Now and<br>No Need to Pay Your Tuition AnyMore!</h2>
                     
-                    <p th:text="#{download.description}">Don't let financial constraints hinder your educational aspirations. Take the first step towards a brighter future with IlmPay. Download the app now and start your journey towards academic success!</p>
+                    <p th:text="#{download.description}" data-translation-key="download.description">Don't let financial constraints hinder your educational aspirations. Take the first step towards a brighter future with IlmPay. Download the app now and start your journey towards academic success!</p>
                     
                     <div class="download-buttons">
                         <a href="#" class="store-button play-store-button" th:href="@{${@environment.getProperty('app.playstore.url')}}" target="_blank">
@@ -307,63 +312,63 @@
                 </div>
                 
                 <div class="download-image">
-                    <img th:src="@{/images/Two Phone.png}" alt="IlmPay App Screenshots" class="phones-image">
+                    <img th:src="@{/images/Two Phone.png}" alt="IlmPay App Screenshots" class="phones-image" title="IlmPay App Screenshots">
                 </div>
             </div>
         </div>
     </section>
 
     <footer class="footer-section">
-        <img class="footer-circle footer-circle-small" th:src="@{/images/footer-1.svg}" alt="Decorative circle">
-        <img class="footer-circle footer-circle-large" th:src="@{/images/footer-2.svg}" alt="Decorative circle">
+        <img class="footer-circle footer-circle-small" th:src="@{/images/footer-1.svg}" alt="Decorative circle" title="Decorative circle">
+        <img class="footer-circle footer-circle-large" th:src="@{/images/footer-2.svg}" alt="Decorative circle" title="Decorative circle">
         <div class="container">
             <div class="footer-header">
                 <div class="footer-logo">
-                    <img th:src="@{/images/logo.svg}" alt="IlmPay Logo">
+                    <img th:src="@{/images/logo.svg}" alt="IlmPay Logo" title="IlmPay Logo">
                 </div>
-                <p class="footer-description" th:text="#{footer.description}">
+                <p class="footer-description" th:text="#{footer.description}" data-translation-key="footer.description">
                     IlmPay is an e-wallet app that allows you to store money, make payments, and perform other financial transactions electronically through your mobile device.
                 </p>
             </div>
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3 th:text="#{footer.company}">COMPANY</h3>
+                    <h3 th:text="#{footer.company}" data-translation-key="footer.company">COMPANY</h3>
                     <ul>
-                        <li><a href="#" th:text="#{footer.about}">About Us</a></li>
-                        <li><a href="#" th:text="#{footer.team}">Our Team</a></li>
-                        <li><a href="#" th:text="#{footer.career}">Career</a></li>
-                        <li><a href="#" th:text="#{footer.contact}">Contact Us</a></li>
-                        <li><a href="#" th:text="#{footer.blog}">Blog</a></li>
+                        <li><a href="#" th:text="#{footer.about}" data-translation-key="footer.about">About Us</a></li>
+                        <li><a href="#" th:text="#{footer.team}" data-translation-key="footer.team">Our Team</a></li>
+                        <li><a href="#" th:text="#{footer.career}" data-translation-key="footer.career">Career</a></li>
+                        <li><a href="#" th:text="#{footer.contact}" data-translation-key="footer.contact">Contact Us</a></li>
+                        <li><a href="#" th:text="#{footer.blog}" data-translation-key="footer.blog">Blog</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3 th:text="#{footer.support}">SUPPORT</h3>
+                    <h3 th:text="#{footer.support}" data-translation-key="footer.support">SUPPORT</h3>
                     <ul>
-                        <li><a href="#" th:text="#{footer.getting_started}">Getting Started</a></li>
-                        <li><a href="#" th:text="#{footer.help_center}">Help Center</a></li>
-                        <li><a href="#" th:text="#{footer.server_status}">Server Status</a></li>
-                        <li><a href="#" th:text="#{footer.report_bug}">Report a Bug</a></li>
-                        <li><a href="#" th:text="#{footer.chat_support}">Chat Support</a></li>
+                        <li><a href="#" th:text="#{footer.getting_started}" data-translation-key="footer.getting_started">Getting Started</a></li>
+                        <li><a href="#" th:text="#{footer.help_center}" data-translation-key="footer.help_center">Help Center</a></li>
+                        <li><a href="#" th:text="#{footer.server_status}" data-translation-key="footer.server_status">Server Status</a></li>
+                        <li><a href="#" th:text="#{footer.report_bug}" data-translation-key="footer.report_bug">Report a Bug</a></li>
+                        <li><a href="#" th:text="#{footer.chat_support}" data-translation-key="footer.chat_support">Chat Support</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3 th:text="#{footer.products}">PRODUCTS</h3>
+                    <h3 th:text="#{footer.products}" data-translation-key="footer.products">PRODUCTS</h3>
                     <ul>
-                        <li><a href="#" th:text="#{footer.features}">Features</a></li>
-                        <li><a href="#" th:text="#{footer.review}">Review</a></li>
-                        <li><a href="#" th:text="#{footer.update}">Update</a></li>
+                        <li><a href="#" th:text="#{footer.features}" data-translation-key="footer.features">Features</a></li>
+                        <li><a href="#" th:text="#{footer.review}" data-translation-key="footer.review">Review</a></li>
+                        <li><a href="#" th:text="#{footer.update}" data-translation-key="footer.update">Update</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
-                    <h3 th:text="#{footer.downloads}">DOWNLOADS</h3>
+                    <h3 th:text="#{footer.downloads}" data-translation-key="footer.downloads">DOWNLOADS</h3>
                     <ul>
-                        <li><a href="#" th:text="#{footer.ios}">iOS</a></li>
-                        <li><a href="#" th:text="#{footer.android}">Android</a></li>
+                        <li><a href="#" th:text="#{footer.ios}" data-translation-key="footer.ios">iOS</a></li>
+                        <li><a href="#" th:text="#{footer.android}" data-translation-key="footer.android">Android</a></li>
                     </ul>
                 </div>
                 <div class="footer-column footer-newsletter">
-                    <h3 th:text="#{footer.newsletter}">SUBSCRIBE TO OUR NEWSLETTER</h3>
-                    <p th:text="#{footer.newsletter.description}">IlmPay is an e-wallet app that allows you to
+                    <h3 th:text="#{footer.newsletter}" data-translation-key="footer.newsletter">SUBSCRIBE TO OUR NEWSLETTER</h3>
+                    <p th:text="#{footer.newsletter.description}" data-translation-key="footer.newsletter.description">IlmPay is an e-wallet app that allows you to
                         store money, make payments, and perform othe</p>
                     <div class="footer-buttons">
                         <a href="#" class="store-button app-store-button">
@@ -384,7 +389,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p th:text="#{footer.copyright}">Copyright 2023 IlmPay | All Rights Reserved</p>
+                <p th:text="#{footer.copyright}" data-translation-key="footer.copyright">Copyright 2023 IlmPay | All Rights Reserved</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -400,4 +405,7 @@
     
     <!-- Load all scripts in optimized order -->
     <th:block th:replace="~{fragments/optimized-resources :: optimized-scripts}"></th:block>
+    
+    <!-- Dynamic translations script -->
+    <script type="module" th:src="@{/js/dynamic-translations.js}"></script>
 </body>
