@@ -11,13 +11,18 @@
     Establishes early connections to critical domains
 -->
 <th:block th:fragment="preconnect">
-    <!-- Preconnect to CDNs used by the site -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://code.jquery.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://use.fontawesome.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <!-- Critical CDNs -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" as="style">
+    
+    <!-- DNS prefetch for performance -->
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://unpkg.com">
 </th:block>
 
 <!-- 
@@ -106,9 +111,9 @@
     Loads scripts in the most efficient way
 -->
 <th:block th:fragment="optimized-scripts">
-    <!-- jQuery - Load with defer since many scripts depend on it -->
-    <script defer src="https://code.jquery.com/jquery-3.6.0.min.js" 
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+    <!-- jQuery - Using latest version with modern CDN -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
+            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" 
             crossorigin="anonymous"></script>
             
     <!-- Bootstrap - Defer to avoid blocking rendering -->
@@ -141,63 +146,51 @@
                         lucide.createIcons();
                     }
                     
-                    // Initialize carousels after a slight delay
-                    setTimeout(function() {
-                        if (jQuery.fn.owlCarousel) {
-                            // Support Carousel
-                            if ($('.support-carousel').length) {
-                                $('.support-carousel').owlCarousel({
-                                    loop: true,
-                                    margin: 30,
-                                    nav: false,
-                                    dots: false,
-                                    autoplay: true,
-                                    autoplayTimeout: 2000,
-                                    smartSpeed: 2000,
-                                    autoplayHoverPause: true,
-                                    slideTransition: 'linear',
-                                    responsive: {
-                                        0: { items: 2 },
-                                        576: { items: 3 },
-                                        768: { items: 4 },
-                                        992: { items: 6 }
-                                    }
-                                });
+                    // Initialize carousels with shared config
+                    const carouselDefaults = {
+                        loop: true,
+                        nav: false,
+                        dots: false,
+                        autoplay: true,
+                        autoplayHoverPause: true,
+                        slideTransition: 'linear',
+                    };
+
+                    // Support Carousel
+                    if ($('.support-carousel').length) {
+                        $('.support-carousel').owlCarousel({
+                            ...carouselDefaults,
+                            autoplayTimeout: 2000,
+                            smartSpeed: 2000,
+                            responsive: {
+                                0: { items: 2 },
+                                576: { items: 3 },
+                                768: { items: 4 },
+                                992: { items: 6 }
                             }
-                            
-                            // Testimonial Carousel
-                            if ($('.testimonial-carousel').length) {
-                                const carousel = $('.testimonial-carousel').owlCarousel({
-                                    loop: true,
-                                    margin: 30,
-                                    nav: false,
-                                    dots: false,
-                                    autoplay: true,
-                                    autoplayTimeout: 2000,
-                                    smartSpeed: 1000,
-                                    autoplayHoverPause: true,
-                                    slideTransition: 'ease',
-                                    responsive: {
-                                        0: { items: 1 },
-                                        576: { items: 2 },
-                                        992: { items: 3 },
-                                        1200: { items: 4 }
-                                    }
-                                });
-                                
-                                // Custom dot functionality
-                                $('.custom-dot').click(function() {
-                                    const index = $(this).data('index');
-                                    carousel.trigger('to.owl.carousel', [index, 300]);
-                                });
-                                
-                                carousel.on('changed.owl.carousel', function(event) {
-                                    $('.custom-dot').removeClass('active');
-                                    $(`.custom-dot[data-index="${event.item.index - event.item.count}"]`).addClass('active');
-                                });
+                        });
+                    }
+
+                    // Testimonial Carousel
+                    if ($('.testimonial-carousel').length) {
+                        const testimonialCarousel = $('.testimonial-carousel').owlCarousel({
+                            ...carouselDefaults,
+                            margin: 30,
+                            autoplayTimeout: 2000,
+                            smartSpeed: 1000,
+                            responsive: {
+                                0: { items: 1 },
+                                576: { items: 2 },
+                                992: { items: 3 },
+                                1200: { items: 4 }
                             }
-                        }
-                    }, 100);
+                        });
+
+                        // Custom dot functionality with event delegation
+                        $(document).on('click', '.custom-dot', function() {
+                            testimonialCarousel.trigger('to.owl.carousel', [$(this).data('index'), 300]);
+                        });
+                    }
                 }
             }, 50);
         });
